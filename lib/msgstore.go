@@ -247,7 +247,6 @@ func merge(to *models.MessageInfo, from *models.MessageInfo) {
 	if from.Envelope != nil {
 		to.Envelope = from.Envelope
 	}
-	to.Flags = from.Flags
 	to.Labels = from.Labels
 	to.Error = from.Error
 	if from.RFC822Headers != nil {
@@ -347,6 +346,11 @@ func (store *MessageStore) Update(msg types.WorkerMessage) {
 		infoUpdated := msg.Info.Envelope != nil || msg.Info.Error != nil
 		if existing, ok := store.Messages[msg.Info.Uid]; ok && existing != nil {
 			merge(existing, msg.Info)
+			if msg.ReplaceFlags {
+				existing.Flags = msg.Info.Flags
+			} else {
+				existing.Flags |= msg.Info.Flags
+			}
 		} else if infoUpdated {
 			store.Messages[msg.Info.Uid] = msg.Info
 			if store.selectedUid == msg.Info.Uid {
