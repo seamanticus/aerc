@@ -259,7 +259,7 @@ Function rules follow the Linux kernel coding style:
 
 ### Commenting
 
-Function rules follow the Linux kernel coding style:
+Commenting rules follow the Linux kernel coding style:
 
 > Comments are good, but there is also a danger of over-commenting. NEVER try
 > to explain HOW your code works in a comment: it’s much better to write the
