@@ -81,7 +81,7 @@ type Composer struct {
 }
 
 func (o *withCenteredGrid) centerWidth() int {
-	if o.centeredLayoutWidth > 0 {
+	if o.centeredLayoutWidth > 0 && o.width >= o.centeredLayoutWidth {
 		return o.centeredLayoutWidth
 	}
 	return o.width
