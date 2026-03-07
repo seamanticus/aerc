@@ -50,12 +50,18 @@ var supportedImageTypes = []string{
 var _ ProvidesMessages = (*MessageViewer)(nil)
 
 type MessageViewer struct {
+	withCenteredGrid
+
 	acct     *AccountView
 	grid     *ui.Grid
 	switcher *PartSwitcher
 	msg      lib.MessageView
 	uiConfig *config.UIConfig
 	envelope *models.Envelope
+
+	headerHeight  int
+	headerView    ui.Drawable
+	needCryptoRow bool
 }
 
 func NewMessageViewer(
@@ -106,13 +112,38 @@ func NewMessageViewer(
 		},
 	)
 
-	rows := []ui.GridSpec{
-		{Strategy: ui.SIZE_EXACT, Size: ui.Const(headerHeight)},
+	switcher := &PartSwitcher{}
+	err := createSwitcher(acct, switcher, msg)
+	if err != nil {
+		return nil, err
 	}
 
-	if msg.MessageDetails() != nil || acct.UiConfig().IconUnencrypted != "" {
+	mv := &MessageViewer{
+		acct:     acct,
+		msg:      msg,
+		switcher: switcher,
+		uiConfig: acct.UiConfig(),
+		envelope: info.Envelope,
+
+		withCenteredGrid: withCenteredGrid{0, acct.UiConfig().CenteredLayoutWidth},
+		needCryptoRow:    msg.MessageDetails() != nil || acct.UiConfig().IconUnencrypted != "",
+		headerHeight:     headerHeight,
+		headerView:       header,
+	}
+	mv.grid = mv.buildGrid()
+	switcher.uiConfig = mv.uiConfig
+
+	return mv, nil
+}
+
+func (mv *MessageViewer) buildGrid() *ui.Grid {
+	rows := []ui.GridSpec{
+		{Strategy: ui.SIZE_EXACT, Size: ui.Const(mv.headerHeight)},
+	}
+
+	if mv.needCryptoRow {
 		height := 1
-		if msg.MessageDetails() != nil && msg.MessageDetails().IsSigned && msg.MessageDetails().IsEncrypted {
+		if mv.msg.MessageDetails() != nil && mv.msg.MessageDetails().IsSigned && mv.msg.MessageDetails().IsEncrypted {
 			height = 2
 		}
 		rows = append(rows, ui.GridSpec{Strategy: ui.SIZE_EXACT, Size: ui.Const(height)})
@@ -123,59 +154,26 @@ func NewMessageViewer(
 		{Strategy: ui.SIZE_WEIGHT, Size: ui.Const(1)},
 	}...)
 
-	grid := ui.NewGrid()
-	var mainCol int = 0
-	if acct.UiConfig().CenteredLayoutWidth != 0 {
-		grid = ui.NewGrid().Rows(rows).Columns([]ui.GridSpec{
-			{Strategy: ui.SIZE_WEIGHT, Size: ui.Const(1)},
-			{Strategy: ui.SIZE_EXACT, Size: ui.Const(acct.UiConfig().CenteredLayoutWidth)},
-			{Strategy: ui.SIZE_WEIGHT, Size: ui.Const(1)},
-		})
-		mainCol = 1
+	grid := mv.makeCenteredGrid(rows)
+
+	borderStyle := mv.uiConfig.GetStyle(config.STYLE_BORDER)
+	borderChar := mv.uiConfig.BorderCharHorizontal
+
+	grid.AddChild(mv.headerView).At(0, 1)
+	if mv.needCryptoRow {
+		grid.AddChild(NewPGPInfo(mv.msg.MessageDetails(), mv.uiConfig)).At(1, 1)
+		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(2, 0)
+		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(2, 1)
+		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(2, 2)
+		grid.AddChild(mv.switcher).At(3, 1)
 	} else {
-		grid = ui.NewGrid().Rows(rows).Columns([]ui.GridSpec{
-			{Strategy: ui.SIZE_WEIGHT, Size: ui.Const(1)},
-		})
+		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(1, 0)
+		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(1, 1)
+		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(1, 2)
+		grid.AddChild(mv.switcher).At(2, 1)
 	}
 
-	switcher := &PartSwitcher{}
-	err := createSwitcher(acct, switcher, msg)
-	if err != nil {
-		return nil, err
-	}
-
-	borderStyle := acct.UiConfig().GetStyle(config.STYLE_BORDER)
-	borderChar := acct.UiConfig().BorderCharHorizontal
-
-	grid.AddChild(header).At(0, mainCol)
-	if msg.MessageDetails() != nil || acct.UiConfig().IconUnencrypted != "" {
-		grid.AddChild(NewPGPInfo(msg.MessageDetails(), acct.UiConfig())).At(1, mainCol)
-		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(2, mainCol)
-		if mainCol == 1 {
-			grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(2, 0)
-			grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(2, 2)
-		}
-		grid.AddChild(switcher).At(3, mainCol)
-	} else {
-		grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(1, mainCol)
-		if mainCol == 1 {
-			grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(1, 0)
-			grid.AddChild(ui.NewFill(borderChar, borderStyle)).At(1, 2)
-		}
-		grid.AddChild(switcher).At(2, mainCol)
-	}
-
-	mv := &MessageViewer{
-		acct:     acct,
-		grid:     grid,
-		msg:      msg,
-		switcher: switcher,
-		uiConfig: acct.UiConfig(),
-		envelope: info.Envelope,
-	}
-	switcher.uiConfig = mv.uiConfig
-
-	return mv, nil
+	return grid
 }
 
 func (mv *MessageViewer) viewerConfig() *config.ViewerConfig {
@@ -311,6 +309,7 @@ func (mv *MessageViewer) Draw(ctx *ui.Context) {
 		ctx.Printf(0, 0, style, "%s", "(no message selected)")
 		return
 	}
+	mv.width = ctx.Width()
 	mv.grid.Draw(ctx)
 }
 
