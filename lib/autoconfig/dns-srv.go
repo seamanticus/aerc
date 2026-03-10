@@ -28,11 +28,12 @@ func getFromProviderDNS(ctx context.Context, localpart, domain string, result ch
 		}
 
 		configs := map[string]*Serverconf{
-			"jmap":       {},
-			"imap":       {},
-			"imaps":      {},
-			"submission": {},
-			"smtps":      {},
+			"jmap":        {},
+			"imap":        {},
+			"imaps":       {},
+			"submission":  {},
+			"submissions": {},
+			"smtps":       {},
 		}
 
 		var wg sync.WaitGroup
@@ -96,6 +97,9 @@ func getFromProviderDNS(ctx context.Context, localpart, domain string, result ch
 		outcreds.Encryption = EncryptionSTARTTLS
 		if configs["submission"].Hostname == "" {
 			configs["submission"] = configs["smtps"]
+			if configs["submission"].Hostname == "" {
+				configs["submission"] = configs["submissions"]
+			}
 			outcreds.Encryption = EncryptionTLS
 		}
 		outcreds.Address = configs["submission"].Hostname
