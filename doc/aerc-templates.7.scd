@@ -569,7 +569,7 @@ aerc provides the following additional functions:
 	not match any of the expressions, leave it unstyled.
 
 	```
-	{{.StyleSwitch .Subject (`^(\[[\w-]+\]\s*)?\[(RFC )?PATCH` "cyan")}}
+	{{.StyleSwitch .Subject (case `^(\[[\w-]+\]\s*)?\[(RFC )?PATCH` "cyan")}}
 	{{.StyleSwitch (.From | names | join ", ") (case `Tim` "cyan") (case `Robin` "pink-blink") (default "blue")}}
 	```
 

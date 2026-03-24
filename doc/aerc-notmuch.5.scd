@@ -79,7 +79,7 @@ options are available:
 	Path to the maildir account relative to the mail root. Only used when
 	*enable-maildir* is set to _true_.
 
-	This can be used to have a single notmuch database, with a suitable
+	This can be used to have a single notmuch database, with a suitably
 	prepared maildir store, usable from multiple conceptually different
 	aerc accounts.
 
