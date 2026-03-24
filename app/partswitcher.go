@@ -88,6 +88,7 @@ func (ps *PartSwitcher) Draw(ctx *ui.Context) {
 	n := len(ps.parts)
 	part := ps.parts[ps.selected]
 	if n == 1 && !part.viewerConfig().AlwaysShowMime {
+		ps.offset = ctx.Height() // Off the screen <-> not really there.
 		part.Draw(ctx)
 		return
 	}
