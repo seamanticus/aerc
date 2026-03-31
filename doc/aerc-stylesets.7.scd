@@ -203,6 +203,8 @@ declared under a *[viewer]* section of the styleset file.
 :  Fourth level quoted text.
 |  *quote_x*
 :  Above fourth level quoted text.
+|  *code*
+:  Code blocks fenced by ``` and inline `code`.
 
 User defined styles can be used to style arbitrary strings in go-templates (see
 _.Style_ in *aerc-templates*(7)). User styles must be defined in the _[user]_
@@ -451,6 +453,7 @@ quote_4.fg = 4
 quote_4.dim = true
 quote_x.fg = 5
 quote_x.dim = true
+code = 5
 ```
 
 You can choose either to reset everything (except in the *[viewer]* section) by

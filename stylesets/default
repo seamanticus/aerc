@@ -82,3 +82,4 @@
 #quote_4.dim = true
 #quote_x.fg = 5
 #quote_x.dim = true
+#code.fg = 6

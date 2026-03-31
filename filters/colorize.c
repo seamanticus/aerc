@@ -177,6 +177,7 @@ struct styles {
 	struct style quote_3;
 	struct style quote_4;
 	struct style quote_x;
+	struct style code;
 };
 
 static FILE *in_file;
@@ -198,6 +199,7 @@ static struct styles styles = {
 	.quote_3 = { .dim = true, .fg = { .type = PALETTE, .index = 6 } },
 	.quote_4 = { .dim = true, .fg = { .type = PALETTE, .index = 4 } },
 	.quote_x = { .dim = true, .fg = { .type = PALETTE, .index = 5 } },
+	.code = { .fg = { .type = PALETTE, .index = 5 } },
 };
 
 static inline bool startswith(const char *s, const char *prefix)
@@ -361,6 +363,7 @@ static struct {const char *n; struct style *s;} ini_objects[] = {
 	{"quote_3", &styles.quote_3},
 	{"quote_4", &styles.quote_4},
 	{"quote_x", &styles.quote_x},
+	{"code", &styles.code},
 };
 
 /*                         object            attribute           value */
@@ -598,6 +601,38 @@ static void diff_line(const char *in, struct style *s)
 	}
 }
 
+static size_t print_inline_code(const char *in, struct style *ctx, size_t max_len)
+{
+	const char *start = in;
+	const char *end = in + max_len;
+
+	while (*in != '\0' && in < end) {
+		const char *open = memchr(in, '`', (size_t)(end - in));
+		if (!open) {
+			break;
+		}
+		const char *close = memchr(open + 1, '`', (size_t)(end - open - 1));
+		if (!close) {
+			break;
+		}
+		/* print text before the opening backtick */
+		if (open > in)
+			print_notabs(in, (size_t)(open - in));
+		/* print the code span with style */
+		print(seq(&styles.code));
+		print_notabs(open, (size_t)(close - open + 1));
+		print(RESET);
+		if (ctx)
+			print(seq(ctx));
+		in = close + 1;
+	}
+	/* print remaining text */
+	if (in < end)
+		print_notabs(in, (size_t)(end - in));
+
+	return (size_t)(end - start);
+}
+
 static inline bool isurichar(char c)
 {
 	if (c == '\0')
@@ -626,7 +661,7 @@ static void urls(const char *in, struct style *ctx)
 	bool trim;
 
 	while (!regexec(&url_re, in, 3, groups, 0)) {
-		in += print_notabs(in, (size_t)groups[0].rm_so);
+		in += print_inline_code(in, ctx, (size_t)groups[0].rm_so);
 		len = (size_t)groups[0].rm_eo - (size_t)groups[0].rm_so;
 
 		if (groups[1].rm_so != -1) {
@@ -704,7 +739,7 @@ static void urls(const char *in, struct style *ctx)
 			print(seq(ctx));
 		}
 	}
-	print_notabs(in, BUFSIZ);
+	print_inline_code(in, ctx, strlen(in));
 }
 
 static inline void signature(const char *in)
@@ -796,7 +831,7 @@ static void print_style(const char *in, struct style *s)
 	print(RESET);
 }
 
-enum state { INIT, DIFF, SIGNATURE, BODY };
+enum state { INIT, DIFF, SIGNATURE, BODY, CODE_BLOCK };
 
 static void colorize_line(const char *in)
 {
@@ -804,6 +839,12 @@ static void colorize_line(const char *in)
 	regmatch_t groups[8];  /* enough groups to cover all expressions */
 
 	switch (state) {
+	case CODE_BLOCK:
+		print_style(in, &styles.code);
+		if (startswith(in, "```")) {
+			state = BODY;
+		}
+		break;
 	case DIFF:
 		if (!strcmp(in, "-- ")) {
 			state = SIGNATURE;
@@ -833,7 +874,10 @@ static void colorize_line(const char *in)
 		signature(in);
 		break;
 	default: /* BODY, INIT */
-		if (!regexec(&diff_start_re, in, 8, groups, 0)) {
+		if (startswith(in, "```")) {
+			state = CODE_BLOCK;
+			print_style(in, &styles.code);
+		} else if (!regexec(&diff_start_re, in, 8, groups, 0)) {
 			state = DIFF;
 			print_style(in, &styles.diff_meta);
 		} else if (!strcmp(in, "---")) {

@@ -61,3 +61,4 @@ signature.dim=true
 signature.fg=#d33682 # magenta
 url.fg=#b58900 # yellow
 url.underline=true
+code.fg=#002b36

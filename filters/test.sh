@@ -26,6 +26,7 @@ diff_del.fg=     1		# comment2
 quote_*.fg     =6
 quote_*.dim=true
 quote_1.dim=false
+code.fg=5
 
 [user]
 foo = bar

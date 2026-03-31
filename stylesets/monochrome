@@ -46,3 +46,4 @@ diff_whitespace.bg = 1
 quote_*.fg = 6
 quote_*.dim = true
 quote_1.dim = false
+code.fg = 4
