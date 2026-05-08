@@ -29,8 +29,10 @@ func Test_translateSearch_ByDate(t *testing.T) {
 	}
 	for _, test := range tests {
 		crit := &types.SearchCriteria{
-			StartDate: test.StartDate,
-			EndDate:   test.EndDate,
+			Match: &types.SearchCriteriaPart{
+				StartDate: test.StartDate,
+				EndDate:   test.EndDate,
+			},
 		}
 		sc := translateSearch(crit)
 		if sc.SentSince != test.StartDate {

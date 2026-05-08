@@ -11,6 +11,17 @@ import (
 )
 
 func translateSearch(c *types.SearchCriteria) *imap.SearchCriteria {
+	if c == nil {
+		return imap.NewSearchCriteria()
+	}
+	criteria := translateSearchPart(c.Match)
+	if c.Exclude != nil {
+		criteria.Not = append(criteria.Not, translateSearchPart(c.Exclude))
+	}
+	return criteria
+}
+
+func translateSearchPart(c *types.SearchCriteriaPart) *imap.SearchCriteria {
 	criteria := imap.NewSearchCriteria()
 	if c == nil {
 		return criteria

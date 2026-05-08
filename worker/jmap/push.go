@@ -375,9 +375,13 @@ func (w *JMAPWorker) refreshQueriesAndThreads(
 		if err != nil {
 			continue
 		}
+		filter, err := w.translateSearch(id, contents.Filter)
+		if err != nil {
+			continue
+		}
 		callID := req.Invoke(&email.QueryChanges{
 			Account:         w.AccountId(),
-			Filter:          w.translateSearch(id, contents.Filter),
+			Filter:          filter,
 			Sort:            translateSort(contents.Sort),
 			SinceQueryState: contents.QueryState,
 		})

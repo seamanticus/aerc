@@ -8,10 +8,21 @@ import (
 	"git.sr.ht/~rjarry/aerc/worker/types"
 )
 
+func searchString(criteria *types.SearchCriteria) string {
+	search := ""
+	if criteria.Match != nil {
+		search += strings.Join(criteria.Match.Terms, " ")
+	}
+	if criteria.Exclude != nil {
+		search += " -" + strings.Join(criteria.Match.Terms, " -")
+	}
+	return search
+}
+
 // handleGmailFilter handles FetchDirectoryContents with Gmail X-GM-RAW filtering.
 // Returns true if the request was handled (caller should not proceed with normal filtering).
 func (w *IMAPWorker) handleGmailFilter(msg *types.FetchDirectoryContents) bool {
-	if msg.Filter == nil || len(msg.Filter.Terms) == 0 {
+	if msg.Filter == nil {
 		return false
 	}
 	if !msg.Filter.UseExtension {
@@ -19,7 +30,10 @@ func (w *IMAPWorker) handleGmailFilter(msg *types.FetchDirectoryContents) bool {
 		return false
 	}
 
-	search := strings.Join(msg.Filter.Terms, " ")
+	search := searchString(msg.Filter)
+	if search == "" {
+		return false
+	}
 	w.worker.Debugf("X-GM-EXT1 filter term: '%s'", search)
 
 	uids, err := w.client.xgmext.RawSearch(strconv.Quote(search))
@@ -42,7 +56,7 @@ func (w *IMAPWorker) handleGmailFilter(msg *types.FetchDirectoryContents) bool {
 // handleGmailSearch handles SearchDirectory with Gmail X-GM-RAW searching.
 // Returns true if the request was handled (caller should not proceed with normal search).
 func (w *IMAPWorker) handleGmailSearch(msg *types.SearchDirectory) bool {
-	if msg.Criteria == nil || len(msg.Criteria.Terms) == 0 {
+	if msg.Criteria == nil {
 		return false
 	}
 	if !msg.Criteria.UseExtension {
@@ -50,7 +64,10 @@ func (w *IMAPWorker) handleGmailSearch(msg *types.SearchDirectory) bool {
 		return false
 	}
 
-	search := strings.Join(msg.Criteria.Terms, " ")
+	search := searchString(msg.Criteria)
+	if search == "" {
+		return false
+	}
 	w.worker.Debugf("X-GM-EXT1 search term: '%s'", search)
 
 	uids, err := w.client.xgmext.RawSearch(strconv.Quote(search))

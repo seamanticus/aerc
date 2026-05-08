@@ -23,6 +23,7 @@ type SearchFilter struct {
 	Unread       bool                 `opt:"-u" action:"ParseUnread" desc:"Search for unread messages."`
 	Body         bool                 `opt:"-b" desc:"Search in the body of the messages."`
 	All          bool                 `opt:"-a" desc:"Search in the entire text of the messages."`
+	Invert       bool                 `opt:"-v" desc:"Exclude messages which match this search."`
 	UseExtension bool                 `opt:"-e" desc:"Use custom search backend extension."`
 	Headers      textproto.MIMEHeader `opt:"-H" action:"ParseHeader" metavar:"<header>:<value>" desc:"Search for messages with the specified header."`
 	WithFlags    models.Flags         `opt:"-x" action:"ParseFlag" complete:"CompleteFlag" desc:"Search messages with specified flag."`
@@ -165,7 +166,7 @@ func (s SearchFilter) Execute(args []string) error {
 		return errors.New("Cannot perform action. Messages still loading")
 	}
 
-	criteria := types.SearchCriteria{
+	criteriaPart := types.SearchCriteriaPart{
 		WithFlags:    s.WithFlags,
 		WithoutFlags: s.WithoutFlags,
 		From:         s.From,
@@ -177,7 +178,7 @@ func (s SearchFilter) Execute(args []string) error {
 		SearchBody:   s.Body,
 		SearchAll:    s.All,
 		Terms:        []string{s.Terms},
-		UseExtension: s.UseExtension,
+		Invert:       s.Invert,
 	}
 
 	if args[0] == "filter" {
@@ -185,7 +186,7 @@ func (s SearchFilter) Execute(args []string) error {
 			return Clear{}.Execute([]string{"clear"})
 		}
 		acct.SetStatus(state.FilterActivity("Filtering..."), state.Search(""))
-		store.SetFilter(&criteria)
+		store.SetFilter(&criteriaPart)
 		cb := func(msg types.WorkerMessage) {
 			if _, ok := msg.(*types.Done); ok {
 				acct.SetStatus(state.FilterResult(strings.Join(args, " ")))
@@ -201,6 +202,12 @@ func (s SearchFilter) Execute(args []string) error {
 			store.ApplySearch(uids)
 			// TODO: Remove when stores have multiple OnUpdate handlers
 			ui.Invalidate()
+		}
+		criteria := types.SearchCriteria{}
+		if criteriaPart.Invert {
+			criteria.Exclude = &criteriaPart
+		} else {
+			criteria.Match = &criteriaPart
 		}
 		store.Search(&criteria, cb)
 	}

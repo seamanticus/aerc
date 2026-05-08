@@ -1,6 +1,7 @@
 package jmap
 
 import (
+	"errors"
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/worker/types"
@@ -11,6 +12,15 @@ import (
 
 func (w *JMAPWorker) translateSearch(
 	mbox jmap.ID, criteria *types.SearchCriteria,
+) (email.Filter, error) {
+	if criteria.Exclude != nil {
+		return nil, errors.New("Exclude filters not supported in JMAP")
+	}
+	return w.translateSearchPart(mbox, criteria.Match), nil
+}
+
+func (w *JMAPWorker) translateSearchPart(
+	mbox jmap.ID, criteria *types.SearchCriteriaPart,
 ) email.Filter {
 	cond := new(email.FilterCondition)
 

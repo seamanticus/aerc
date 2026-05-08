@@ -9,6 +9,12 @@ import (
 )
 
 type SearchCriteria struct {
+	Match        *SearchCriteriaPart
+	Exclude      *SearchCriteriaPart
+	UseExtension bool
+}
+
+type SearchCriteriaPart struct {
 	WithFlags    models.Flags
 	WithoutFlags models.Flags
 	From         []string
@@ -20,10 +26,18 @@ type SearchCriteria struct {
 	SearchBody   bool
 	SearchAll    bool
 	Terms        []string
-	UseExtension bool
+	Invert       bool
 }
 
 func (c *SearchCriteria) PrepareHeader() {
+	if c == nil {
+		return
+	}
+	c.Match.PrepareHeader()
+	c.Exclude.PrepareHeader()
+}
+
+func (c *SearchCriteriaPart) PrepareHeader() {
 	if c == nil {
 		return
 	}
@@ -41,7 +55,19 @@ func (c *SearchCriteria) PrepareHeader() {
 	}
 }
 
-func (c *SearchCriteria) Combine(other *SearchCriteria) *SearchCriteria {
+func (c *SearchCriteria) Combine(other *SearchCriteriaPart) *SearchCriteria {
+	if c == nil {
+		c = &SearchCriteria{}
+	}
+	if other.Invert {
+		c.Exclude = c.Exclude.Combine(other)
+	} else {
+		c.Match = c.Match.Combine(other)
+	}
+	return c
+}
+
+func (c *SearchCriteriaPart) Combine(other *SearchCriteriaPart) *SearchCriteriaPart {
 	if c == nil {
 		return other
 	}
@@ -65,7 +91,7 @@ func (c *SearchCriteria) Combine(other *SearchCriteria) *SearchCriteria {
 	cc := make([]string, len(c.Cc)+len(other.Cc))
 	copy(cc[:len(c.Cc)], c.Cc)
 	copy(cc[len(c.Cc):], other.Cc)
-	return &SearchCriteria{
+	return &SearchCriteriaPart{
 		WithFlags:    c.WithFlags | other.WithFlags,
 		WithoutFlags: c.WithoutFlags | other.WithoutFlags,
 		From:         from,
@@ -77,5 +103,6 @@ func (c *SearchCriteria) Combine(other *SearchCriteria) *SearchCriteria {
 		SearchBody:   c.SearchBody || other.SearchBody,
 		SearchAll:    c.SearchAll || other.SearchAll,
 		Terms:        append(c.Terms, other.Terms...),
+		Invert:       c.Invert,
 	}
 }

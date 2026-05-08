@@ -150,9 +150,13 @@ func (w *JMAPWorker) handleFetchDirectoryContents(msg *types.FetchDirectoryConte
 	if contents.NeedsRefresh(msg.Filter, msg.SortCriteria) {
 		var req jmap.Request
 
+		filter, err := w.translateSearch(mbox.ID, msg.Filter)
+		if err != nil {
+			return err
+		}
 		req.Invoke(&email.Query{
 			Account: w.AccountId(),
-			Filter:  w.translateSearch(mbox.ID, msg.Filter),
+			Filter:  filter,
 			Sort:    translateSort(msg.SortCriteria),
 		})
 		resp, err := w.Do(msg.Context(), &req)
@@ -208,9 +212,13 @@ func (w *JMAPWorker) handleSearchDirectory(msg *types.SearchDirectory) error {
 	}
 	var req jmap.Request
 
+	filter, err := w.translateSearch(mbox.ID, msg.Criteria)
+	if err != nil {
+		return err
+	}
 	req.Invoke(&email.Query{
 		Account: w.AccountId(),
-		Filter:  w.translateSearch(mbox.ID, msg.Criteria),
+		Filter:  filter,
 	})
 
 	resp, err := w.Do(msg.Context(), &req)

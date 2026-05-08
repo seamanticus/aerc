@@ -36,11 +36,27 @@ func (q *queryBuilder) or(s string) {
 	q.s += "(" + s + ")"
 }
 
-func translate(crit *types.SearchCriteria) string {
-	if crit == nil {
+func invert(s string, invert bool) string {
+	if len(s) == 0 || !invert {
+		return s
+	}
+	return "not (" + s + ")"
+}
+
+func translate(criteria *types.SearchCriteria) string {
+	if criteria == nil {
 		return ""
 	}
 	var base queryBuilder
+	translatePart(base, criteria.Match)
+	translatePart(base, criteria.Exclude)
+	return base.s
+}
+
+func translatePart(base queryBuilder, crit *types.SearchCriteriaPart) {
+	if crit == nil {
+		return
+	}
 
 	// recipients
 	var from queryBuilder
@@ -48,7 +64,7 @@ func translate(crit *types.SearchCriteria) string {
 		from.or("from:" + opt.QuoteArg(f))
 	}
 	if from.s != "" {
-		base.and(from.s)
+		base.and(invert(from.s, crit.Invert))
 	}
 
 	var to queryBuilder
@@ -56,7 +72,7 @@ func translate(crit *types.SearchCriteria) string {
 		to.or("to:" + opt.QuoteArg(t))
 	}
 	if to.s != "" {
-		base.and(to.s)
+		base.and(invert(to.s, crit.Invert))
 	}
 
 	var cc queryBuilder
@@ -64,42 +80,40 @@ func translate(crit *types.SearchCriteria) string {
 		cc.or("cc:" + opt.QuoteArg(c))
 	}
 	if cc.s != "" {
-		base.and(cc.s)
+		base.and(invert(cc.s, crit.Invert))
 	}
 
 	// flags
 	for f := range flagToTag {
 		if crit.WithFlags.Has(f) {
-			base.and(getParsedFlag(f, false))
+			base.and(invert(getParsedFlag(f, false), crit.Invert))
 		}
 		if crit.WithoutFlags.Has(f) {
-			base.and(getParsedFlag(f, true))
+			base.and(invert(getParsedFlag(f, true), crit.Invert))
 		}
 	}
 
 	// dates
 	switch {
 	case !crit.StartDate.IsZero() && !crit.EndDate.IsZero():
-		base.and(fmt.Sprintf("date:@%d..@%d",
-			crit.StartDate.Unix(), crit.EndDate.Unix()))
+		base.and(invert(fmt.Sprintf("date:@%d..@%d",
+			crit.StartDate.Unix(), crit.EndDate.Unix()), crit.Invert))
 	case !crit.StartDate.IsZero():
-		base.and(fmt.Sprintf("date:@%d..", crit.StartDate.Unix()))
+		base.and(invert(fmt.Sprintf("date:@%d..", crit.StartDate.Unix()), crit.Invert))
 	case !crit.EndDate.IsZero():
-		base.and(fmt.Sprintf("date:..@%d", crit.EndDate.Unix()))
+		base.and(invert(fmt.Sprintf("date:..@%d", crit.EndDate.Unix()), crit.Invert))
 	}
 
 	// other terms
 	if len(crit.Terms) > 0 {
 		if crit.SearchBody {
-			base.and("body:" + opt.QuoteArg(strings.Join(crit.Terms, " ")))
+			base.and(invert("body:"+opt.QuoteArg(strings.Join(crit.Terms, " ")), crit.Invert))
 		} else {
 			for _, term := range crit.Terms {
-				base.and(term)
+				base.and(invert(term, crit.Invert))
 			}
 		}
 	}
-
-	return base.s
 }
 
 func getParsedFlag(flag models.Flags, inverse bool) string {

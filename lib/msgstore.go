@@ -946,8 +946,9 @@ func (store *MessageStore) IsResult(uid models.UID) bool {
 	return slices.Contains(store.results, uid)
 }
 
-func (store *MessageStore) SetFilter(terms *types.SearchCriteria) {
+func (store *MessageStore) SetFilter(terms *types.SearchCriteriaPart) *types.SearchCriteria {
 	store.filter = store.filter.Combine(terms)
+	return store.filter
 }
 
 func (store *MessageStore) ApplyClear() {

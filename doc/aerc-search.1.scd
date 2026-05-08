@@ -8,8 +8,8 @@ aerc-search - search and filter patterns and options for *aerc*(1)
 
 This syntax is common to all backends.
 
-*:filter* [*-rubae*] [*-x* _<flag>_] [*-X* _<flag>_] [*-H* _<header>:[<value>]_] [*-f* _<from>_] [*-t* _<to>_] [*-c* _<cc>_] [*-d* _<start[..end]>_] [_<terms>_...]++
-*:search* [*-rubae*] [*-x* _<flag>_] [*-X* _<flag>_] [*-H* _<header>:[<value>]_] [*-f* _<from>_] [*-t* _<to>_] [*-c* _<cc>_] [*-d* _<start[..end]>_] [_<terms>_...]
+*:filter* [*-rubave*] [*-x* _<flag>_] [*-X* _<flag>_] [*-H* _<header>:[<value>]_] [*-f* _<from>_] [*-t* _<to>_] [*-c* _<cc>_] [*-d* _<start[..end]>_] [_<terms>_...]++
+*:search* [*-rubave*] [*-x* _<flag>_] [*-X* _<flag>_] [*-H* _<header>:[<value>]_] [*-f* _<from>_] [*-t* _<to>_] [*-c* _<cc>_] [*-d* _<start[..end]>_] [_<terms>_...]
 	Searches the current folder for messages matching the given set of
 	conditions.
 
@@ -48,6 +48,8 @@ This syntax is common to all backends.
 	*-b*: Search in the body of the messages
 
 	*-a*: Search in the entire text of the messages
+
+	*-v*: Exclude messages which match this search
 
 	*-e*: Instruct the backend to use a custom search extension
 		(such as X-GM-EXT-1 if available). Search terms are expected
