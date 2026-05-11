@@ -71,6 +71,10 @@ const (
 	STYLE_SELECTOR_DEFAULT
 	STYLE_SELECTOR_FOCUSED
 	STYLE_SELECTOR_CHOOSER
+
+	STYLE_KEYHINT_DEFAULT
+	STYLE_KEYHINT_KEY
+	STYLE_KEYHINT_DESC
 )
 
 var StyleNames = map[string]StyleObject{
@@ -128,6 +132,10 @@ var StyleNames = map[string]StyleObject{
 	"selector_default": STYLE_SELECTOR_DEFAULT,
 	"selector_focused": STYLE_SELECTOR_FOCUSED,
 	"selector_chooser": STYLE_SELECTOR_CHOOSER,
+
+	"keyhint_default": STYLE_KEYHINT_DEFAULT,
+	"keyhint_key":     STYLE_KEYHINT_KEY,
+	"keyhint_desc":    STYLE_KEYHINT_DESC,
 }
 
 type StyleHeaderPattern struct {

@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+	"strings"
 	"sync/atomic"
 
 	"git.sr.ht/~rjarry/aerc/lib/log"
@@ -12,6 +14,7 @@ type StatuslineConfig struct {
 	ColumnSeparator string       `ini:"column-separator" default:" "`
 	Separator       string       `ini:"separator" default:" | "`
 	DisplayMode     string       `ini:"display-mode" default:"text"`
+	pendingKeysCol  int
 }
 
 var statuslineConfig atomic.Pointer[StatuslineConfig]
@@ -41,5 +44,21 @@ func (s *StatuslineConfig) ParseColumns(sec *ini.Section, key *ini.Key) ([]*Colu
 	if !sec.HasKey("column-right") {
 		_, _ = sec.NewKey("column-right", "{{.TrayInfo}} | {{cwd}}")
 	}
-	return ParseColumnDefs(key, sec)
+	result, err := ParseColumnDefs(key, sec)
+	if err != nil {
+		return nil, err
+	}
+	s.pendingKeysCol = -1
+	for i, col := range result {
+		raw, err := sec.GetKey(fmt.Sprintf("column-%s", col.Name))
+		if err == nil && strings.Contains(raw.String(), "PendingKeys") {
+			s.pendingKeysCol = i
+			break
+		}
+	}
+	return result, nil
+}
+
+func (s *StatuslineConfig) PendingKeysColIndex() int {
+	return s.pendingKeysCol
 }

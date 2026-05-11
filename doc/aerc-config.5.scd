@@ -396,6 +396,28 @@ These options are configured in the *[ui]* section of _aerc.conf_.
 
 	Default: _1_
 
+*keyhint* = _true_|_false_
+	When a key is pressed that starts a multi-key binding, show a popup
+	listing possible continuations. The popup uses annotations from
+	_binds.conf_ as descriptions. Bindings without annotations will show
+	their command text instead.
+
+	Default: _false_
+
+*keyhint-delay* = _<duration>_
+	The delay after pressing a multi-key binding prefix before the
+	keyhint popup is displayed. This avoids flickering during fast key
+	sequences. Only applies when *keyhint* is enabled.
+
+	Default: _200ms_
+
+*keyhint-position* = _bottom-left_|_bottom-center_|_bottom-right_
+	Position of the keyhint popup on screen. When left empty (default),
+	the position is auto-detected from the _[statusline]_ column
+	containing _{{.PendingKeys}}_.
+
+	Default: _auto-detected_
+
 *border-char-vertical* = _"<char>"_
 	Set stylable character (via the *border* element) for vertical borders.
 

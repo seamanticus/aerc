@@ -163,6 +163,12 @@ styling.
 :  The focused item in a selector ui element.
 |  *selector_chooser*
 :  The item chooser in a selector ui element.
+|  *keyhint_default*
+:  The default style for the keyhint popup background.
+|  *keyhint_key*
+:  The style for the key column in the keyhint popup.
+|  *keyhint_desc*
+:  The style for the description column in the keyhint popup.
 
 These next style objects only affect the built-in *colorize* filter and must be
 declared under a *[viewer]* section of the styleset file.

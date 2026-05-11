@@ -27,21 +27,24 @@ import (
 )
 
 type Aerc struct {
-	accounts    map[string]*AccountView
-	cmd         func(string, *config.AccountConfig, *models.MessageInfo) error
-	cmdHistory  lib.History
-	complete    func(ctx context.Context, cmd string) ([]opt.Completion, string)
-	focused     ui.Interactive
-	grid        *ui.Grid
-	simulating  int
-	statusbar   *ui.Stack
-	statusline  *StatusLine
-	pasting     bool
-	pendingKeys []config.KeyStroke
-	prompts     *ui.Stack
-	tabs        *ui.Tabs
-	beep        func()
-	dialog      ui.DrawableInteractive
+	accounts       map[string]*AccountView
+	cmd            func(string, *config.AccountConfig, *models.MessageInfo) error
+	cmdHistory     lib.History
+	complete       func(ctx context.Context, cmd string) ([]opt.Completion, string)
+	focused        ui.Interactive
+	grid           *ui.Grid
+	simulating     int
+	statusbar      *ui.Stack
+	statusline     *StatusLine
+	pasting        bool
+	pendingKeys    []config.KeyStroke
+	prompts        *ui.Stack
+	tabs           *ui.Tabs
+	beep           func()
+	dialog         ui.DrawableInteractive
+	keyhint        *KeyHint
+	keyhintPending time.Time
+	keyhintTimer   *time.Timer
 
 	Crypto crypto.Provider
 }
@@ -206,6 +209,51 @@ func (aerc *Aerc) Draw(ctx *ui.Context) {
 			aerc.dialog.Draw(ctx.Subcontext(4, h/2-2, w-8, 4))
 		}
 	}
+	if !aerc.keyhintPending.IsZero() && aerc.dialog == nil {
+		uiConf := aerc.SelectedAccountUiConfig()
+		if time.Since(aerc.keyhintPending) >= uiConf.KeyHintDelay {
+			bindings := aerc.getBindings()
+			allBindings := bindings.Bindings
+			if bindings.Globals {
+				allBindings = append(allBindings, config.Binds().Global.Bindings...)
+			}
+			aerc.keyhint = NewKeyHint(allBindings, aerc.pendingKeys)
+			aerc.keyhintPending = time.Time{}
+			aerc.keyhintTimer = nil
+		}
+	}
+	if aerc.keyhint != nil && aerc.dialog == nil &&
+		aerc.keyhint.HasEntries() {
+		w, h := ctx.Width(), ctx.Height()
+		uiConf := aerc.SelectedAccountUiConfig()
+		khW := aerc.keyhint.RequiredWidth() + 2
+		khH := aerc.keyhint.RequiredHeight() + 2
+		if khH > h-2 {
+			khH = h - 2
+		}
+		if khW > w-2 {
+			khW = w - 2
+		}
+		if khW > 0 && khH > 0 {
+			var x int
+			switch aerc.keyHintPosition(uiConf) {
+			case "bottom-left":
+				x = 1
+			case "bottom-center":
+				x = (w - khW) / 2
+			default:
+				x = w - khW - 1
+			}
+			y := h - khH - 2
+			if y < 1 {
+				y = 1
+			}
+			prefixStr := config.FormatKeyStrokes(
+				aerc.keyhint.Prefix())
+			box := ui.NewBox(aerc.keyhint, prefixStr, "", uiConf)
+			box.Draw(ctx.Subcontext(x, y, khW, khH))
+		}
+	}
 }
 
 func (aerc *Aerc) HumanReadableBindings() []string {
@@ -292,8 +340,18 @@ func (aerc *Aerc) getBindings() *config.KeyBindings {
 	}
 }
 
+func (aerc *Aerc) clearKeyhint() {
+	aerc.keyhint = nil
+	aerc.keyhintPending = time.Time{}
+	if aerc.keyhintTimer != nil {
+		aerc.keyhintTimer.Stop()
+		aerc.keyhintTimer = nil
+	}
+}
+
 func (aerc *Aerc) simulate(strokes []config.KeyStroke) {
 	aerc.pendingKeys = []config.KeyStroke{}
+	aerc.clearKeyhint()
 	bindings := aerc.getBindings()
 	complete := aerc.SelectedAccountUiConfig().CompletionMinChars != config.MANUAL_COMPLETE
 	aerc.simulating += 1
@@ -378,6 +436,7 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
 		result, strokes := bindings.GetBinding(aerc.pendingKeys)
 		switch result {
 		case config.BINDING_FOUND:
+			aerc.clearKeyhint()
 			aerc.simulate(strokes)
 			return true
 		case config.BINDING_INCOMPLETE:
@@ -388,6 +447,7 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
 			result, strokes = config.Binds().Global.GetBinding(aerc.pendingKeys)
 			switch result {
 			case config.BINDING_FOUND:
+				aerc.clearKeyhint()
 				aerc.simulate(strokes)
 				return true
 			case config.BINDING_INCOMPLETE:
@@ -397,6 +457,7 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
 		}
 		if !incomplete {
 			aerc.pendingKeys = []config.KeyStroke{}
+			aerc.clearKeyhint()
 			exKey := bindings.ExKey
 			if aerc.simulating > 0 {
 				// Keybindings still use : even if you change the ex key
@@ -411,6 +472,22 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
 				return interactive.Event(event)
 			}
 			return false
+		}
+		if incomplete && aerc.simulating == 0 && aerc.SelectedAccountUiConfig().KeyHint {
+			if aerc.keyhint != nil {
+				bindings := aerc.getBindings()
+				allBindings := bindings.Bindings
+				if bindings.Globals {
+					allBindings = append(allBindings, config.Binds().Global.Bindings...)
+				}
+				aerc.keyhint = NewKeyHint(allBindings, aerc.pendingKeys)
+			} else if aerc.keyhintPending.IsZero() {
+				aerc.keyhintPending = time.Now()
+				delay := aerc.SelectedAccountUiConfig().KeyHintDelay
+				aerc.keyhintTimer = time.AfterFunc(delay, func() {
+					ui.Invalidate()
+				})
+			}
 		}
 	case vaxis.Mouse:
 		aerc.grid.MouseEvent(event.Col, event.Row, event)
@@ -994,4 +1071,23 @@ func CmdFallbackSearch(cmds []string, silent bool) (string, error) {
 		return cmd, nil
 	}
 	return "", fmt.Errorf("no command found in PATH: %s", tried)
+}
+
+func (aerc *Aerc) keyHintPosition(uiConf *config.UIConfig) string {
+	if uiConf.KeyHintPosition != "" {
+		return uiConf.KeyHintPosition
+	}
+	sl := config.Statusline()
+	idx := sl.PendingKeysColIndex()
+	n := len(sl.StatusColumns)
+	switch {
+	case idx < 0 || n <= 1:
+		return "bottom-center"
+	case idx == 0:
+		return "bottom-left"
+	case idx == n-1:
+		return "bottom-right"
+	default:
+		return "bottom-center"
+	}
 }

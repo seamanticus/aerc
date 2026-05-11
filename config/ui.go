@@ -84,6 +84,9 @@ type UIConfig struct {
 	StyleSetDirs                  []string      `ini:"stylesets-dirs" delim:":"`
 	StyleSetName                  string        `ini:"styleset-name" default:"default"`
 	CenteredLayoutWidth           int           `ini:"centered-layout-width" default:"0"`
+	KeyHint                       bool          `ini:"keyhint" default:"false"`
+	KeyHintDelay                  time.Duration `ini:"keyhint-delay" default:"200ms"`
+	KeyHintPosition               string        `ini:"keyhint-position" default:"" parse:"ParseKeyHintPosition"`
 
 	// customize border appearance
 	BorderCharVertical   rune `ini:"border-char-vertical" default:"│" type:"rune"`
@@ -281,6 +284,18 @@ func (*UIConfig) ParseDialogPosition(section *ini.Section, key *ini.Key) (string
 		return "", fmt.Errorf("bad option value")
 	}
 	return key.String(), nil
+}
+
+func (*UIConfig) ParseKeyHintPosition(section *ini.Section, key *ini.Key) (string, error) {
+	val := strings.TrimSpace(key.String())
+	if val == "" {
+		return "", nil
+	}
+	match, _ := regexp.MatchString(`^(bottom-left|bottom-center|bottom-right)$`, val)
+	if !match {
+		return "", fmt.Errorf("bad option value")
+	}
+	return val, nil
 }
 
 const (
