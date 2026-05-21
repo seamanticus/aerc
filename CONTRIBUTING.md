@@ -171,6 +171,20 @@ set. It causes multiple versions of the same patch to be merged under v1 in the
 
 [web-ui]: https://lists.sr.ht/~rjarry/aerc-devel/patches
 
+## Use of generative AI
+
+The use of generative AI or LLMs for writing code or documentation for aerc is
+not permitted. These tools make copyright and license compliance complex and
+difficult (making aerc's DCO policy impossible to comply with). They have an
+enormous environmental cost, grossly misallocate the resources of a responsible
+society, expand the power of the wealthy, and directly facilitate the
+encroachment of fascism on global politics.
+
+For more information about the social, ethical, and political problems posed by
+LLMs, [consult this reference][llms].
+
+[llms]: https://codeberg.org/small-hack/open-slopware#why-not-llms
+
 ## Code Style
 
 Please refer only to the quoted sections when guidelines are sourced from
