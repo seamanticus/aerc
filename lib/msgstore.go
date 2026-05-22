@@ -250,6 +250,9 @@ func merge(to *models.MessageInfo, from *models.MessageInfo) {
 	to.Flags = from.Flags
 	to.Labels = from.Labels
 	to.Error = from.Error
+	if from.RFC822Headers != nil {
+		to.RFC822Headers = from.RFC822Headers
+	}
 	if from.Size != 0 {
 		to.Size = from.Size
 	}
