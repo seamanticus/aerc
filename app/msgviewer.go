@@ -567,6 +567,9 @@ func NewPartViewer(
 		if config.General().EnableOSC8 {
 			filter.Env = append(filter.Env, "AERC_OSC8_URLS=1")
 		}
+		if pager != filter {
+			pager.Env = filter.Env
+		}
 		if pager == filter {
 			log.Debugf("<%s> part=%v %s: %v",
 				info.Envelope.MessageId, curindex, mime, filter)

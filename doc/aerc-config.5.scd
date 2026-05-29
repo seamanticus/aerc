@@ -847,6 +847,23 @@ These options are configured in the *[viewer]* section of _aerc.conf_.
 	may add ANSI escape sequences to add color to rendered emails, so you may
 	want to use a pager which supports ANSI.
 
+	The following variables are defined in the pager command environment:
+
+	*AERC_MIME_TYPE*
+		the part MIME type/subtype
+	*AERC_FORMAT*
+		the part content type format= parameter (e.g. format=flowed)
+	*AERC_FILENAME*
+		the attachment filename (if any)
+	*AERC_SUBJECT*
+		the message Subject header value
+	*AERC_FROM*
+		the message From header value
+	*AERC_STYLESET*
+		the path to the styleset used by aerc
+	*AERC_OSC8_URLS*
+		set to _1_ when OSC 8 is enabled (see *enable-osc8*)
+
 	Default: _less -Rc_
 
 *alternatives* = _<mime,types>_
