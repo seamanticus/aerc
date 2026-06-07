@@ -609,7 +609,7 @@ func (c *completions) Event(e vaxis.Event) bool {
 			e.Matches(vaxis.KeyUp):
 			c.prev()
 			return true
-		case e.Matches(vaxis.KeyEnter):
+		case e.Matches(vaxis.KeyEnter), e.Matches('y', vaxis.ModCtrl):
 			if c.index() >= 0 {
 				c.exec()
 				return true
