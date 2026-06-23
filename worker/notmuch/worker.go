@@ -35,6 +35,7 @@ func init() {
 
 type worker struct {
 	w                   *types.Worker
+	worker              types.WorkerInteractor
 	nmStateChange       chan bool
 	query               string
 	currentQueryName    string
@@ -63,6 +64,7 @@ func NewWorker(w *types.Worker) (types.Backend, error) {
 	}
 	return &worker{
 		w:             w,
+		worker:        w,
 		nmStateChange: events,
 		watcher:       watcher,
 		capabilities: &models.Capabilities{
@@ -79,7 +81,7 @@ func (w *worker) Run() {
 	for {
 		select {
 		case action := <-w.w.Actions():
-			msg := w.w.ProcessAction(action)
+			msg := w.worker.ProcessAction(action)
 			err := w.handleMessage(msg)
 			switch {
 			case errors.Is(err, types.ErrNoop):
@@ -87,15 +89,15 @@ func (w *worker) Run() {
 				// Do *NOT* send a Done message.
 				break
 			case errors.Is(err, context.Canceled):
-				w.w.PostMessage(&types.Cancelled{
+				w.worker.PostMessage(&types.Cancelled{
 					Message: types.RespondTo(msg),
 				}, nil)
 			case errors.Is(err, types.ErrUnsupported):
-				w.w.PostMessage(&types.Unsupported{
+				w.worker.PostMessage(&types.Unsupported{
 					Message: types.RespondTo(msg),
 				}, nil)
 			case err != nil:
-				w.w.PostMessage(&types.Error{
+				w.worker.PostMessage(&types.Error{
 					Message: types.RespondTo(msg),
 					Error:   err,
 				}, nil)
@@ -105,7 +107,7 @@ func (w *worker) Run() {
 				if _, ok := msg.(*types.CheckMail); ok {
 					break
 				}
-				w.w.PostMessage(&types.Done{
+				w.worker.PostMessage(&types.Done{
 					Message: types.RespondTo(msg),
 				}, nil)
 			}
@@ -294,7 +296,7 @@ func (w *worker) handleListDirectories(msg *types.ListDirectories) error {
 			return err
 		}
 		for name := range folders {
-			w.w.PostMessage(&types.Directory{
+			w.worker.PostMessage(&types.Directory{
 				Message: types.RespondTo(msg),
 				Dir: &models.Directory{
 					Name: name,
@@ -304,7 +306,7 @@ func (w *worker) handleListDirectories(msg *types.ListDirectories) error {
 	}
 
 	for _, name := range w.queryMapOrder {
-		w.w.PostMessage(&types.Directory{
+		w.worker.PostMessage(&types.Directory{
 			Message: types.RespondTo(msg),
 			Dir: &models.Directory{
 				Name: name,
@@ -314,7 +316,7 @@ func (w *worker) handleListDirectories(msg *types.ListDirectories) error {
 	}
 
 	for name := range w.dynamicNameQueryMap {
-		w.w.PostMessage(&types.Directory{
+		w.worker.PostMessage(&types.Directory{
 			Message: types.RespondTo(msg),
 			Dir: &models.Directory{
 				Name: name,
@@ -380,7 +382,7 @@ func (w *worker) handleOpenDirectory(msg *types.OpenDirectory) error {
 			q = msg.Directory
 		}
 		w.dynamicNameQueryMap[msg.Directory] = q
-		w.w.PostMessage(&types.Directory{
+		w.worker.PostMessage(&types.Directory{
 			Message: types.RespondTo(msg),
 			Dir: &models.Directory{
 				Name: msg.Directory,
@@ -393,7 +395,7 @@ func (w *worker) handleOpenDirectory(msg *types.OpenDirectory) error {
 	w.query = q
 	w.currentQueryName = msg.Directory
 
-	w.w.PostMessage(&types.DirectoryInfo{
+	w.worker.PostMessage(&types.DirectoryInfo{
 		Info:    w.getDirectoryInfo(msg.Directory, w.query),
 		Message: types.RespondTo(msg),
 	}, nil)
@@ -448,7 +450,7 @@ func (w *worker) handleFetchMessageBodyPart(
 			msg.Uid, msg.Part, err)
 		return err
 	}
-	w.w.PostMessage(&types.MessageBodyPart{
+	w.worker.PostMessage(&types.MessageBodyPart{
 		Message: types.RespondTo(msg),
 		Part: &models.MessageBodyPart{
 			Reader: r,
@@ -475,7 +477,7 @@ func (w *worker) handleFetchFullMessages(msg *types.FetchFullMessages) error {
 		if err != nil {
 			return err
 		}
-		w.w.PostMessage(&types.FullMessage{
+		w.worker.PostMessage(&types.FullMessage{
 			Message: types.RespondTo(msg),
 			Content: &models.FullMessage{
 				Uid:    uid,
@@ -539,7 +541,7 @@ func (w *worker) handleSearchDirectory(msg *types.SearchDirectory) error {
 	if err != nil {
 		return err
 	}
-	w.w.PostMessage(&types.SearchResults{
+	w.worker.PostMessage(&types.SearchResults{
 		Message:   types.RespondTo(msg),
 		Directory: w.currentQueryName,
 		Criteria:  msg.Criteria,
@@ -605,7 +607,7 @@ func (w *worker) emitDirectoryContents(msg *types.FetchDirectoryContents) error 
 		w.w.Errorf("error sorting directory: %v", err)
 		return err
 	}
-	w.w.PostMessage(&types.DirectoryContents{
+	w.worker.PostMessage(&types.DirectoryContents{
 		Message:   types.RespondTo(msg),
 		Directory: msg.Directory,
 		Filter:    msg.Filter,
@@ -621,7 +623,7 @@ func (w *worker) emitDirectoryThreaded(msg *types.FetchDirectoryThreaded) error 
 	if err != nil {
 		return err
 	}
-	w.w.PostMessage(&types.DirectoryThreaded{
+	w.worker.PostMessage(&types.DirectoryThreaded{
 		Message:   types.RespondTo(msg),
 		Directory: msg.Directory,
 		Filter:    msg.Filter,
@@ -631,7 +633,7 @@ func (w *worker) emitDirectoryThreaded(msg *types.FetchDirectoryThreaded) error 
 }
 
 func (w *worker) emitMessageInfoError(msg types.WorkerMessage, dir string, uid models.UID, err error) {
-	w.w.PostMessage(&types.MessageInfo{
+	w.worker.PostMessage(&types.MessageInfo{
 		Message: types.RespondTo(msg),
 		Info: &models.MessageInfo{
 			Envelope:  &models.Envelope{},
@@ -658,11 +660,11 @@ func (w *worker) emitMessageInfo(m *Message, dir string,
 	}
 	switch parent {
 	case nil:
-		w.w.PostMessage(&types.MessageInfo{
+		w.worker.PostMessage(&types.MessageInfo{
 			Info: info,
 		}, nil)
 	default:
-		w.w.PostMessage(&types.MessageInfo{
+		w.worker.PostMessage(&types.MessageInfo{
 			Message: types.RespondTo(parent),
 			Info:    info,
 		}, nil)
@@ -672,7 +674,7 @@ func (w *worker) emitMessageInfo(m *Message, dir string,
 
 func (w *worker) emitLabelList() {
 	tags := w.db.ListTags()
-	w.w.PostMessage(&types.LabelList{Labels: tags}, nil)
+	w.worker.PostMessage(&types.LabelList{Labels: tags}, nil)
 }
 
 func (w *worker) msgHeadersFromUid(uid models.UID, dir string) (*models.MessageInfo, error) {
@@ -723,7 +725,7 @@ func (w *worker) sort(
 func (w *worker) handleCheckMail(msg *types.CheckMail) {
 	defer log.PanicHandler()
 	if msg.Command == "" {
-		w.w.PostMessage(&types.Error{
+		w.worker.PostMessage(&types.Error{
 			Message: types.RespondTo(msg),
 			Error:   fmt.Errorf("(%s) checkmail: no command specified", msg.Account()),
 		}, nil)
@@ -735,17 +737,17 @@ func (w *worker) handleCheckMail(msg *types.CheckMail) {
 	err := cmd.Run()
 	switch {
 	case ctx.Err() != nil:
-		w.w.PostMessage(&types.Error{
+		w.worker.PostMessage(&types.Error{
 			Message: types.RespondTo(msg),
 			Error:   fmt.Errorf("(%s) checkmail: timed out", msg.Account()),
 		}, nil)
 	case err != nil:
-		w.w.PostMessage(&types.Error{
+		w.worker.PostMessage(&types.Error{
 			Message: types.RespondTo(msg),
 			Error:   fmt.Errorf("(%s) checkmail: error running command: %w", msg.Account(), err),
 		}, nil)
 	default:
-		w.w.PostMessage(&types.Done{
+		w.worker.PostMessage(&types.Done{
 			Message: types.RespondTo(msg),
 		}, nil)
 	}
@@ -790,7 +792,7 @@ func (w *worker) handleDeleteMessages(msg *types.DeleteMessages) error {
 		deleted = append(deleted, uid)
 	}
 	if len(deleted) > 0 {
-		w.w.PostMessage(&types.MessagesDeleted{
+		w.worker.PostMessage(&types.MessagesDeleted{
 			Message:   types.RespondTo(msg),
 			Directory: msg.Directory,
 			Uids:      deleted,
@@ -829,7 +831,7 @@ func (w *worker) handleCopyMessages(msg *types.CopyMessages) error {
 			return err
 		}
 	}
-	w.w.PostMessage(&types.MessagesCopied{
+	w.worker.PostMessage(&types.MessagesCopied{
 		Message:     types.RespondTo(msg),
 		Destination: msg.Destination,
 		Uids:        msg.Uids,
@@ -868,7 +870,7 @@ func (w *worker) handleMoveMessages(msg *types.MoveMessages) error {
 			return err
 		}
 	}
-	w.w.PostMessage(&types.MessagesDeleted{
+	w.worker.PostMessage(&types.MessagesDeleted{
 		Message:   types.RespondTo(msg),
 		Directory: msg.Source,
 		Uids:      msg.Uids,
@@ -911,7 +913,7 @@ func (w *worker) handleAppendMessage(msg *types.AppendMessage) error {
 		return err
 	}
 
-	w.w.PostMessage(&types.DirectoryInfo{
+	w.worker.PostMessage(&types.DirectoryInfo{
 		Info: w.getDirectoryInfo(w.currentQueryName, w.query),
 	}, nil)
 	return nil

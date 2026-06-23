@@ -41,7 +41,7 @@ func (w *worker) updateDirCounts() error {
 		for name := range folders {
 			folder := filepath.Join(w.maildirAccountPath, name)
 			query := fmt.Sprintf("folder:%s", strconv.Quote(folder))
-			w.w.PostMessage(&types.DirectoryInfo{
+			w.worker.PostMessage(&types.DirectoryInfo{
 				Info:    w.getDirectoryInfo(name, query),
 				Refetch: w.query == query,
 			}, nil)
@@ -49,14 +49,14 @@ func (w *worker) updateDirCounts() error {
 	}
 
 	for name, query := range w.nameQueryMap {
-		w.w.PostMessage(&types.DirectoryInfo{
+		w.worker.PostMessage(&types.DirectoryInfo{
 			Info:    w.getDirectoryInfo(name, query),
 			Refetch: w.query == query,
 		}, nil)
 	}
 
 	for name, query := range w.dynamicNameQueryMap {
-		w.w.PostMessage(&types.DirectoryInfo{
+		w.worker.PostMessage(&types.DirectoryInfo{
 			Info:    w.getDirectoryInfo(name, query),
 			Refetch: w.query == query,
 		}, nil)
