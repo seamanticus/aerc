@@ -4,6 +4,7 @@
 package notmuch
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"errors"
@@ -24,6 +25,7 @@ import (
 	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rjarry/aerc/worker/handlers"
 	"git.sr.ht/~rjarry/aerc/worker/lib"
+	"git.sr.ht/~rjarry/aerc/worker/middleware"
 	notmuch "git.sr.ht/~rjarry/aerc/worker/notmuch/lib"
 	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-maildir"
@@ -244,6 +246,20 @@ func (w *worker) handleConfigure(msg *types.Configure) error {
 		}
 		w.store = store
 	}
+
+	if name, ok := msg.Config.Params["folder-map"]; ok {
+		file := xdg.ExpandHome(name)
+		f, err := os.Open(file)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		fmap, order, err := lib.ParseFolderMap(bufio.NewReader(f))
+		if err != nil {
+			return err
+		}
+		w.worker = middleware.NewFolderMapper(w.worker, fmap, order)
+	}
 	w.headers = msg.Config.Headers
 	w.headersExclude = msg.Config.HeadersExclude
 
@@ -289,22 +305,6 @@ func (w *worker) handleConnect(msg *types.Connect) error {
 }
 
 func (w *worker) handleListDirectories(msg *types.ListDirectories) error {
-	if w.store != nil {
-		folders, err := w.store.FolderMap()
-		if err != nil {
-			w.w.Errorf("failed listing directories: %v", err)
-			return err
-		}
-		for name := range folders {
-			w.worker.PostMessage(&types.Directory{
-				Message: types.RespondTo(msg),
-				Dir: &models.Directory{
-					Name: name,
-				},
-			}, nil)
-		}
-	}
-
 	for _, name := range w.queryMapOrder {
 		w.worker.PostMessage(&types.Directory{
 			Message: types.RespondTo(msg),
@@ -325,7 +325,22 @@ func (w *worker) handleListDirectories(msg *types.ListDirectories) error {
 		}, nil)
 	}
 
-	// Update dir counts when listing directories
+	if w.store != nil {
+		folders, err := w.store.FolderMap()
+		if err != nil {
+			w.w.Errorf("failed listing directories: %v", err)
+			return err
+		}
+		for name := range folders {
+			w.worker.PostMessage(&types.Directory{
+				Message: types.RespondTo(msg),
+				Dir: &models.Directory{
+					Name: name,
+				},
+			}, nil)
+		}
+	}
+
 	return w.updateDirCounts()
 }
 

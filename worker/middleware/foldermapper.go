@@ -5,6 +5,7 @@ import (
 	"strings"
 	"sync"
 
+	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rjarry/aerc/worker/types"
 )
 
@@ -173,8 +174,10 @@ func (f *folderMapper) PostMessage(msg types.WorkerMessage, cb func(m types.Work
 			msg.Directories[i] = f.outgoing(msg, msg.Directories[i])
 		}
 	case *types.Directory:
-		f.store(msg.Dir.Name)
-		msg.Dir.Name = f.outgoing(msg, msg.Dir.Name)
+		if msg.Dir.Role != models.QueryRole {
+			f.store(msg.Dir.Name)
+			msg.Dir.Name = f.outgoing(msg, msg.Dir.Name)
+		}
 	case *types.DirectoryInfo:
 		msg.Info.Name = f.outgoing(msg, msg.Info.Name)
 	case *types.MessagesMoved:

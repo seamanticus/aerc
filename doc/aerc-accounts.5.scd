@@ -115,7 +115,14 @@ Note that many of these configuration options are written for you, such as
 	_<display-folder-name>_=_<server-folder-name>_[\*]
 	mapping per line (similar key=value syntax as for the *query-map* in notmuch).
 	The mappings are applied as they appear in the *folder-map*.
-	Supported backends: imap, maildir.
+	Supported backends: imap, maildir, notmuch.
+
+	For the notmuch backend, the folder-map applies to physical maildir
+	directories. Query-map and dynamic query folders are not affected. If a
+	folder-map display name collides with a query-map or dynamic query folder
+	name, only one entry appears in the folder list: the directory store
+	maps names to entries and the last Directory message for a given name
+	overwrites earlier ones.
 
 	Note that other account options such as *archive*, *default*, *copy-to*,
 	*postpone*, *folders*, *folders-exclude*, *folders-sort* need to be
