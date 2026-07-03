@@ -17,46 +17,62 @@ type Message struct {
 	dir maildir.Dir
 	uid models.UID
 	key string
+	msg *maildir.Message
 }
 
-// NewReader reads a message into memory and returns an io.Reader for it.
-func (m Message) NewReader() (io.ReadCloser, error) {
+// loadMsg lazy-loads and caches the underlying maildir.Message.
+func (m *Message) loadMsg() (*maildir.Message, error) {
+	if m.msg != nil {
+		return m.msg, nil
+	}
 	msg, err := m.dir.MessageByKey(m.key)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+	}
+	m.msg = msg
+	return msg, nil
+}
+
+// NewReader reads a message into memory and returns an io.Reader for it.
+func (m *Message) NewReader() (io.ReadCloser, error) {
+	msg, err := m.loadMsg()
+	if err != nil {
+		return nil, err
 	}
 	return msg.Open()
 }
 
 // Flags fetches the set of flags currently applied to the message.
-func (m Message) Flags() ([]maildir.Flag, error) {
-	msg, err := m.dir.MessageByKey(m.key)
+func (m *Message) Flags() ([]maildir.Flag, error) {
+	msg, err := m.loadMsg()
 	if err != nil {
-		return nil, fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+		return nil, err
 	}
 	return msg.Flags(), nil
 }
 
 // ModelFlags fetches the set of models.flags currently applied to the message.
-func (m Message) ModelFlags() (models.Flags, error) {
-	msg, err := m.dir.MessageByKey(m.key)
+func (m *Message) ModelFlags() (models.Flags, error) {
+	msg, err := m.loadMsg()
 	if err != nil {
-		return 0, fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+		return 0, err
 	}
 	return lib.FromMaildirFlags(msg.Flags()), nil
 }
 
 // SetFlags replaces the message's flags with a new set.
-func (m Message) SetFlags(flags []maildir.Flag) error {
-	msg, err := m.dir.MessageByKey(m.key)
+func (m *Message) SetFlags(flags []maildir.Flag) error {
+	msg, err := m.loadMsg()
 	if err != nil {
-		return fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+		return err
 	}
-	return msg.SetFlags(flags)
+	err = msg.SetFlags(flags)
+	m.msg = nil
+	return err
 }
 
 // SetOneFlag enables or disables a single message flag on the message.
-func (m Message) SetOneFlag(flag maildir.Flag, enable bool) error {
+func (m *Message) SetOneFlag(flag maildir.Flag, enable bool) error {
 	flags, err := m.Flags()
 	if err != nil {
 		return fmt.Errorf("could not read previous flags: %w", err)
@@ -76,27 +92,29 @@ func (m Message) SetOneFlag(flag maildir.Flag, enable bool) error {
 
 // MarkForwarded either adds or removes the maildir.FlagForwarded flag
 // from the message.
-func (m Message) MarkForwarded(forwarded bool) error {
+func (m *Message) MarkForwarded(forwarded bool) error {
 	return m.SetOneFlag(maildir.FlagPassed, forwarded)
 }
 
 // MarkReplied either adds or removes the maildir.FlagReplied flag from the
 // message.
-func (m Message) MarkReplied(answered bool) error {
+func (m *Message) MarkReplied(answered bool) error {
 	return m.SetOneFlag(maildir.FlagReplied, answered)
 }
 
 // Remove deletes the email immediately.
-func (m Message) Remove() error {
-	msg, err := m.dir.MessageByKey(m.key)
+func (m *Message) Remove() error {
+	msg, err := m.loadMsg()
 	if err != nil {
-		return fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+		return err
 	}
-	return msg.Remove()
+	err = msg.Remove()
+	m.msg = nil
+	return err
 }
 
 // MessageInfo populates a models.MessageInfo struct for the message.
-func (m Message) MessageInfo(dir string) (*models.MessageInfo, error) {
+func (m *Message) MessageInfo(dir string) (*models.MessageInfo, error) {
 	info, err := rfc822.MessageInfo(m)
 	if err != nil {
 		return nil, err
@@ -110,10 +128,10 @@ func (m Message) MessageInfo(dir string) (*models.MessageInfo, error) {
 	return info, nil
 }
 
-func (m Message) Size() (uint32, error) {
-	msg, err := m.dir.MessageByKey(m.key)
+func (m *Message) Size() (uint32, error) {
+	msg, err := m.loadMsg()
 	if err != nil {
-		return 0, fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+		return 0, err
 	}
 	size, err := lib.FileSize(msg.Filename())
 	if err != nil {
@@ -124,7 +142,7 @@ func (m Message) Size() (uint32, error) {
 
 // MessageHeaders populates a models.MessageInfo struct for the message with
 // minimal information, used for sorting and threading.
-func (m Message) MessageHeaders() (*models.MessageInfo, error) {
+func (m *Message) MessageHeaders() (*models.MessageInfo, error) {
 	info, err := rfc822.MessageHeaders(m)
 	if err != nil {
 		return nil, err
@@ -139,10 +157,10 @@ func (m Message) MessageHeaders() (*models.MessageInfo, error) {
 
 // NewBodyPartReader creates a new io.Reader for the requested body part(s) of
 // the message.
-func (m Message) NewBodyPartReader(requestedParts []int) (io.Reader, error) {
-	msgWrapper, err := m.dir.MessageByKey(m.key)
+func (m *Message) NewBodyPartReader(requestedParts []int) (io.Reader, error) {
+	msgWrapper, err := m.loadMsg()
 	if err != nil {
-		return nil, fmt.Errorf("failed to find message with key %q: %w", m.key, err)
+		return nil, err
 	}
 	f, err := msgWrapper.Open()
 	if err != nil {
@@ -156,10 +174,10 @@ func (m Message) NewBodyPartReader(requestedParts []int) (io.Reader, error) {
 	return rfc822.FetchEntityPartReader(msg, requestedParts)
 }
 
-func (m Message) UID() models.UID {
+func (m *Message) UID() models.UID {
 	return m.uid
 }
 
-func (m Message) Labels() ([]string, error) {
+func (m *Message) Labels() ([]string, error) {
 	return nil, nil
 }

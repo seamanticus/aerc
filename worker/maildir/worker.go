@@ -946,7 +946,7 @@ func (w *Worker) msgInfoFromUid(dir maildir.Dir, uid models.UID) (*models.Messag
 	if err != nil {
 		return nil, err
 	}
-	msg, err := m.dir.MessageByKey(m.key)
+	msg, err := m.loadMsg()
 	if err != nil {
 		return nil, err
 	}
