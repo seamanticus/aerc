@@ -124,7 +124,6 @@ func Sort(threads Threadable, by ThreadLess) Threadable {
 	// And the new child of the node above is the first of the newly sorted (or at the top level the new root)
 	//
 	newChild := s[0]
-	s = nil
 
 	// And return the new child for the node above us
 	//
