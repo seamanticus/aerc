@@ -3,7 +3,7 @@
 
 package jwz
 
-import "sort"
+import "slices"
 
 // ThreadLess specifies the signature of a function that compares two Threadables in some way you define,
 // such as comparing dates in the emails they contain. Note your function should be able to handle Dummy
@@ -106,8 +106,14 @@ func Sort(threads Threadable, by ThreadLess) Threadable {
 	// - because this node is a Dummy - then it will be OK to use it as it will be in the correct
 	// order already
 	//
-	sort.Slice(s, func(i, j int) bool {
-		return by(s[i], s[j])
+	slices.SortFunc(s, func(a, b Threadable) int {
+		if by(a, b) {
+			return -1
+		}
+		if by(b, a) {
+			return 1
+		}
+		return 0
 	})
 
 	// And we now rebuild the chain from the slice
