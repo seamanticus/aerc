@@ -2,12 +2,13 @@ package msg
 
 import (
 	"bytes"
+	"cmp"
 	"context"
 	"fmt"
 	"io"
 	"os/exec"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -264,16 +265,19 @@ func (p Pipe) Run(cb func()) error {
 			if is_git_patches {
 				// Sort all messages by increasing Subject header.
 				// This will ensure that patch series are applied in order.
-				sort.Slice(messages, func(i, j int) bool {
-					infoi := store.Messages[messages[i].Content.Uid]
-					infoj := store.Messages[messages[j].Content.Uid]
-					if infoi == nil || infoi.Envelope == nil {
-						return false
+				slices.SortFunc(messages, func(a, b *types.FullMessage) int {
+					infoA := store.Messages[a.Content.Uid]
+					infoB := store.Messages[b.Content.Uid]
+					if infoA == nil || infoA.Envelope == nil {
+						if infoB == nil || infoB.Envelope == nil {
+							return 0
+						}
+						return 1
 					}
-					if infoj == nil || infoj.Envelope == nil {
-						return true
+					if infoB == nil || infoB.Envelope == nil {
+						return -1
 					}
-					return infoi.Envelope.Subject < infoj.Envelope.Subject
+					return cmp.Compare(infoA.Envelope.Subject, infoB.Envelope.Subject)
 				})
 			}
 
