@@ -1,7 +1,8 @@
 package lib
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/models"
@@ -17,8 +18,8 @@ func Sort(messageInfos []*models.MessageInfo,
 		criterion := criteria[i]
 		switch criterion.Field {
 		case types.SortArrival:
-			sortSlice(criterion, messageInfos, func(i, j int) bool {
-				return messageInfos[i].InternalDate.Before(messageInfos[j].InternalDate)
+			sortSlice(criterion, messageInfos, func(a, b *models.MessageInfo) int {
+				return a.InternalDate.Compare(b.InternalDate)
 			})
 		case types.SortCc:
 			sortAddresses(messageInfos, criterion,
@@ -26,8 +27,8 @@ func Sort(messageInfos []*models.MessageInfo,
 					return msgInfo.Envelope.Cc
 				})
 		case types.SortDate:
-			sortSlice(criterion, messageInfos, func(i, j int) bool {
-				return messageInfos[i].Envelope.Date.Before(messageInfos[j].Envelope.Date)
+			sortSlice(criterion, messageInfos, func(a, b *models.MessageInfo) int {
+				return a.Envelope.Date.Compare(b.Envelope.Date)
 			})
 		case types.SortFrom:
 			sortAddresses(messageInfos, criterion,
@@ -39,8 +40,8 @@ func Sort(messageInfos []*models.MessageInfo,
 		case types.SortFlagged:
 			sortFlags(messageInfos, criterion, models.FlaggedFlag)
 		case types.SortSize:
-			sortSlice(criterion, messageInfos, func(i, j int) bool {
-				return messageInfos[i].Size < messageInfos[j].Size
+			sortSlice(criterion, messageInfos, func(a, b *models.MessageInfo) int {
+				return cmp.Compare(a.Size, b.Size)
 			})
 		case types.SortSubject:
 			sortStrings(messageInfos, criterion,
@@ -67,27 +68,31 @@ func Sort(messageInfos []*models.MessageInfo,
 func sortAddresses(messageInfos []*models.MessageInfo, criterion *types.SortCriterion,
 	getValue func(*models.MessageInfo) []*mail.Address,
 ) {
-	sortSlice(criterion, messageInfos, func(i, j int) bool {
-		addressI, addressJ := getValue(messageInfos[i]), getValue(messageInfos[j])
-		var firstI, firstJ *mail.Address
-		if len(addressI) > 0 {
-			firstI = addressI[0]
+	sortSlice(criterion, messageInfos, func(a, b *models.MessageInfo) int {
+		addressA, addressB := getValue(a), getValue(b)
+		var firstA, firstB *mail.Address
+		if len(addressA) > 0 {
+			firstA = addressA[0]
 		}
-		if len(addressJ) > 0 {
-			firstJ = addressJ[0]
+		if len(addressB) > 0 {
+			firstB = addressB[0]
 		}
-		if firstI != nil && firstJ != nil {
+		if firstA != nil && firstB != nil {
 			getName := func(addr *mail.Address) string {
 				if addr.Name != "" {
 					return addr.Name
-				} else {
-					return addr.Address
 				}
+				return addr.Address
 			}
-			return getName(firstI) < getName(firstJ)
-		} else {
-			return firstI != nil && firstJ == nil
+			return cmp.Compare(getName(firstA), getName(firstB))
 		}
+		if firstA != nil {
+			return -1
+		}
+		if firstB != nil {
+			return 1
+		}
+		return 0
 	})
 }
 
@@ -101,9 +106,14 @@ func sortFlags(messageInfos []*models.MessageInfo, criterion *types.SortCriterio
 			MsgInfo: msgInfo,
 		})
 	}
-	sortSlice(criterion, slice, func(i, j int) bool {
-		valI, valJ := slice[i].Value, slice[j].Value
-		return valI && !valJ
+	sortSlice(criterion, slice, func(a, b *boolStore) int {
+		if a.Value == b.Value {
+			return 0
+		}
+		if a.Value {
+			return -1
+		}
+		return 1
 	})
 	for i := range messageInfos {
 		messageInfos[i] = slice[i].MsgInfo
@@ -120,8 +130,8 @@ func sortStrings(messageInfos []*models.MessageInfo, criterion *types.SortCriter
 			MsgInfo: msgInfo,
 		})
 	}
-	sortSlice(criterion, slice, func(i, j int) bool {
-		return slice[i].Value < slice[j].Value
+	sortSlice(criterion, slice, func(a, b *lexiStore) int {
+		return cmp.Compare(a.Value, b.Value)
 	})
 	for i := range messageInfos {
 		messageInfos[i] = slice[i].MsgInfo
@@ -138,12 +148,12 @@ type boolStore struct {
 	MsgInfo *models.MessageInfo
 }
 
-func sortSlice(criterion *types.SortCriterion, slice any, less func(i, j int) bool) {
+func sortSlice[E any](criterion *types.SortCriterion, slice []E, compare func(a, b E) int) {
 	if criterion.Reverse {
-		sort.SliceStable(slice, func(i, j int) bool {
-			return less(j, i)
+		slices.SortStableFunc(slice, func(a, b E) int {
+			return compare(b, a)
 		})
 	} else {
-		sort.SliceStable(slice, less)
+		slices.SortStableFunc(slice, compare)
 	}
 }
