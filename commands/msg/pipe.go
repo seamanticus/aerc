@@ -262,14 +262,16 @@ func (p Pipe) Run(cb func()) error {
 				}
 			}
 			if is_git_patches {
-				// Sort all messages by increasing Message-Id header.
+				// Sort all messages by increasing Subject header.
 				// This will ensure that patch series are applied in order.
 				sort.Slice(messages, func(i, j int) bool {
 					infoi := store.Messages[messages[i].Content.Uid]
 					infoj := store.Messages[messages[j].Content.Uid]
-					if infoi == nil || infoi.Envelope == nil ||
-						infoj == nil || infoj.Envelope == nil {
+					if infoi == nil || infoi.Envelope == nil {
 						return false
+					}
+					if infoj == nil || infoj.Envelope == nil {
+						return true
 					}
 					return infoi.Envelope.Subject < infoj.Envelope.Subject
 				})
