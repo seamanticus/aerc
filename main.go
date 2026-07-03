@@ -1,12 +1,13 @@
 package main
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"runtime"
-	"sort"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -52,7 +53,7 @@ func execCommand(
 func getCompletions(ctx context.Context, cmdline string) ([]opt.Completion, string) {
 	// complete template terms
 	if options, prefix, ok := commands.GetTemplateCompletion(cmdline); ok {
-		sort.Strings(options)
+		slices.Sort(options)
 		completions := make([]opt.Completion, 0, len(options))
 		for _, o := range options {
 			completions = append(completions, opt.Completion{
@@ -78,8 +79,8 @@ func getCompletions(ctx context.Context, cmdline string) ([]opt.Completion, stri
 				}
 			}
 		}
-		sort.Slice(completions, func(i, j int) bool {
-			return completions[i].Value < completions[j].Value
+		slices.SortFunc(completions, func(a, b opt.Completion) int {
+			return cmp.Compare(a.Value, b.Value)
 		})
 		return completions, ""
 	}

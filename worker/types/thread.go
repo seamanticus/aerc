@@ -1,9 +1,10 @@
 package types
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
-	"sort"
+	"slices"
 
 	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/aerc/models"
@@ -194,7 +195,7 @@ func SortThreadsBy(toSort []*Thread, sortBy []models.UID) {
 		uidMap[uid] = i
 	}
 	// sortslice of toSort with less function of indexing the map sortBy
-	sort.Slice(toSort, func(i, j int) bool {
-		return getMaxValue(toSort[i], uidMap) < getMaxValue(toSort[j], uidMap)
+	slices.SortFunc(toSort, func(a, b *Thread) int {
+		return cmp.Compare(getMaxValue(a, uidMap), getMaxValue(b, uidMap))
 	})
 }

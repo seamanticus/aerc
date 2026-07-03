@@ -1,10 +1,11 @@
 package autoconfig
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"net"
-	"sort"
+	"slices"
 	"strings"
 	"sync"
 
@@ -115,8 +116,8 @@ func getFromProviderDNS(ctx context.Context, localpart, domain string, result ch
 }
 
 func getHighestSRV(list []*net.SRV) *net.SRV {
-	sort.SliceStable(list, func(i, j int) bool {
-		return list[i].Priority < list[j].Priority
+	slices.SortStableFunc(list, func(a, b *net.SRV) int {
+		return cmp.Compare(a.Priority, b.Priority)
 	})
 
 	var max int

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"path"
 	"reflect"
-	"sort"
+	"slices"
 	"strings"
 	"unicode"
 
@@ -321,7 +321,7 @@ func GetTemplates(arg string) []string {
 	for n := range templates {
 		names = append(names, n)
 	}
-	sort.Strings(names)
+	slices.Sort(names)
 	return FilterList(names, arg, nil)
 }
 

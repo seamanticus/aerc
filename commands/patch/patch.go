@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"sort"
+	"slices"
 
 	"git.sr.ht/~rjarry/aerc/commands"
 	"git.sr.ht/~rjarry/go-opt/v2"
@@ -66,7 +66,7 @@ func (*Patch) CompleteSubNames(arg string) []string {
 			options = append(options, alias+"\n"+cmd.Description())
 		}
 	}
-	sort.Strings(options)
+	slices.Sort(options)
 	return commands.FilterList(options, arg, nil)
 }
 

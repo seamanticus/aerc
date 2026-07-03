@@ -1,9 +1,10 @@
 package sort
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/models"
@@ -69,8 +70,8 @@ func SortBy(toSort []models.UID, sortBy []models.UID) {
 		uidMap[uid] = i
 	}
 	// sortslice of toSort with less function of indexing the map sortBy
-	sort.Slice(toSort, func(i, j int) bool {
-		return uidMap[toSort[i]] < uidMap[toSort[j]]
+	slices.SortFunc(toSort, func(a, b models.UID) int {
+		return cmp.Compare(uidMap[a], uidMap[b])
 	})
 }
 
@@ -81,7 +82,7 @@ func SortStringBy(s []string, order []string) {
 	for i, d := range order {
 		m[d] = i
 	}
-	sort.Slice(s, func(i, j int) bool {
-		return m[s[i]] < m[s[j]]
+	slices.SortFunc(s, func(a, b string) int {
+		return cmp.Compare(m[a], m[b])
 	})
 }

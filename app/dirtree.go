@@ -1,8 +1,9 @@
 package app
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -487,22 +488,23 @@ func (dt *DirectoryTree) buildTree() {
 
 	// folders-sort
 	if dt.DirectoryList.acctConf.EnableFoldersSort {
-		sort.Slice(threads, func(i, j int) bool {
-			foldersSort := dt.DirectoryList.acctConf.FoldersSort
-			iInFoldersSort := findFirstMatchingString(foldersSort, dt.getDirectory(threads[i]))
-			jInFoldersSort := findFirstMatchingString(foldersSort, dt.getDirectory(threads[j]))
-			if iInFoldersSort != jInFoldersSort {
-				if iInFoldersSort >= 0 && jInFoldersSort >= 0 {
-					return iInFoldersSort < jInFoldersSort
+		foldersSort := dt.DirectoryList.acctConf.FoldersSort
+		slices.SortFunc(threads, func(a, b *types.Thread) int {
+			idxA := findFirstMatchingString(foldersSort, dt.getDirectory(a))
+			idxB := findFirstMatchingString(foldersSort, dt.getDirectory(b))
+
+			if idxA != idxB {
+				if idxA >= 0 && idxB >= 0 {
+					return cmp.Compare(idxA, idxB)
 				}
-				if iInFoldersSort >= 0 {
-					return true
+				if idxA >= 0 {
+					return -1
 				}
-				if jInFoldersSort >= 0 {
-					return false
+				if idxB >= 0 {
+					return 1
 				}
 			}
-			return dt.getDirectory(threads[i]) < dt.getDirectory(threads[j])
+			return cmp.Compare(dt.getDirectory(a), dt.getDirectory(b))
 		})
 	}
 
@@ -536,9 +538,9 @@ func (dt *DirectoryTree) buildTreeNode(node *types.Thread, dirs []string, depth 
 	bases := make([]string, 0, len(dirmap))
 	for base, dirs := range dirmap {
 		bases = append(bases, base)
-		sort.Strings(dirs)
+		slices.Sort(dirs)
 	}
-	sort.Strings(bases)
+	slices.Sort(bases)
 
 	basePath := dt.getDirectory(node)
 	collapse := dt.UiConfig(basePath).DirListCollapse

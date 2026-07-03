@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"io"
 	"regexp"
-	"sort"
+	"slices"
 )
 
 // Partial regexp to match the beginning of URLs and email addresses.
@@ -123,7 +123,7 @@ func HttpLinks(r io.Reader, isHtml bool) (io.Reader, []string) {
 	for link := range links {
 		results = append(results, link)
 	}
-	sort.Strings(results)
+	slices.Sort(results)
 
 	return bytes.NewReader(buf), results
 }

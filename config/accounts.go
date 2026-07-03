@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"cmp"
 	"errors"
 	"fmt"
 	"net/url"
@@ -10,7 +11,7 @@ import (
 	"path"
 	"reflect"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -267,8 +268,8 @@ Please update your accounts.conf:
 		for i, acct := range sortaccts {
 			idx[acct] = i
 		}
-		sort.Slice(Accounts, func(i, j int) bool {
-			return idx[Accounts[i].Name] < idx[Accounts[j].Name]
+		slices.SortFunc(Accounts, func(a, b *AccountConfig) int {
+			return cmp.Compare(idx[a.Name], idx[b.Name])
 		})
 	}
 

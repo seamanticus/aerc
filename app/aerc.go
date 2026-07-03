@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/url"
 	"os/exec"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 	"unicode"
@@ -245,7 +245,7 @@ func (aerc *Aerc) HumanReadableBindings() []string {
 		"Globals",
 		fmt.Sprintf("%v", binds.Globals), "",
 	))
-	sort.Strings(result)
+	slices.Sort(result)
 	return result
 }
 

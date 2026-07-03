@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 
 	"github.com/emersion/go-maildir"
 
@@ -79,7 +79,7 @@ func (c *Container) UIDs(d maildir.Dir) ([]models.UID, error) {
 	for _, msg := range messages {
 		keyList = append(keyList, msg.Key())
 	}
-	sort.Strings(keyList)
+	slices.Sort(keyList)
 	var uids []models.UID
 	for _, key := range keyList {
 		uids = append(uids, models.UID(key))

@@ -3,7 +3,7 @@ package jmap
 import (
 	"errors"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/models"
@@ -32,7 +32,7 @@ func (w *JMAPWorker) translateMsgInfo(m *email.Email, dir string) *models.Messag
 			labels = append(labels, dir)
 		}
 	}
-	sort.Strings(labels)
+	slices.Sort(labels)
 
 	return &models.MessageInfo{
 		Envelope:      env,

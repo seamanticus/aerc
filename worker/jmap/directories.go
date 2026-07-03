@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"path"
-	"sort"
+	"slices"
 
 	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rjarry/aerc/worker/jmap/cache"
@@ -90,7 +90,7 @@ func (w *JMAPWorker) handleListDirectories(msg *types.ListDirectories) error {
 		labels = append(labels, w.mbox2dir[mbox.ID])
 	}
 	if w.config.useLabels {
-		sort.Strings(labels)
+		slices.Sort(labels)
 		w.w.PostMessage(&types.LabelList{Labels: labels}, nil)
 	}
 

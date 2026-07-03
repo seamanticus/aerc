@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 
 	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/aerc/lib/rfc822"
@@ -114,7 +114,7 @@ func (w *mboxWorker) handleMessage(msg types.WorkerMessage) error {
 
 	case *types.ListDirectories:
 		dirs := w.data.Names()
-		sort.Strings(dirs)
+		slices.Sort(dirs)
 		for _, name := range dirs {
 			w.worker.PostMessage(&types.Directory{
 				Message: types.RespondTo(msg),

@@ -2,7 +2,7 @@ package patch
 
 import (
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 	"unicode"
 
@@ -263,6 +263,6 @@ func proposePatchName(patches, subjects []string) []string {
 		summary[result] = struct{}{}
 	}
 
-	sort.Strings(results)
+	slices.Sort(results)
 	return results
 }

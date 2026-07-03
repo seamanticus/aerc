@@ -1,9 +1,10 @@
 package autoconfig
 
 import (
+	"cmp"
 	"context"
 	"net"
-	"sort"
+	"slices"
 	"strings"
 	"sync"
 
@@ -27,7 +28,9 @@ func guessMX(ctx context.Context, localpart, domain string, result chan *Config)
 			return
 		}
 
-		sort.Slice(records, func(a, b int) bool { return records[a].Pref < records[b].Pref })
+		slices.SortFunc(records, func(a, b *net.MX) int {
+			return cmp.Compare(a.Pref, b.Pref)
+		})
 
 		mailserver := records[0].Host
 		mailserver = strings.TrimSuffix(mailserver, ".")

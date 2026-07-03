@@ -13,7 +13,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"slices"
-	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -197,7 +196,7 @@ func splitMaildirFile(name string) (uniq string, flags []maildir.Flag, err error
 		return "", nil, &maildir.FlagError{Info: info, Experimental: true}
 	}
 	flags = []maildir.Flag(info[2:])
-	sort.Slice(flags, func(i, j int) bool { return flags[i] < flags[j] })
+	slices.Sort(flags)
 	return uniq, flags, nil
 }
 

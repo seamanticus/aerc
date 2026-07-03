@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/app"
@@ -78,7 +78,7 @@ func (*Help) CompleteTopic(arg string) []string {
 		}
 		pages = append(pages, name)
 	}
-	sort.Strings(pages)
+	slices.Sort(pages)
 	return FilterList(pages, arg, nil)
 }
 

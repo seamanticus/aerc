@@ -3,7 +3,7 @@ package jmap
 import (
 	"context"
 	"fmt"
-	"sort"
+	"slices"
 	"time"
 
 	"git.sr.ht/~rjarry/aerc/lib/log"
@@ -350,7 +350,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 		for dir := range w.dir2mbox {
 			labels = append(labels, dir)
 		}
-		sort.Strings(labels)
+		slices.Sort(labels)
 		w.w.PostMessage(&types.LabelList{Labels: labels}, nil)
 	}
 

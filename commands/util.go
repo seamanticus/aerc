@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -113,7 +113,7 @@ func completePath(path string, onlyDirs bool, fuzzyComplete bool) []string {
 		filteredEntries = append(filteredEntries, m)
 	}
 
-	sort.Strings(filteredEntries)
+	slices.Sort(filteredEntries)
 	results := filterList(
 		filteredEntries,
 		search,

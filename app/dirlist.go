@@ -2,12 +2,12 @@ package app
 
 import (
 	"bytes"
+	"cmp"
 	"context"
 	"math"
 	"path/filepath"
 	"regexp"
 	"slices"
-	"sort"
 	"time"
 
 	"git.sr.ht/~rjarry/aerc/config"
@@ -127,7 +127,7 @@ func (dirlist *DirectoryList) Update(msg types.WorkerMessage) {
 				dirlist.dirs = append(dirlist.dirs, dirlist.selected)
 			}
 			if dirlist.acctConf.EnableFoldersSort {
-				sort.Strings(dirlist.dirs)
+				slices.Sort(dirlist.dirs)
 			}
 			dirlist.sortDirsByFoldersSortConfig()
 			store, ok := dirlist.SelectedMsgStore()
@@ -488,22 +488,22 @@ func (dirlist *DirectoryList) sortDirsByFoldersSortConfig() {
 		return
 	}
 
-	sort.Slice(dirlist.dirs, func(i, j int) bool {
-		foldersSort := dirlist.acctConf.FoldersSort
-		iInFoldersSort := findFirstMatchingString(foldersSort, dirlist.dirs[i])
-		jInFoldersSort := findFirstMatchingString(foldersSort, dirlist.dirs[j])
-		if iInFoldersSort != jInFoldersSort {
-			if iInFoldersSort >= 0 && jInFoldersSort >= 0 {
-				return iInFoldersSort < jInFoldersSort
+	foldersSort := dirlist.acctConf.FoldersSort
+	slices.SortFunc(dirlist.dirs, func(a, b string) int {
+		idxA := findFirstMatchingString(foldersSort, a)
+		idxB := findFirstMatchingString(foldersSort, b)
+		if idxA != idxB {
+			if idxA >= 0 && idxB >= 0 {
+				return cmp.Compare(idxA, idxB)
 			}
-			if iInFoldersSort >= 0 {
-				return true
+			if idxA >= 0 {
+				return -1
 			}
-			if jInFoldersSort >= 0 {
-				return false
+			if idxB >= 0 {
+				return 1
 			}
 		}
-		return dirlist.dirs[i] < dirlist.dirs[j]
+		return cmp.Compare(a, b)
 	})
 }
 
