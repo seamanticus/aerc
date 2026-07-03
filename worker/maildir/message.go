@@ -3,6 +3,8 @@ package maildir
 import (
 	"fmt"
 	"io"
+	"os"
+	"time"
 
 	"github.com/emersion/go-maildir"
 
@@ -125,6 +127,7 @@ func (m *Message) MessageInfo(dir string) (*models.MessageInfo, error) {
 		// don't care if size retrieval fails
 		log.Debugf("message size: %v", err)
 	}
+	info.InternalDate = m.InternalDate()
 	return info, nil
 }
 
@@ -140,6 +143,18 @@ func (m *Message) Size() (uint32, error) {
 	return size, nil
 }
 
+func (m *Message) InternalDate() time.Time {
+	msg, err := m.loadMsg()
+	if err != nil {
+		return time.Time{}
+	}
+	info, err := os.Stat(msg.Filename())
+	if err != nil {
+		return time.Time{}
+	}
+	return info.ModTime()
+}
+
 // MessageHeaders populates a models.MessageInfo struct for the message with
 // minimal information, used for sorting and threading.
 func (m *Message) MessageHeaders() (*models.MessageInfo, error) {
@@ -152,6 +167,7 @@ func (m *Message) MessageHeaders() (*models.MessageInfo, error) {
 		// don't care if size retrieval fails
 		log.Debugf("message size failed: %v", err)
 	}
+	info.InternalDate = m.InternalDate()
 	return info, nil
 }
 
