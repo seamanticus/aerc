@@ -13,6 +13,11 @@ import (
 func Sort(messageInfos []*models.MessageInfo,
 	criteria []*types.SortCriterion,
 ) ([]models.UID, error) {
+	// establish a deterministic baseline to prevent message shuffling
+	slices.SortFunc(messageInfos, func(a, b *models.MessageInfo) int {
+		return cmp.Compare(a.Uid, b.Uid)
+	})
+
 	// loop through in reverse to ensure we sort by non-primary fields first
 	for i := len(criteria) - 1; i >= 0; i-- {
 		criterion := criteria[i]
