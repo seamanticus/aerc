@@ -1,7 +1,8 @@
 package imap
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 
 	sortthread "github.com/emersion/go-imap-sortthread"
 
@@ -128,7 +129,9 @@ func (imapw *IMAPWorker) handleDirectoryThreaded(
 		return err
 	}
 	aercThreads, count := imapw.convertThreads(threads, nil)
-	sort.Sort(types.ByUID(aercThreads))
+	slices.SortFunc(aercThreads, func(a, b *types.Thread) int {
+		return cmp.Compare(a.MaxUid(), b.MaxUid())
+	})
 	imapw.worker.Tracef("Found %d threaded messages", count)
 	if msg.Filter == nil {
 		// Only initialize if we are not filtering

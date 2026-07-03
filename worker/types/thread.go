@@ -94,6 +94,22 @@ func (t *Thread) Uids() []models.UID {
 	return uids
 }
 
+// MaxUid returns the highest UID among the thread and its children
+func (t *Thread) MaxUid() models.UID {
+	var max models.UID
+
+	_ = t.Walk(func(node *Thread, _ int, currentErr error) error {
+		if node.Deleted || node.Hidden > 0 {
+			return nil
+		}
+		if node.Uid > max {
+			max = node.Uid
+		}
+		return nil
+	})
+	return max
+}
+
 func (t *Thread) String() string {
 	if t == nil {
 		return "<nil>"
@@ -139,39 +155,6 @@ func newWalk(node *Thread, walkFn NewThreadWalkFn, lvl int, ce error) error {
 var ErrSkipThread = errors.New("skip this Thread")
 
 type NewThreadWalkFn func(t *Thread, level int, currentErr error) error
-
-// Implement interface to be able to sort threads by newest (max UID)
-type ByUID []*Thread
-
-func getMaxUID(thread *Thread) models.UID {
-	// TODO: should we make this part of the Thread type to avoid recomputation?
-	var Uid models.UID
-
-	_ = thread.Walk(func(t *Thread, _ int, currentErr error) error {
-		if t.Deleted || t.Hidden > 0 {
-			return nil
-		}
-		if t.Uid > Uid {
-			Uid = t.Uid
-		}
-		return nil
-	})
-	return Uid
-}
-
-func (s ByUID) Len() int {
-	return len(s)
-}
-
-func (s ByUID) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s ByUID) Less(i, j int) bool {
-	maxUID_i := getMaxUID(s[i])
-	maxUID_j := getMaxUID(s[j])
-	return maxUID_i < maxUID_j
-}
 
 func getMaxValue(thread *Thread, uidMap map[models.UID]int) int {
 	var max int
