@@ -104,14 +104,15 @@ func sortAddresses(messageInfos []*models.MessageInfo, criterion *types.SortCrit
 func sortFlags(messageInfos []*models.MessageInfo, criterion *types.SortCriterion,
 	testFlag models.Flags,
 ) {
-	var slice []*boolStore
-	for _, msgInfo := range messageInfos {
-		slice = append(slice, &boolStore{
-			Value:   msgInfo.Flags.Has(testFlag),
-			MsgInfo: msgInfo,
-		})
+	type boolStore struct {
+		Value   bool
+		MsgInfo *models.MessageInfo
 	}
-	sortSlice(criterion, slice, func(a, b *boolStore) int {
+	slice := make([]boolStore, len(messageInfos))
+	for i, msgInfo := range messageInfos {
+		slice[i] = boolStore{msgInfo.Flags.Has(testFlag), msgInfo}
+	}
+	sortSlice(criterion, slice, func(a, b boolStore) int {
 		if a.Value == b.Value {
 			return 0
 		}
@@ -128,29 +129,20 @@ func sortFlags(messageInfos []*models.MessageInfo, criterion *types.SortCriterio
 func sortStrings(messageInfos []*models.MessageInfo, criterion *types.SortCriterion,
 	getValue func(*models.MessageInfo) string,
 ) {
-	var slice []*lexiStore
-	for _, msgInfo := range messageInfos {
-		slice = append(slice, &lexiStore{
-			Value:   getValue(msgInfo),
-			MsgInfo: msgInfo,
-		})
+	type lexiStore struct {
+		Value   string
+		MsgInfo *models.MessageInfo
 	}
-	sortSlice(criterion, slice, func(a, b *lexiStore) int {
+	slice := make([]lexiStore, len(messageInfos))
+	for i, msgInfo := range messageInfos {
+		slice[i] = lexiStore{getValue(msgInfo), msgInfo}
+	}
+	sortSlice(criterion, slice, func(a, b lexiStore) int {
 		return cmp.Compare(a.Value, b.Value)
 	})
 	for i := range messageInfos {
 		messageInfos[i] = slice[i].MsgInfo
 	}
-}
-
-type lexiStore struct {
-	Value   string
-	MsgInfo *models.MessageInfo
-}
-
-type boolStore struct {
-	Value   bool
-	MsgInfo *models.MessageInfo
 }
 
 func sortSlice[E any](criterion *types.SortCriterion, slice []E, compare func(a, b E) int) {
