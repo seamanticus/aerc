@@ -105,6 +105,8 @@ func (term *Terminal) Draw(ctx *ui.Context) {
 			term.OnStart()
 		}
 	}
+	w, h := ctx.Window().Size()
+	term.vterm.Update(vaxis.Resize{Cols: w, Rows: h})
 	term.vterm.Draw(ctx.Window())
 }
 

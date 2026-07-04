@@ -177,6 +177,7 @@ func Render() {
 func HandleEvent(event vaxis.Event) {
 	switch event := event.(type) {
 	case vaxis.Resize:
+		state.vx.Resize(event)
 		state.ctx = NewContext(state.vx, onPopover)
 		Invalidate()
 	case vaxis.Redraw:

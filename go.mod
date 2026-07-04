@@ -7,7 +7,7 @@ toolchain go1.24.3
 require (
 	git.sr.ht/~rjarry/go-opt/v2 v2.2.0
 	git.sr.ht/~rockorager/go-jmap v0.5.3
-	git.sr.ht/~rockorager/vaxis v0.15.0
+	git.sr.ht/~rockorager/vaxis v0.16.0
 	github.com/ProtonMail/go-crypto v1.3.0
 	github.com/arran4/golang-ical v0.3.2
 	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
@@ -39,20 +39,18 @@ require (
 
 require (
 	github.com/cloudflare/circl v1.6.1 // indirect
-	github.com/containerd/console v1.0.5 // indirect
-	github.com/creack/pty v1.1.24 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
-	github.com/mattn/go-sixel v0.0.5 // indirect
 	github.com/onsi/gomega v1.20.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/rockorager/go-uucode v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
-	github.com/soniakeys/quant v1.0.0 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/mod v0.27.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/term v0.34.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
