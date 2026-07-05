@@ -69,6 +69,7 @@ diff_meta.bold=true
 diff_chunk.fg=#00cdcd
 diff_add.fg=#00cd00
 diff_del.fg=#cd0000
+diff_whitespace.bg=#cd0000
 quote_1.fg=#5fafff
 quote_2.fg=#ff8700
 quote_3.fg=#af87ff

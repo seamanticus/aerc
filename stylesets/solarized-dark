@@ -46,6 +46,7 @@ diff_add.fg=#859900 # green
 diff_chunk.dim=true
 diff_chunk.fg=#2aa198 # cyan
 diff_del.fg=#dc322f # red
+diff_whitespace.bg=#dc322f # red
 diff_meta.bold=true
 diff_meta.fg=#839496 # bright blue
 header.bold=true

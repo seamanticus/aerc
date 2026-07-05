@@ -54,5 +54,6 @@ diff_chunk_func.fg=#8caaee
 diff_chunk_func.bold=true
 diff_add.fg=#a6d189
 diff_del.fg=#e78284
+diff_whitespace.bg=#e78284
 quote_*.fg=#737994
 quote_1.fg=#949cbb
