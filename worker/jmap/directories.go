@@ -356,6 +356,7 @@ func translateSort(criteria []*types.SortCriterion) []*email.SortComparator {
 		case types.SortFrom:
 			cmp.Property = "from"
 		case types.SortRead:
+			cmp.Property = "hasKeyword"
 			cmp.Keyword = "$seen"
 		case types.SortSize:
 			cmp.Property = "size"
@@ -363,6 +364,9 @@ func translateSort(criteria []*types.SortCriterion) []*email.SortComparator {
 			cmp.Property = "subject"
 		case types.SortTo:
 			cmp.Property = "to"
+		case types.SortFlagged:
+			cmp.Property = "hasKeyword"
+			cmp.Keyword = "$flagged"
 		default:
 			continue
 		}
