@@ -13,6 +13,9 @@ import (
 func (w *JMAPWorker) translateSearch(
 	mbox jmap.ID, criteria *types.SearchCriteria,
 ) (email.Filter, error) {
+	if criteria == nil {
+		return w.translateSearchPart(mbox, nil), nil
+	}
 	if criteria.Exclude != nil {
 		return nil, errors.New("Exclude filters not supported in JMAP")
 	}
