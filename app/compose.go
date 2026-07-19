@@ -143,7 +143,7 @@ func NewComposer(
 		}
 		data.SetBody(buf.String())
 	}
-	if err := c.addTemplate(template, data.Data()); err != nil {
+	if err := c.setUpFields(template, data.Data()); err != nil {
 		return nil, err
 	}
 	if err := c.setupFor(acct); err != nil {
@@ -626,31 +626,32 @@ func (c *Composer) RemovePart(mimetype string) error {
 	return fmt.Errorf("%s part not found", mimetype)
 }
 
-func (c *Composer) addTemplate(
+func (c *Composer) setUpFields(
 	template string, data models.TemplateData,
 ) error {
-	var readers []io.Reader
-
-	if template != "" {
-		templateText, err := templates.ParseTemplateFromFile(
-			template, config.Templates().TemplateDirs, data)
-		if err != nil {
-			return err
-		}
-		readers = append(readers, templateText)
-	}
-	if len(readers) == 0 {
-		return nil
+	if template == "" {
+		// No template, but there might be a body from recall
+		return c.setContents(strings.NewReader(data.Body()))
 	}
 
-	buf, err := io.ReadAll(io.MultiReader(readers...))
+	templateText, err := templates.ParseTemplateFromFile(
+		template, config.Templates().TemplateDirs, data)
+	if err != nil {
+		return err
+	}
+
+	buf, err := io.ReadAll(templateText)
 	if err != nil {
 		return err
 	}
 
 	mr, err := mail.CreateReader(bytes.NewReader(buf))
 	if err != nil {
-		// no headers in the template nor body
+		log.Warnf("failed to parse rendered template '%s' as email: %v",
+			template, err)
+		// For backward compatibility with old aerc which supported
+		// templates that don't parse as an email.
+
 		return c.setContents(bytes.NewReader(buf))
 	}
 
