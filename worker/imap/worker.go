@@ -348,7 +348,7 @@ func (w *IMAPWorker) handleImapUpdate(update client.Update) {
 				w.worker.Errorf("ExpungeUpdate unknown seqnum: %d", update.SeqNum)
 			}
 		}
-		if uid != 0 {
+		if uid != 0 && (w.expunger == nil || !w.expunger.ForDelete()) {
 			w.worker.PostMessage(&types.MessagesDeleted{
 				Directory: w.client.Mailbox().Name,
 				Uids:      []models.UID{w.Uint32ToUid(uid)},

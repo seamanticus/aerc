@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"sync"
 
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
@@ -24,8 +25,11 @@ import (
 // To stop the draining, close the returned struct.
 func (imapw *IMAPWorker) drainUpdates() *drainCloser {
 	done := make(chan struct{})
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
 		defer log.PanicHandler()
+		defer wg.Done()
 		for {
 			select {
 			case update := <-imapw.updates:
@@ -39,15 +43,20 @@ func (imapw *IMAPWorker) drainUpdates() *drainCloser {
 			}
 		}
 	}()
-	return &drainCloser{done}
+	return &drainCloser{done: done, wg: &wg}
 }
 
 type drainCloser struct {
+	once sync.Once
 	done chan struct{}
+	wg   *sync.WaitGroup
 }
 
 func (d *drainCloser) Close() error {
-	close(d.done)
+	d.once.Do(func() {
+		close(d.done)
+		d.wg.Wait()
+	})
 	return nil
 }
 
@@ -70,6 +79,15 @@ func (imapw *IMAPWorker) handleDeleteMessages(msg *types.DeleteMessages) error {
 	if err := imapw.client.Expunge(nil); err != nil {
 		return err
 	}
+	// Post a single batched MessagesDeleted. Individual ExpungeUpdate
+	// notifications are suppressed when the expunge handler is for a
+	// delete operation (ForDelete). Wait for the drain goroutine to
+	// finish processing all updates before posting.
+	drain.Close()
+	imapw.worker.PostMessage(&types.MessagesDeleted{
+		Directory: msg.Directory,
+		Uids:      msg.Uids,
+	}, nil)
 	return nil
 }
 

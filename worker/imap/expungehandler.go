@@ -113,6 +113,10 @@ func (h *ExpungeHandler) PopSequenceNumber(seqNum uint32) (uint32, bool) {
 	return uid, ok
 }
 
+func (h *ExpungeHandler) ForDelete() bool {
+	return h.forDelete
+}
+
 func (h *ExpungeHandler) IsExpungingForDelete(uid uint32) bool {
 	h.lock.Lock()
 	defer h.lock.Unlock()
