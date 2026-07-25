@@ -455,10 +455,22 @@ func (t *Threader) pruneEmptyContainers(parent *threadContainer) {
 			container = prev
 
 		case container.child != nil:
-			// A real message with kids.
+			// A container with children.
 			// Iterate over its children, and try to strip out the junk.
 			//
 			t.pruneEmptyContainers(container)
+
+			// The recursion may have cleared all of a dummy's children.
+			// If so, remove the now-empty container.
+			//
+			if container.threadable == nil && container.child == nil {
+				if prev == nil {
+					parent.child = container.next
+				} else {
+					prev.next = container.next
+				}
+				container = prev
+			}
 		}
 
 		// Set up for the next iteration
