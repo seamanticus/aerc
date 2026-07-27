@@ -98,12 +98,11 @@ cat >"$email" <<EOF
 From: $(git config user.name) <$(git config user.email)>
 To: aerc-annouce <~rjarry/aerc-announce@lists.sr.ht>
 Cc: aerc-devel <~rjarry/aerc-devel@lists.sr.ht>
-Bcc: aerc <~sircmpwn/aerc@lists.sr.ht>,
-	$(git config user.name) <$(git config user.email)>
+Bcc: $(git config user.name) <$(git config user.email)>
 Reply-To: aerc-devel <~rjarry/aerc-devel@lists.sr.ht>
 Subject: aerc $next_tag
 User-Agent: aerc/$next_tag
-Message-ID: <$(date +%Y%m%d%H%M%S).$(base32 -w12 < /dev/urandom | head -n1)@$(hostname)>
+Message-ID: <$(date +%Y%m%d%H%M%S).$(base32 -w16 < /dev/urandom | head -n1)-$(git config user.email)>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
