@@ -48,12 +48,12 @@ func translate(criteria *types.SearchCriteria) string {
 		return ""
 	}
 	var base queryBuilder
-	translatePart(base, criteria.Match)
-	translatePart(base, criteria.Exclude)
+	translatePart(&base, criteria.Match)
+	translatePart(&base, criteria.Exclude)
 	return base.s
 }
 
-func translatePart(base queryBuilder, crit *types.SearchCriteriaPart) {
+func translatePart(base *queryBuilder, crit *types.SearchCriteriaPart) {
 	if crit == nil {
 		return
 	}
