@@ -114,14 +114,12 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 	if err != nil {
 		w.w.Debugf("GetEmailState: %s", err)
 	}
-	emailUpdated := ""
-	emailCreated := ""
 	if emailState != "" && newState[EmailState] != emailState {
 		callID := req.Invoke(&email.Changes{
 			Account:    w.AccountId(),
 			SinceState: emailState,
 		})
-		emailUpdated = req.Invoke(&email.Get{
+		req.Invoke(&email.Get{
 			Account:        w.AccountId(),
 			Properties:     emailProperties,
 			BodyProperties: bodyProperties,
@@ -131,8 +129,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 				Path:     "/updated",
 			},
 		})
-
-		emailCreated = req.Invoke(&email.Get{
+		req.Invoke(&email.Get{
 			Account:        w.AccountId(),
 			Properties:     emailProperties,
 			BodyProperties: bodyProperties,
@@ -185,6 +182,14 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 	// threadEmails are email IDs from threads which changed or were
 	// created
 	var threadEmails []jmap.ID
+	// addedEmails are genuinely new messages per mailbox from QueryChanges,
+	// used to set Index and RecentFlag in GetResponse.
+	// email ID -> mailbox ID -> position index in message store
+	addedEmails := make(map[jmap.ID]map[jmap.ID]int)
+	// removedEmails are messages removed from mailboxes by QueryChanges,
+	// used to skip re-posting in GetResponse.
+	// email ID -> mailbox ID -> true
+	removedEmails := make(map[jmap.ID]map[jmap.ID]bool)
 
 	for _, inv := range resp.Responses {
 		switch r := inv.Args.(type) {
@@ -258,69 +263,82 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 			contents := folderContents[mboxId]
 			dir := w.mbox2dir[mboxId]
 
-			removed := make(map[jmap.ID]bool)
+			removed := make(map[jmap.ID]models.UID)
 			for _, id := range r.Removed {
-				removed[id] = true
+				removed[id] = models.UID(id)
 			}
-			added := make(map[int]jmap.ID)
 			for _, add := range r.Added {
-				added[int(add.Index)] = add.ID
-			}
-			w.w.Debugf("%q: %d added, %d removed", dir, len(added), len(removed))
-			n := len(contents.MessageIDs) - len(removed) + len(added)
-			if n < 0 {
-				w.w.Errorf("bug: invalid folder contents state")
-				err = w.cache.DeleteFolderContents(mboxId)
-				if err != nil {
-					w.w.Warnf("DeleteFolderContents: %s", err)
+				if _, ok := removed[add.ID]; ok {
+					// message just changed, ignore
+					delete(removed, add.ID)
+				} else {
+					// Store add index for each new message
+					mboxes, ok := addedEmails[add.ID]
+					if !ok {
+						mboxes = make(map[jmap.ID]int)
+						addedEmails[add.ID] = mboxes
+					}
+					mboxes[mboxId] = int(add.Index)
 				}
-				continue
-			}
-			ids := make([]jmap.ID, 0, n)
-			i := 0
-			for _, id := range contents.MessageIDs {
-				if removed[id] {
-					continue
-				}
-				if addedId, ok := added[i]; ok {
-					ids = append(ids, addedId)
-					delete(added, i)
-					i += 1
-				}
-				ids = append(ids, id)
-				i += 1
-			}
-			for _, id := range added {
-				ids = append(ids, id)
-			}
-			contents.MessageIDs = ids
-			contents.QueryState = r.NewQueryState
-
-			err = w.cache.PutFolderContents(mboxId, contents)
-			if err != nil {
-				w.w.Warnf("PutFolderContents: %s", err)
 			}
 
-			// Post MessageInfo with Index for each added message
-			for _, add := range r.Added {
-				m, err := w.cache.GetEmail(add.ID)
-				if err != nil {
-					continue
+			// Rebuild the cached message ID list using
+			// the original Removed/Added from the response
+			// (not the deduped `removed` map).
+			if contents != nil {
+				allRemoved := make(map[jmap.ID]bool)
+				for _, id := range r.Removed {
+					allRemoved[id] = true
 				}
-				info := w.translateMsgInfo(m, dir)
-				info.Flags |= models.RecentFlag
-				idx := int(add.Index)
-				info.Index = &idx
-				w.w.PostMessage(&types.MessageInfo{
-					Info: info,
-				}, nil)
+				added := make(map[int]jmap.ID)
+				for _, add := range r.Added {
+					added[int(add.Index)] = add.ID
+				}
+				n := len(contents.MessageIDs) - len(allRemoved) + len(added)
+				if n < 0 {
+					w.w.Errorf("bug: invalid folder contents state")
+					err = w.cache.DeleteFolderContents(mboxId)
+					if err != nil {
+						w.w.Warnf("DeleteFolderContents: %s", err)
+					}
+				} else {
+					ids := make([]jmap.ID, 0, n)
+					i := 0
+					for _, id := range contents.MessageIDs {
+						if allRemoved[id] {
+							continue
+						}
+						if addedId, ok := added[i]; ok {
+							ids = append(ids, addedId)
+							delete(added, i)
+							i += 1
+						}
+						ids = append(ids, id)
+						i += 1
+					}
+					for _, id := range added {
+						ids = append(ids, id)
+					}
+					contents.MessageIDs = ids
+					contents.QueryState = r.NewQueryState
+					err = w.cache.PutFolderContents(mboxId, contents)
+					if err != nil {
+						w.w.Warnf("PutFolderContents: %s", err)
+					}
+				}
 			}
 
 			// Post MessagesDeleted for removed messages
-			if len(r.Removed) > 0 {
-				deletedUids := make([]models.UID, 0, len(r.Removed))
-				for _, id := range r.Removed {
-					deletedUids = append(deletedUids, models.UID(id))
+			if len(removed) > 0 {
+				deletedUids := make([]models.UID, 0, len(removed))
+				for id, uid := range removed {
+					deletedUids = append(deletedUids, uid)
+					mboxes, ok := removedEmails[id]
+					if !ok {
+						mboxes = make(map[jmap.ID]bool)
+						removedEmails[id] = mboxes
+					}
+					mboxes[mboxId] = true
 				}
 				w.w.PostMessage(&types.MessagesDeleted{
 					Directory: dir,
@@ -357,52 +375,59 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 			}
 
 		case *email.GetResponse:
-			switch inv.CallID {
-			case emailUpdated:
-				for _, m := range r.List {
-					err = w.cache.PutEmail(m.ID, m)
-					if err != nil {
-						w.w.Warnf("PutEmail: %s", err)
-					}
-					for mboxId := range m.MailboxIDs {
-						dir, ok := w.mbox2dir[mboxId]
-						if !ok {
-							continue
+			for _, m := range r.List {
+				old, err := w.cache.GetEmail(m.ID)
+				if err == nil {
+					for mboxId := range old.MailboxIDs {
+						if !m.MailboxIDs[mboxId] {
+							dir, ok := w.mbox2dir[mboxId]
+							if !ok {
+								continue
+							}
+							w.w.PostMessage(&types.MessagesDeleted{
+								Directory: dir,
+								Uids:      []models.UID{models.UID(m.ID)},
+							}, nil)
 						}
-						info := w.translateMsgInfo(m, dir)
-						w.w.PostMessage(&types.MessageInfo{
-							Info: info,
-						}, nil)
 					}
 				}
-				err = w.cache.PutEmailState(r.State)
+				err = w.cache.PutEmail(m.ID, m)
 				if err != nil {
-					w.w.Warnf("PutEmailState: %s", err)
+					w.w.Warnf("PutEmail: %s", err)
 				}
-			case emailCreated:
-				for _, m := range r.List {
-					err = w.cache.PutEmail(m.ID, m)
-					if err != nil {
-						w.w.Warnf("PutEmail: %s", err)
+				removedBoxes := removedEmails[m.ID]
+				indexes, ok := addedEmails[m.ID]
+				if ok {
+					delete(addedEmails, m.ID)
+				}
+				for mboxId := range m.MailboxIDs {
+					dir, ok := w.mbox2dir[mboxId]
+					if !ok {
+						continue
 					}
-					for mboxId := range m.MailboxIDs {
-						dir, ok := w.mbox2dir[mboxId]
-						if !ok {
-							continue
+					if removedBoxes != nil && removedBoxes[mboxId] {
+						continue
+					}
+					info := w.translateMsgInfo(m, dir)
+					if indexes != nil {
+						i, ok := indexes[mboxId]
+						if ok {
+							info.Index = &i
+							// Set recent on created messages so we
+							// get a notification
+							if !info.Flags.Has(models.SeenFlag) {
+								info.Flags |= models.RecentFlag
+							}
 						}
-						info := w.translateMsgInfo(m, dir)
-						// Set recent on created messages so we
-						// get a notification
-						info.Flags |= models.RecentFlag
-						w.w.PostMessage(&types.MessageInfo{
-							Info: info,
-						}, nil)
 					}
+					w.w.PostMessage(&types.MessageInfo{
+						Info: info,
+					}, nil)
 				}
-				err = w.cache.PutEmailState(r.State)
-				if err != nil {
-					w.w.Warnf("PutEmailState: %s", err)
-				}
+			}
+			err = w.cache.PutEmailState(r.State)
+			if err != nil {
+				w.w.Warnf("PutEmailState: %s", err)
 			}
 
 		case *jmap.MethodError:
