@@ -27,6 +27,7 @@ type reply struct {
 	All        bool   `opt:"-a" desc:"Reply to all recipients."`
 	Close      bool   `opt:"-c" desc:"Close the view tab when replying."`
 	From       bool   `opt:"-f" desc:"Reply to all addresses in From and Reply-To headers."`
+	List       bool   `opt:"-l" desc:"Reply to the mailing list in List-Post header"`
 	Quote      bool   `opt:"-q" desc:"Alias of -T quoted-reply."`
 	Template   string `opt:"-T" complete:"CompleteTemplate" desc:"Template name."`
 	Edit       bool   `opt:"-e" desc:"Force [compose].edit-headers = true."`
@@ -126,6 +127,13 @@ func (r reply) Execute(args []string) error {
 
 	if r.From {
 		to = append(to, dedupe(msg.Envelope.From)...)
+	}
+
+	if r.List {
+		post, _ := msg.RFC822Headers.Text("List-Post")
+		if addrs, err := parse.Mailto(post); err == nil {
+			to = addrs
+		}
 	}
 
 	if !config.Compose().ReplyToSelf && len(to) == 0 {

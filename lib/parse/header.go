@@ -40,3 +40,10 @@ func MsgIDList(h *mail.Header, key string) []string {
 	}
 	return append(list, l...)
 }
+
+// Mailto parses a URI string and extracts the mail address.
+// Example: "<mailto:user@domain.com>" -> "user@domain.com"
+func Mailto(val string) ([]*mail.Address, error) {
+	s := strings.Trim(val, "<> \t\r\n")
+	return mail.ParseAddressList(strings.TrimPrefix(s, "mailto:"))
+}

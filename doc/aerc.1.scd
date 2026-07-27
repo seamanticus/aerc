@@ -475,7 +475,7 @@ message list, the message in the message viewer, etc).
 	_[PATCH X/Y]_), all marked messages will be sorted by subject to ensure
 	that the patches are applied in order.
 
-*:reply* [*-acfqs*] [*-T* _<template-file>_] [*-A* _<account>_] [*-e*|*-E*]
+*:reply* [*-acflqs*] [*-T* _<template-file>_] [*-A* _<account>_] [*-e*|*-E*]
 	Opens the composer to reply to the selected message.
 
 	*-a*: Reply all
@@ -484,6 +484,8 @@ message list, the message in the message viewer, etc).
 	the view tab.
 
 	*-f*: Reply to all addresses in From and Reply-To headers.
+
+	*-l*: Reply to the mailing list in *List-Post* header.
 
 	*-q*: Insert a quoted version of the selected message into the reply
 	editor. This defaults to what is set as *quoted-reply* in the *[templates]*
