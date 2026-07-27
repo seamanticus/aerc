@@ -611,8 +611,31 @@ static size_t print_inline_code(const char *in, struct style *ctx, size_t max_le
 		if (!open) {
 			break;
 		}
-		const char *close = memchr(open + 1, '`', (size_t)(end - open - 1));
+
+		/* count the opening backtick sequence */
+		size_t ticks = 0;
+		while (open + ticks < end && open[ticks] == '`')
+			ticks++;
+
+		/* search for a matching closing sequence */
+		const char *p = open + ticks;
+		const char *close = NULL;
+		while (p + ticks <= end) {
+			p = memchr(p, '`', (size_t)(end - p));
+			if (!p)
+				break;
+			size_t n = 0;
+			while (p + n < end && p[n] == '`')
+				n++;
+			if (n == ticks) {
+				close = p;
+				break;
+			}
+			p += n;
+		}
+
 		if (!close) {
+			/* no matching close, print remaining as-is */
 			break;
 		}
 		/* print text before the opening backtick */
@@ -620,11 +643,11 @@ static size_t print_inline_code(const char *in, struct style *ctx, size_t max_le
 			print_notabs(in, (size_t)(open - in));
 		/* print the code span with style */
 		print(seq(&styles.code));
-		print_notabs(open, (size_t)(close - open + 1));
+		print_notabs(open, (size_t)(close + ticks - open));
 		print(RESET);
 		if (ctx)
 			print(seq(ctx));
-		in = close + 1;
+		in = close + ticks;
 	}
 	/* print remaining text */
 	if (in < end)
@@ -831,6 +854,9 @@ static void print_style(const char *in, struct style *s)
 	print(RESET);
 }
 
+#define CODE_BLOCK_START_RE "^```[A-Za-z_-]*$"
+static regex_t code_block_start_re;
+
 enum state { INIT, DIFF, SIGNATURE, BODY, CODE_BLOCK };
 
 static void colorize_line(const char *in)
@@ -841,7 +867,7 @@ static void colorize_line(const char *in)
 	switch (state) {
 	case CODE_BLOCK:
 		print_style(in, &styles.code);
-		if (startswith(in, "```")) {
+		if (strcmp(in, "```") == 0) {
 			state = BODY;
 		}
 		break;
@@ -874,7 +900,7 @@ static void colorize_line(const char *in)
 		signature(in);
 		break;
 	default: /* BODY, INIT */
-		if (startswith(in, "```")) {
+		if (!regexec(&code_block_start_re, in, 8, groups, 0)) {
 			state = CODE_BLOCK;
 			print_style(in, &styles.code);
 		} else if (!regexec(&diff_start_re, in, 8, groups, 0)) {
@@ -952,6 +978,7 @@ static struct { const char *expr; regex_t *re; } regexes[] = {
 	{DIFF_META_RE, &diff_meta_re},
 	{DIFF_STAT_RE, &diff_stat_re},
 	{URL_RE, &url_re},
+	{CODE_BLOCK_START_RE, &code_block_start_re},
 };
 
 int main(int argc, char **argv)

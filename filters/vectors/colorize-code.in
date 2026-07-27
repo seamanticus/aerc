@@ -2,7 +2,7 @@ Foo Bar, xxxxx:
 > Lorem ipsum dolor sit amet, insolens adolescens ne usu? In pri denique
 > argumentum, te autem decore convenire mea! Duo nisl esse an, aliquid
 > conceptam sea cu. Ignota copiosae gubergren ad est, ut illum doming vocibus
-> sed. Et vis nulla expetendis mediocritatem, errem option gloriatur at nam?
+> sed. Et vis nulla `expetendis` mediocritatem, errem option gloriatur at nam?
 > Brute vidisse corpora ut his, sonet omnesque adipiscing ea quo, cum ea errem
 > aliquip reformidans?
 
@@ -18,11 +18,13 @@ int main(void) {
 
 Id vix referrentur philosophia, veri labores an nec. Noster denique no duo, sit
 ei diam inermis vocibus! Mutat principes ex pro, at ~rjarry/aerc-devel@lists.sr.ht.
-Has putent `rm -rf / &`, tale electram duo at! Ei nulla lucilius intellegat
+Has putent ``rm -rf / &``, tale electram duo at! Ei nulla lucilius intellegat
 nam, pro quod epicuri dissentiet ut, omnis voluptatibus definitiones vim at
 [irc://foo.bar] <jeanpierre@foobaz.org>.
 
 https://git-man-page-generator.lokaltog.net/#Y2xhcCQkY29tbWFuZA==
+
+```foo `bar` baz``` is an inline code block.
 
 -- 
 Batman
