@@ -197,6 +197,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 			for _, id := range r.Destroyed {
 				dir, ok := w.mbox2dir[id]
 				if ok {
+					w.w.Infof("mailbox %q deleted", dir)
 					w.w.PostMessage(&types.RemoveDirectory{
 						Directory: dir,
 					}, nil)
@@ -224,6 +225,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 				}
 				m, exist := w.mboxes[mbox.ID]
 				if exist && mbox.Name != m.Name {
+					w.w.Infof("mailbox %q renamed to %q", m.Name, mbox.Name)
 					w.w.PostMessage(&types.RemoveDirectory{
 						Directory: w.mbox2dir[mbox.ID],
 					}, nil)
@@ -232,6 +234,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 					exist = false
 				}
 				if exist {
+					w.w.Infof("mailbox %q counts updated", mbox.Name)
 					w.mboxes[mbox.ID] = mbox
 					w.w.PostMessage(&types.DirectoryInfo{
 						Info: &models.DirectoryInfo{
@@ -241,6 +244,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 						},
 					}, nil)
 				} else {
+					w.w.Infof("mailbox %q created", mbox.Name)
 					w.addMbox(mbox)
 					w.w.PostMessage(&types.Directory{
 						Dir: &models.Directory{
@@ -340,6 +344,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 					}
 					mboxes[mboxId] = true
 				}
+				w.w.Infof("%d messages deleted from %q", len(deletedUids), dir)
 				w.w.PostMessage(&types.MessagesDeleted{
 					Directory: dir,
 					Uids:      deletedUids,
@@ -420,6 +425,7 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 							}
 						}
 					}
+					w.w.Infof("message %s updated in %q", info.Envelope.MessageId, dir)
 					w.w.PostMessage(&types.MessageInfo{
 						Info: info,
 					}, nil)
@@ -527,6 +533,7 @@ func (w *JMAPWorker) refreshQueriesAndThreads(
 							}
 						}
 					}
+					w.w.Infof("message %s added to %q", info.Envelope.MessageId, dir)
 					w.w.PostMessage(&types.MessageInfo{
 						Info: info,
 					}, nil)
