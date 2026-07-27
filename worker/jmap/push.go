@@ -114,23 +114,6 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 	if err != nil {
 		w.w.Debugf("GetEmailState: %s", err)
 	}
-	ids, _ := w.cache.GetMailboxList()
-	mboxes := make(map[jmap.ID]*mailbox.Mailbox)
-	for _, id := range ids {
-		mbox, err := w.cache.GetMailbox(id)
-		if err != nil {
-			w.w.Warnf("GetMailbox: %s", err)
-			continue
-		}
-		if mbox.Role == mailbox.RoleArchive && w.config.useLabels {
-			mboxes[""] = &mailbox.Mailbox{
-				Name: w.config.allMail,
-				Role: mailbox.RoleAll,
-			}
-		} else {
-			mboxes[id] = mbox
-		}
-	}
 	emailUpdated := ""
 	emailCreated := ""
 	if emailState != "" && newState[EmailState] != emailState {
@@ -198,7 +181,6 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 		return
 	}
 
-	var changedMboxIds []jmap.ID
 	var labelsChanged bool
 	// threadEmails are email IDs from threads which changed or were
 	// created
@@ -228,11 +210,42 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 
 		case *mailbox.GetResponse:
 			for _, mbox := range r.List {
-				changedMboxIds = append(changedMboxIds, mbox.ID)
-				mboxes[mbox.ID] = mbox
+				if mbox.Role == mailbox.RoleArchive && w.config.useLabels {
+					continue
+				}
 				err = w.cache.PutMailbox(mbox.ID, mbox)
 				if err != nil {
 					w.w.Warnf("PutMailbox: %s", err)
+				}
+				m, exist := w.mboxes[mbox.ID]
+				if exist && mbox.Name != m.Name {
+					w.w.PostMessage(&types.RemoveDirectory{
+						Directory: w.mbox2dir[mbox.ID],
+					}, nil)
+					w.deleteMbox(mbox.ID)
+					labelsChanged = true
+					exist = false
+				}
+				if exist {
+					w.mboxes[mbox.ID] = mbox
+					w.w.PostMessage(&types.DirectoryInfo{
+						Info: &models.DirectoryInfo{
+							Name:   w.mbox2dir[mbox.ID],
+							Exists: int(mbox.TotalEmails),
+							Unseen: int(mbox.UnreadEmails),
+						},
+					}, nil)
+				} else {
+					w.addMbox(mbox)
+					w.w.PostMessage(&types.Directory{
+						Dir: &models.Directory{
+							Name:   w.mbox2dir[mbox.ID],
+							Role:   jmapRole2aerc[mbox.Role],
+							Exists: int(mbox.TotalEmails),
+							Unseen: int(mbox.UnreadEmails),
+						},
+					}, nil)
+					labelsChanged = true
 				}
 			}
 			err = w.cache.PutMailboxState(r.State)
@@ -404,47 +417,6 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 				}
 			}
 		}
-	}
-
-	for _, id := range changedMboxIds {
-		mbox := mboxes[id]
-		if mbox.Role == mailbox.RoleArchive && w.config.useLabels {
-			continue
-		}
-		newDir := w.MailboxPath(mbox)
-		dir, ok := w.mbox2dir[id]
-		if ok {
-			// updated
-			if newDir == dir {
-				w.deleteMbox(id)
-				w.addMbox(mbox)
-				w.w.PostMessage(&types.DirectoryInfo{
-					Info: &models.DirectoryInfo{
-						Name:   dir,
-						Exists: int(mbox.TotalEmails),
-						Unseen: int(mbox.UnreadEmails),
-					},
-				}, nil)
-			} else {
-				// renamed mailbox
-				w.deleteMbox(id)
-				w.w.PostMessage(&types.RemoveDirectory{
-					Directory: dir,
-				}, nil)
-				dir = newDir
-			}
-		}
-		// new mailbox
-		w.addMbox(mbox)
-		w.w.PostMessage(&types.Directory{
-			Dir: &models.Directory{
-				Name:   dir,
-				Exists: int(mbox.TotalEmails),
-				Unseen: int(mbox.UnreadEmails),
-				Role:   jmapRole2aerc[mbox.Role],
-			},
-		}, nil)
-		labelsChanged = true
 	}
 
 	if w.config.useLabels && labelsChanged {
