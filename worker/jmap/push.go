@@ -453,35 +453,32 @@ func (w *JMAPWorker) handleChange(s *jmap.StateChange) {
 		w.w.PostMessage(&types.LabelList{Labels: labels}, nil)
 	}
 
-	w.refreshQueriesAndThreads(threadEmails)
+	w.refreshQueriesAndThreads(addedEmails, threadEmails)
 }
 
 // refreshQueriesAndThreads updates the cached query for any mailbox which was updated
 func (w *JMAPWorker) refreshQueriesAndThreads(
+	addedEmails map[jmap.ID]map[jmap.ID]int,
 	threadEmails []jmap.ID,
 ) {
-	if len(threadEmails) == 0 {
+	if len(addedEmails) == 0 && len(threadEmails) == 0 {
 		return
 	}
 
+	ids := make([]jmap.ID, 0, len(addedEmails)+len(threadEmails))
+	for i := range addedEmails {
+		ids = append(ids, i)
+	}
+	ids = append(ids, threadEmails...)
+
 	var req jmap.Request
 
-	emailsToFetch := []jmap.ID{}
-	for _, id := range threadEmails {
-		if w.cache.HasEmail(id) {
-			continue
-		}
-		emailsToFetch = append(emailsToFetch, id)
-	}
-
-	if len(emailsToFetch) != 0 {
-		req.Invoke(&email.Get{
-			Account:        w.AccountId(),
-			Properties:     emailProperties,
-			BodyProperties: bodyProperties,
-			IDs:            emailsToFetch,
-		})
-	}
+	req.Invoke(&email.Get{
+		Account:        w.AccountId(),
+		Properties:     emailProperties,
+		BodyProperties: bodyProperties,
+		IDs:            ids,
+	})
 
 	resp, err := w.Do(context.TODO(), &req)
 	if err != nil {
@@ -493,16 +490,43 @@ func (w *JMAPWorker) refreshQueriesAndThreads(
 		switch r := inv.Args.(type) {
 		case *email.GetResponse:
 			for _, m := range r.List {
+				old, err := w.cache.GetEmail(m.ID)
+				if err == nil {
+					for mboxId := range old.MailboxIDs {
+						if !m.MailboxIDs[mboxId] {
+							dir, ok := w.mbox2dir[mboxId]
+							if !ok {
+								continue
+							}
+							w.w.PostMessage(&types.MessagesDeleted{
+								Directory: dir,
+								Uids:      []models.UID{models.UID(m.ID)},
+							}, nil)
+						}
+					}
+				}
 				err = w.cache.PutEmail(m.ID, m)
 				if err != nil {
 					w.w.Warnf("PutEmail: %s", err)
 				}
+				indexes := addedEmails[m.ID]
 				for mboxId := range m.MailboxIDs {
 					dir, ok := w.mbox2dir[mboxId]
 					if !ok {
 						continue
 					}
 					info := w.translateMsgInfo(m, dir)
+					if indexes != nil {
+						i, ok := indexes[mboxId]
+						if ok {
+							info.Index = &i
+							// Set recent on created messages so we
+							// get a notification
+							if !info.Flags.Has(models.SeenFlag) {
+								info.Flags |= models.RecentFlag
+							}
+						}
+					}
 					w.w.PostMessage(&types.MessageInfo{
 						Info: info,
 					}, nil)
