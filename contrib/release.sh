@@ -74,7 +74,9 @@ if [ "$dry_run" = false ]; then
 	${EDITOR:-vi} CHANGELOG.md
 	rm -f .changelog.md
 	git add GNUmakefile CHANGELOG.md
-	git commit -vesm "Release version $next_tag"
+	git commit -vesm "aerc: release version $next_tag" \
+		-m "~\$ contrib/git-stats.sh $prev_tag..$next_tag
+$(contrib/git-stats.sh $prev_tag..)"
 
 	echo "======= Creating tag..."
 	git -c core.commentchar='%' tag --edit --sign \
