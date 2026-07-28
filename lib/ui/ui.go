@@ -150,6 +150,10 @@ func QueueRefresh() {
 	}
 }
 
+func Vaxis() *vaxis.Vaxis {
+	return state.vx
+}
+
 func PushClipboard(text string) {
 	state.vx.ClipboardPush(text)
 }

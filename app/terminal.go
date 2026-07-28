@@ -38,12 +38,17 @@ type Terminal struct {
 }
 
 func NewTerminal(cmd *exec.Cmd) (*Terminal, error) {
+	var vterm *term.Model
+	if config.General().InheritHostTTYFeatures {
+		vterm = term.New(term.WithVaxis(ui.Vaxis()))
+	} else {
+		vterm = term.New()
+	}
 	term := &Terminal{
 		cmd:     cmd,
-		vterm:   term.New(),
+		vterm:   vterm,
 		visible: 1,
 	}
-	term.vterm.OSC8 = config.General().EnableOSC8
 	term.vterm.TERM = config.General().Term
 	return term, nil
 }

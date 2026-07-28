@@ -104,12 +104,16 @@ These options are configured in the *[general]* section of _aerc.conf_.
 
 	Default: _xterm-256color_
 
-*enable-osc8* = _true_|_false_
-	Enable the embedded terminal to output OSC 8 (hyperlinks) escape
-	sequences. Not all terminal emulators handle OSC 8 sequences properly
-	and can produce confusing results, disable this setting if that occurs.
+*inherit-host-tty-features* = _true_|_false_
+	Enable inheriting host terminal features in the embedded terminal. When
+	enabled, the embedded terminal negotiates advanced keyboard protocols
+	with child processes, allowing disambiguation of modified keys (e.g.
+	Ctrl+Backspace is no longer aliased to C-h). Also enables hyperlink
+	support (OSC 8), clipboard integration (OSC 52), inline image display,
+	and foreground/background color queries (OSC 10/11) for child processes.
+	Requires a compatible host terminal.
 
-	Default: _false_
+	Default: _true_
 
 *enable-quake-mode* = _true_|_false_
 	Enable Quake mode which consists of a persistent drop-down terminal

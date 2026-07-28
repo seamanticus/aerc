@@ -563,7 +563,7 @@ func NewPartViewer(
 			format.FormatAddresses(info.Envelope.From)))
 		filter.Env = append(filter.Env, fmt.Sprintf("AERC_STYLESET=%s",
 			acct.UiConfig().StyleSetPath()))
-		if config.General().EnableOSC8 {
+		if ui.Vaxis().CanHyperlink() {
 			filter.Env = append(filter.Env, "AERC_OSC8_URLS=1")
 		}
 		if pager != filter {

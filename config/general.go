@@ -15,20 +15,20 @@ import (
 )
 
 type GeneralConfig struct {
-	DefaultSavePath    string       `ini:"default-save-path"`
-	PgpProvider        string       `ini:"pgp-provider" default:"auto" parse:"ParsePgpProvider"`
-	UnsafeAccountsConf bool         `ini:"unsafe-accounts-conf"`
-	LogFile            string       `ini:"log-file"`
-	LogLevel           log.LogLevel `ini:"log-level" default:"info" parse:"ParseLogLevel"`
-	DisableIPC         bool         `ini:"disable-ipc"`
-	DisableIPCMailto   bool         `ini:"disable-ipc-mailto"`
-	DisableIPCMbox     bool         `ini:"disable-ipc-mbox"`
-	EnableOSC8         bool         `ini:"enable-osc8" default:"false"`
-	Term               string       `ini:"term" default:"xterm-256color"`
-	DefaultMenuCmd     string       `ini:"default-menu-cmd"`
-	QuakeMode          bool         `ini:"enable-quake-mode" default:"false"`
-	UsePinentry        bool         `ini:"use-terminal-pinentry" default:"false"`
-	TempDir            string       `ini:"temporary-directory" default:"" parse:"ParseTempDir"`
+	DefaultSavePath        string       `ini:"default-save-path"`
+	PgpProvider            string       `ini:"pgp-provider" default:"auto" parse:"ParsePgpProvider"`
+	UnsafeAccountsConf     bool         `ini:"unsafe-accounts-conf"`
+	LogFile                string       `ini:"log-file"`
+	LogLevel               log.LogLevel `ini:"log-level" default:"info" parse:"ParseLogLevel"`
+	DisableIPC             bool         `ini:"disable-ipc"`
+	DisableIPCMailto       bool         `ini:"disable-ipc-mailto"`
+	DisableIPCMbox         bool         `ini:"disable-ipc-mbox"`
+	InheritHostTTYFeatures bool         `ini:"inherit-host-tty-features" default:"true"`
+	Term                   string       `ini:"term" default:"xterm-256color"`
+	DefaultMenuCmd         string       `ini:"default-menu-cmd"`
+	QuakeMode              bool         `ini:"enable-quake-mode" default:"false"`
+	UsePinentry            bool         `ini:"use-terminal-pinentry" default:"false"`
+	TempDir                string       `ini:"temporary-directory" default:"" parse:"ParseTempDir"`
 }
 
 var generalConfig atomic.Pointer[GeneralConfig]
@@ -69,6 +69,19 @@ func parseGeneral(file *ini.File) (*GeneralConfig, error) {
 	err := log.Init(logFile, useStdout, conf.LogLevel)
 	if err != nil {
 		return nil, err
+	}
+
+	if file.Section("general").HasKey("enable-osc8") {
+		Warnings = append(Warnings, Warning{
+			Title: "aerc.conf: [general].enable-osc8 is deprecated",
+			Body: `The enable-osc8 option is deprecated and has no effect.
+
+OSC 8 hyperlink support can be now automatically detected from the host
+terminal. The [general].inherit-host-tty-features option enables this
+capability detection for embedded terminals.
+
+Please remove enable-osc8 from aerc.conf.`,
+		})
 	}
 
 	log.Debugf("aerc.conf: [general] %#v", conf)
