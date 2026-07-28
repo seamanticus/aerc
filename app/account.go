@@ -23,7 +23,7 @@ import (
 	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rjarry/aerc/worker"
 	"git.sr.ht/~rjarry/aerc/worker/types"
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 var _ ProvidesMessages = (*AccountView)(nil)

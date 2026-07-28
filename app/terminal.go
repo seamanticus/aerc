@@ -9,8 +9,8 @@ import (
 	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/aerc/lib/state"
 	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rockorager/vaxis"
-	"git.sr.ht/~rockorager/vaxis/widgets/term"
+	"go.rockorager.dev/vaxis"
+	"go.rockorager.dev/vaxis/widgets/term"
 )
 
 type HasTerminal interface {

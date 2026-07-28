@@ -4,7 +4,7 @@ import (
 	"math"
 	"sync"
 
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 type Grid struct {

@@ -1,8 +1,8 @@
 package ui
 
 import (
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/mattn/go-runewidth"
+	"go.rockorager.dev/vaxis"
 )
 
 const (

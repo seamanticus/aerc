@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 // Drawable is a UI component that can draw. Unless specified, all methods must

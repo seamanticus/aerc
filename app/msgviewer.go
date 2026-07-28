@@ -25,8 +25,8 @@ import (
 	"git.sr.ht/~rjarry/aerc/lib/ui"
 	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rjarry/go-opt/v2"
-	"git.sr.ht/~rockorager/vaxis"
-	"git.sr.ht/~rockorager/vaxis/widgets/align"
+	"go.rockorager.dev/vaxis"
+	"go.rockorager.dev/vaxis/widgets/align"
 
 	// Image support
 	_ "image/jpeg"

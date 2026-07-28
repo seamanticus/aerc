@@ -3,8 +3,8 @@ package commands
 import (
 	"git.sr.ht/~rjarry/aerc/app"
 	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/pkg/errors"
+	"go.rockorager.dev/vaxis"
 )
 
 type SendKeys struct {

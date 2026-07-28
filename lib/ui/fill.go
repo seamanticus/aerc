@@ -1,6 +1,6 @@
 package ui
 
-import "git.sr.ht/~rockorager/vaxis"
+import "go.rockorager.dev/vaxis"
 
 type Fill struct {
 	Rune  rune

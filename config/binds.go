@@ -14,8 +14,8 @@ import (
 	"unicode/utf8"
 
 	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/go-ini/ini"
+	"go.rockorager.dev/vaxis"
 )
 
 type BindingConfig struct {

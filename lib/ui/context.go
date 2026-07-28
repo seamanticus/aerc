@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 // A context allows you to draw in a sub-region of the terminal

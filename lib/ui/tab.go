@@ -6,7 +6,7 @@ import (
 	"github.com/mattn/go-runewidth"
 
 	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 const tabRuneWidth int = 32 // TODO: make configurable

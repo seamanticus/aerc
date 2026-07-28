@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 func stroke(key rune) config.KeyStroke {

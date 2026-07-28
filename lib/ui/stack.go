@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 type Stack struct {

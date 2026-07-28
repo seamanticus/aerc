@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/lib/xdg"
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
+	"go.rockorager.dev/vaxis"
 )
 
 type StyleObject int32

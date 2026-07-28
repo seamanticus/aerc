@@ -4,8 +4,8 @@ import (
 	"git.sr.ht/~rjarry/aerc/config"
 	"git.sr.ht/~rjarry/aerc/lib/authres"
 	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/mattn/go-runewidth"
+	"go.rockorager.dev/vaxis"
 )
 
 type AuthInfo struct {

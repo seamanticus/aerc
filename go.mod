@@ -5,7 +5,6 @@ go 1.25.0
 require (
 	git.sr.ht/~rjarry/go-opt/v2 v2.2.0
 	git.sr.ht/~rockorager/go-jmap v0.5.3
-	git.sr.ht/~rockorager/vaxis v0.16.0
 	github.com/ProtonMail/go-crypto v1.4.1
 	github.com/arran4/golang-ical v0.3.5
 	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
@@ -28,6 +27,7 @@ require (
 	github.com/riywo/loginshell v0.0.0-20200815045211-7d26008be1ab
 	github.com/stretchr/testify v1.11.1
 	github.com/syndtr/goleveldb v1.0.0
+	go.rockorager.dev/vaxis v0.17.1
 	golang.org/x/image v0.44.0
 	golang.org/x/net v0.57.0
 	golang.org/x/oauth2 v0.36.0

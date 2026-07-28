@@ -13,9 +13,9 @@ import (
 	"unicode"
 
 	"git.sr.ht/~rjarry/go-opt/v2"
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/emersion/go-message/mail"
+	"go.rockorager.dev/vaxis"
 
 	"git.sr.ht/~rjarry/aerc/config"
 	"git.sr.ht/~rjarry/aerc/lib"

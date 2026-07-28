@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/stretchr/testify/assert"
+	"go.rockorager.dev/vaxis"
 )
 
 func TestGetBinding(t *testing.T) {

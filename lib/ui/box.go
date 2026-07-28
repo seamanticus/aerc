@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rockorager/vaxis"
 	"github.com/mattn/go-runewidth"
+	"go.rockorager.dev/vaxis"
 )
 
 type Box struct {

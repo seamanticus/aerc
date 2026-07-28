@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"git.sr.ht/~rockorager/vaxis"
+	"go.rockorager.dev/vaxis"
 )
 
 func StyledString(s string) *vaxis.StyledString {
