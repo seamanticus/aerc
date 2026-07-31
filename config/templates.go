@@ -1,7 +1,6 @@
 package config
 
 import (
-	"path"
 	"sync/atomic"
 	"time"
 
@@ -32,11 +31,7 @@ func parseTemplates(file *ini.File) (*TemplateConfig, error) {
 	}
 
 	// append default paths to template-dirs
-	for _, dir := range SearchDirs {
-		conf.TemplateDirs = append(
-			conf.TemplateDirs, path.Join(dir, "templates"),
-		)
-	}
+	conf.TemplateDirs = append(conf.TemplateDirs, ResourceDirs("templates")...)
 
 	// we want to fail during startup if the templates are not ok
 	// hence we do dummy executes here

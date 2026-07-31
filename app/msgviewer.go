@@ -541,10 +541,7 @@ func NewPartViewer(
 	var noFilter *ui.Grid
 	if filter != nil {
 		path, _ := os.LookupEnv("PATH")
-		var paths []string
-		for _, dir := range config.SearchDirs {
-			paths = append(paths, dir+"/filters")
-		}
+		paths := config.ResourceDirs("filters")
 		paths = append(paths, path)
 		path = strings.Join(paths, ":")
 		filter.Env = os.Environ()

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"path"
 	"strings"
 
 	"git.sr.ht/~rjarry/aerc/lib/xdg"
@@ -50,3 +51,14 @@ func buildDefaultDirs() []string {
 }
 
 var SearchDirs = buildDefaultDirs()
+
+// ResourceDirs returns a list of directories to search for specific resources
+func ResourceDirs(resource string) []string {
+	var dirs []string
+
+	for _, dir := range SearchDirs {
+		dirs = append(dirs, path.Join(dir, resource))
+	}
+
+	return dirs
+}

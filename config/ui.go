@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"math"
-	"path"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -199,11 +198,7 @@ func parseUi(file *ini.File) (*UIConfig, error) {
 	}
 
 	// append default paths to styleset-dirs
-	for _, dir := range SearchDirs {
-		conf.StyleSetDirs = append(
-			conf.StyleSetDirs, path.Join(dir, "stylesets"),
-		)
-	}
+	conf.StyleSetDirs = append(conf.StyleSetDirs, ResourceDirs("stylesets")...)
 
 	if err := conf.LoadStyle(); err != nil {
 		return nil, err
