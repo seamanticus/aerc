@@ -1400,7 +1400,18 @@ message/rfc822=thunderbird
 
 Hooks are triggered whenever the associated event occurs. The commands are
 invoked with _sh -c command_ including information added to environment
-variables.
+variables. The following folders are prepended to the system *$PATH* to allow
+referencing filters from their name only.
+
+```
+${XDG_CONFIG_HOME:-~/.config}/aerc/hooks
+~/.local/libexec/aerc/hooks
+${XDG_DATA_HOME:-~/.local/share}/aerc/hooks
+$PREFIX/libexec/aerc/hooks
+$PREFIX/share/aerc/hooks
+/usr/libexec/aerc/hooks
+/usr/share/aerc/hooks
+```
 
 They are configured in the *[hooks]* section of aerc.conf.
 
