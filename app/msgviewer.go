@@ -540,11 +540,10 @@ func NewPartViewer(
 	}
 	var noFilter *ui.Grid
 	if filter != nil {
-		path, _ := os.LookupEnv("PATH")
-		paths := config.ResourceDirs("filters")
-		paths = append(paths, path)
-		path = strings.Join(paths, ":")
-		filter.Env = os.Environ()
+		// append to PATH to find filters
+		paths := strings.Split(os.Getenv("PATH"), string(os.PathListSeparator))
+		paths = append(config.ResourceDirs("filters"), paths...)
+		path := strings.Join(paths, string(os.PathListSeparator))
 		filter.Env = append(filter.Env, fmt.Sprintf("PATH=%s", path))
 		filter.Env = append(filter.Env,
 			fmt.Sprintf("AERC_MIME_TYPE=%s", mime))
