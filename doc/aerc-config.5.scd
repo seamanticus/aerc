@@ -1398,8 +1398,9 @@ message/rfc822=thunderbird
 
 # HOOKS
 
-Hooks are triggered whenever the associated event occurs. The commands are run
-in a shell environment with information added to environment variables.
+Hooks are triggered whenever the associated event occurs. The commands are
+invoked with _sh -c command_ including information added to environment
+variables.
 
 They are configured in the *[hooks]* section of aerc.conf.
 
