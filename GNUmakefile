@@ -169,7 +169,7 @@ endef
 define install_filter
 ifneq ($(wildcard filters/$1.c),)
 $1: filters/$1.c
-	$$(CC) $$(CFLAGS) $$(LDFLAGS) -o $$@ $$<
+	$$(CC) $$(CFLAGS) $$(CPPFLAGS) $$(LDFLAGS) -o $$@ $$<
 
 all: $1
 endif
