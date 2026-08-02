@@ -403,6 +403,18 @@ static bool is_split_point(const wchar_t c)
 	return false;
 }
 
+static size_t wc_width(wchar_t c)
+{
+	int w = wcwidth(c);
+	return w > 0 ? (size_t)w : 0;
+}
+
+static size_t wcs_width(const wchar_t *s, size_t n)
+{
+	int w = wcswidth(s, n);
+	return w > 0 ? (size_t)w : 0;
+}
+
 /*
  * Write a paragraph, wrapping at words boundaries.
  *
@@ -411,8 +423,8 @@ static bool is_split_point(const wchar_t c)
  */
 static void write_paragraph(struct paragraph *p)
 {
-	size_t quotes_width = (size_t)wcswidth(p->quotes, wcslen(p->quotes));
-	size_t remain = (size_t)wcswidth(p->text, wcslen(p->text));
+	size_t quotes_width = wcs_width(p->quotes, wcslen(p->quotes));
+	size_t remain = wcs_width(p->text, wcslen(p->text));
 	const wchar_t *indent = L"";
 	wchar_t *text = p->text;
 	bool more = true;
@@ -421,7 +433,7 @@ static void write_paragraph(struct paragraph *p)
 	size_t width;
 
 	while (more) {
-		width = quotes_width + (size_t)wcswidth(indent, wcslen(indent));
+		width = quotes_width + wcs_width(indent, wcslen(indent));
 
 		if (width + remain <= margin || p->prose_ratio < prose_ratio) {
 			/* whole paragraph fits on a single line */
@@ -433,7 +445,7 @@ static void write_paragraph(struct paragraph *p)
 			size_t split = SIZE_MAX;
 			size_t w = 0;
 			for (size_t i = 0; text[i] != L'\0'; i++) {
-				w += (size_t)wcwidth(text[i]);
+				w += wc_width(text[i]);
 				if (width + w > margin && split != SIZE_MAX) {
 					break;
 				}
@@ -454,7 +466,7 @@ static void write_paragraph(struct paragraph *p)
 					split++;
 				}
 				if (text[split] != L'\0') {
-					remain -= (size_t)wcswidth(text, split);
+					remain -= wcs_width(text, split);
 					text = &text[split];
 				} else {
 					/* only trailing whitespace, we're done */
