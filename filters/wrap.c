@@ -514,9 +514,14 @@ static int set_stdio_encoding(void)
 
 	/* aerc will always send UTF-8 text, ensure that we read that properly */
 	locale_t loc = newlocale(LC_ALL_MASK, locale, NULL);
+	if (!loc) {
+		fprintf(stderr, "error: failed to create locale '%s'\n", locale);
+		return 1;
+	}
 	char *codeset = nl_langinfo_l(CODESET, loc);
+	bool utf8 = strstr(codeset, "UTF-8") != NULL;
 	freelocale(loc);
-	if (!strstr(codeset, "UTF-8")) {
+	if (!utf8) {
 		fprintf(stderr, "error: locale '%s' is not UTF-8\n", locale);
 		return 1;
 	}
