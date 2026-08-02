@@ -544,6 +544,7 @@ func NewPartViewer(
 		paths := strings.Split(os.Getenv("PATH"), string(os.PathListSeparator))
 		paths = append(config.ResourceDirs("filters"), paths...)
 		path := strings.Join(paths, string(os.PathListSeparator))
+		filter.Env = os.Environ()
 		filter.Env = append(filter.Env, fmt.Sprintf("PATH=%s", path))
 		filter.Env = append(filter.Env,
 			fmt.Sprintf("AERC_MIME_TYPE=%s", mime))
