@@ -124,7 +124,8 @@ func (w *Worker) handleAction(action types.WorkerMessage) {
 	// Explicitly handle all asynchronous actions. Async actions are
 	// responsible for posting their own Done message
 	case *types.CheckMail:
-		go w.handleCheckMail(msg)
+		// w.selectedName is only safe to read from this goroutine.
+		go w.handleCheckMail(msg, w.selectedName)
 	default:
 		// Default handling, will be performed synchronously
 		err := w.handleMessage(msg)
@@ -977,7 +978,7 @@ func (w *Worker) msgHeadersFromUid(dir maildir.Dir, uid models.UID) (*models.Mes
 	return info, nil
 }
 
-func (w *Worker) handleCheckMail(msg *types.CheckMail) {
+func (w *Worker) handleCheckMail(msg *types.CheckMail, selectedName string) {
 	defer log.PanicHandler()
 	if msg.Command == "" {
 		w.err(msg, fmt.Errorf("checkmail: no command specified"))
@@ -1018,7 +1019,7 @@ func (w *Worker) handleCheckMail(msg *types.CheckMail) {
 				dirInfo := w.getDirectoryInfo(name)
 				w.worker.PostMessage(&types.DirectoryInfo{
 					Info:    dirInfo,
-					Refetch: name == w.selectedName,
+					Refetch: name == selectedName,
 				}, nil)
 			}
 			w.done(msg)
