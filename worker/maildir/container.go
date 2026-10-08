@@ -95,7 +95,7 @@ func (c *Container) UIDs(d maildir.Dir) ([]models.UID, error) {
 	for _, msg := range messages {
 		key := msg.Key()
 		uid := models.UID(key)
-		if m, ok := c.msgCache[uid]; ok {
+		if m, ok := c.msgCache[uid]; ok && m.dir == d {
 			// If cached message is already present, update msg so
 			// any path (flag) changes by external programs are
 			// picked up.

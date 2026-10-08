@@ -1,6 +1,8 @@
 package maildir
 
 import (
+	"os"
+	"path/filepath"
 	"slices"
 	"testing"
 	"time"
@@ -46,6 +48,54 @@ func deleteAll(
 	case <-time.After(5 * time.Second):
 		t.Fatal("DeleteAll did not return (deadlock?)")
 		return nil, nil
+	}
+}
+
+func TestContainerSameKeyInTwoFolders(t *testing.T) {
+	c, err := NewContainer(t.TempDir(), false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	inbox := c.Store.Dir("INBOX")
+	archive := c.Store.Dir("Archive")
+	for _, d := range []maildir.Dir{inbox, archive} {
+		if err := d.Init(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	uid := addTestMessage(t, inbox)
+	// Copy the file with the same name, as an external tool may do.
+	src, err := inbox.MessageByKey(string(uid))
+	if err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(src.Filename())
+	if err != nil {
+		t.Fatal(err)
+	}
+	dst := filepath.Join(string(archive), "cur", filepath.Base(src.Filename()))
+	if err := os.WriteFile(dst, data, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Listing the other folder must not hijack the cached message.
+	if _, err := c.UIDs(inbox); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.UIDs(archive); err != nil {
+		t.Fatal(err)
+	}
+	m, err := c.Message(inbox, uid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	msg, err := m.loadMsg()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if msg.Filename() != src.Filename() {
+		t.Fatalf("INBOX message resolved to %q, expected %q",
+			msg.Filename(), src.Filename())
 	}
 }
 
