@@ -121,6 +121,12 @@ func (c *Container) UIDs(d maildir.Dir) ([]models.UID, error) {
 func (c *Container) Message(d maildir.Dir, uid models.UID) (*Message, error) {
 	c.Lock()
 	defer c.Unlock()
+	return c.messageLocked(d, uid)
+}
+
+// messageLocked is the implementation of Message. The caller must hold the
+// container write lock.
+func (c *Container) messageLocked(d maildir.Dir, uid models.UID) (*Message, error) {
 	if m, ok := c.msgCache[uid]; ok && m.dir == d {
 		return m, nil
 	}
@@ -140,7 +146,7 @@ func (c *Container) DeleteAll(d maildir.Dir, uids []models.UID) ([]models.UID, e
 	defer c.Unlock()
 	var success []models.UID
 	for _, uid := range uids {
-		msg, err := c.Message(d, uid)
+		msg, err := c.messageLocked(d, uid)
 		if err != nil {
 			return success, err
 		}
