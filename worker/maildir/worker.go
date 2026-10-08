@@ -83,6 +83,7 @@ func NewMaildirppWorker(worker *types.Worker) (types.Backend, error) {
 		},
 		worker:    worker,
 		watcher:   watch,
+		fsEvents:  make(chan struct{}),
 		maildirpp: true,
 	}, nil
 }
