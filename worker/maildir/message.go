@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
+	"sync/atomic"
 	"time"
 
 	"github.com/emersion/go-maildir"
@@ -15,24 +17,28 @@ import (
 )
 
 // A Message is an individual email inside of a maildir.Dir.
+//
+// Message objects are cached by the Container and shared between goroutines.
+// The lazily loaded fields are accessed atomically and the objects they point
+// to must never be modified once stored.
 type Message struct {
 	dir maildir.Dir
 	uid models.UID
 	key string
-	msg *maildir.Message
-	hdr *models.MessageInfo
+	msg atomic.Pointer[maildir.Message]
+	hdr atomic.Pointer[models.MessageInfo]
 }
 
 // loadMsg lazy-loads and caches the underlying maildir.Message.
 func (m *Message) loadMsg() (*maildir.Message, error) {
-	if m.msg != nil {
-		return m.msg, nil
+	if msg := m.msg.Load(); msg != nil {
+		return msg, nil
 	}
 	msg, err := m.dir.MessageByKey(m.key)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find message with key %q: %w", m.key, err)
 	}
-	m.msg = msg
+	m.msg.Store(msg)
 	return msg, nil
 }
 
@@ -51,7 +57,8 @@ func (m *Message) Flags() ([]maildir.Flag, error) {
 	if err != nil {
 		return nil, err
 	}
-	return msg.Flags(), nil
+	// Return a copy, the caller may modify it.
+	return slices.Clone(msg.Flags()), nil
 }
 
 // ModelFlags fetches the set of models.flags currently applied to the message.
@@ -69,8 +76,11 @@ func (m *Message) SetFlags(flags []maildir.Flag) error {
 	if err != nil {
 		return err
 	}
-	err = msg.SetFlags(flags)
-	m.msg = nil
+	// maildir.Message.SetFlags() updates the object in place. Work on a
+	// copy since other goroutines may be reading the cached one.
+	newMsg := *msg
+	err = newMsg.SetFlags(flags)
+	m.msg.Store(nil)
 	return err
 }
 
@@ -112,7 +122,7 @@ func (m *Message) Remove() error {
 		return err
 	}
 	err = msg.Remove()
-	m.msg = nil
+	m.msg.Store(nil)
 	return err
 }
 
@@ -159,7 +169,7 @@ func (m *Message) InternalDate() time.Time {
 // MessageHeaders populates a models.MessageInfo struct for the message with
 // minimal information, used for sorting and threading.
 func (m *Message) MessageHeaders() (*models.MessageInfo, error) {
-	hdr := m.hdr
+	hdr := m.hdr.Load()
 	if hdr == nil {
 		var err error
 		hdr, err = rfc822.MessageHeaders(m)
@@ -172,7 +182,7 @@ func (m *Message) MessageHeaders() (*models.MessageInfo, error) {
 			log.Debugf("message size failed: %v", err)
 		}
 		hdr.InternalDate = m.InternalDate()
-		m.hdr = hdr
+		m.hdr.Store(hdr)
 	}
 	// Unlike headers, flags change over time. Never return cached ones.
 	flags, err := m.ModelFlags()

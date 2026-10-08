@@ -99,15 +99,16 @@ func (c *Container) UIDs(d maildir.Dir) ([]models.UID, error) {
 			// If cached message is already present, update msg so
 			// any path (flag) changes by external programs are
 			// picked up.
-			m.msg = msg
+			m.msg.Store(msg)
 			newCache[uid] = m
 		} else {
-			newCache[uid] = &Message{
+			m := &Message{
 				dir: d,
 				uid: uid,
 				key: key,
-				msg: msg,
 			}
+			m.msg.Store(msg)
+			newCache[uid] = m
 		}
 		uids = append(uids, uid)
 	}
