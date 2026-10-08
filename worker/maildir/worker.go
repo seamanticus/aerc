@@ -505,7 +505,7 @@ func (w *Worker) handleFetchDirectoryContents(
 			}, nil)
 		}
 	}
-	sortedUids, err := w.sort(msg.Context(), uids, msg.SortCriteria)
+	sortedUids, err := w.sort(msg.Context(), dir, uids, msg.SortCriteria)
 	if err != nil {
 		w.worker.Errorf("failed sorting directory: %v", err)
 		return err
@@ -519,7 +519,10 @@ func (w *Worker) handleFetchDirectoryContents(
 	return nil
 }
 
-func (w *Worker) sort(ctx context.Context, uids []models.UID, criteria []*types.SortCriterion) ([]models.UID, error) {
+func (w *Worker) sort(
+	ctx context.Context, dir maildir.Dir, uids []models.UID,
+	criteria []*types.SortCriterion,
+) ([]models.UID, error) {
 	if len(criteria) == 0 {
 		// At least sort by uid, parallel searching can create random
 		// order
@@ -542,7 +545,7 @@ func (w *Worker) sort(ctx context.Context, uids []models.UID, criteria []*types.
 			go func(uid models.UID) {
 				defer log.PanicHandler()
 				defer wg.Done()
-				info, err := w.msgHeadersFromUid(uid)
+				info, err := w.msgHeadersFromUid(dir, uid)
 				if err != nil {
 					w.worker.Errorf("could not get message info: %v", err)
 					<-limit
@@ -585,7 +588,7 @@ func (w *Worker) handleFetchDirectoryThreaded(
 			return err
 		}
 	}
-	threads, err := w.threads(msg.Context(), uids, msg.SortCriteria)
+	threads, err := w.threads(msg.Context(), dir, uids, msg.SortCriteria)
 	if err != nil {
 		w.worker.Errorf("failed sorting directory: %v", err)
 		return err
@@ -599,7 +602,7 @@ func (w *Worker) handleFetchDirectoryThreaded(
 	return nil
 }
 
-func (w *Worker) threads(ctx context.Context, uids []models.UID,
+func (w *Worker) threads(ctx context.Context, dir maildir.Dir, uids []models.UID,
 	criteria []*types.SortCriterion,
 ) ([]*types.Thread, error) {
 	ui := config.Ui().ForAccount(w.worker.Name())
@@ -619,7 +622,7 @@ func (w *Worker) threads(ctx context.Context, uids []models.UID,
 			go func(uid models.UID) {
 				defer log.PanicHandler()
 				defer wg.Done()
-				info, err := w.msgHeadersFromUid(uid)
+				info, err := w.msgHeadersFromUid(dir, uid)
 				if err != nil {
 					w.worker.Errorf("could not get message info: %v", err)
 					<-limit
@@ -962,8 +965,8 @@ func (w *Worker) msgInfoFromUid(dir maildir.Dir, uid models.UID) (*models.Messag
 	return info, nil
 }
 
-func (w *Worker) msgHeadersFromUid(uid models.UID) (*models.MessageInfo, error) {
-	m, err := w.c.Message(*w.selected, uid)
+func (w *Worker) msgHeadersFromUid(dir maildir.Dir, uid models.UID) (*models.MessageInfo, error) {
+	m, err := w.c.Message(dir, uid)
 	if err != nil {
 		return nil, err
 	}
