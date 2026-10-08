@@ -159,22 +159,29 @@ func (m *Message) InternalDate() time.Time {
 // MessageHeaders populates a models.MessageInfo struct for the message with
 // minimal information, used for sorting and threading.
 func (m *Message) MessageHeaders() (*models.MessageInfo, error) {
-	if m.hdr != nil {
-		return m.hdr, nil
+	hdr := m.hdr
+	if hdr == nil {
+		var err error
+		hdr, err = rfc822.MessageHeaders(m)
+		if err != nil {
+			return nil, err
+		}
+		hdr.Size, err = m.Size()
+		if err != nil {
+			// don't care if size retrieval fails
+			log.Debugf("message size failed: %v", err)
+		}
+		hdr.InternalDate = m.InternalDate()
+		m.hdr = hdr
 	}
-
-	info, err := rfc822.MessageHeaders(m)
+	// Unlike headers, flags change over time. Never return cached ones.
+	flags, err := m.ModelFlags()
 	if err != nil {
 		return nil, err
 	}
-	info.Size, err = m.Size()
-	if err != nil {
-		// don't care if size retrieval fails
-		log.Debugf("message size failed: %v", err)
-	}
-	info.InternalDate = m.InternalDate()
-	m.hdr = info
-	return info, nil
+	info := *hdr
+	info.Flags = flags
+	return &info, nil
 }
 
 // NewBodyPartReader creates a new io.Reader for the requested body part(s) of

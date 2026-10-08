@@ -10,9 +10,9 @@ import (
 	"git.sr.ht/~rjarry/aerc/models"
 )
 
-func addTestMessage(t *testing.T, d maildir.Dir) models.UID {
+func addTestMessage(t *testing.T, d maildir.Dir, flags ...maildir.Flag) models.UID {
 	t.Helper()
-	msg, w, err := d.Create(nil)
+	msg, w, err := d.Create(flags)
 	if err != nil {
 		t.Fatal(err)
 	}
