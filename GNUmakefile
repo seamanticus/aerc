@@ -36,7 +36,7 @@ man7 = $(subst .scd,,$(notdir $(wildcard doc/*.7.scd)))
 docs = $(man1) $(man5) $(man7)
 cfilters = $(subst .c,,$(notdir $(wildcard filters/*.c)))
 filters = $(filter-out filters/vectors filters/test.sh filters/%.c,$(wildcard filters/*))
-gofumpt_tag = v0.7.0
+gofumpt_tag = v0.12.0
 
 # Dependencies are added dynamically to the "all" rule with macros
 .PHONY: all
@@ -65,7 +65,7 @@ lint:
 		&& echo The above files need to be formatted, please run make fmt && exit 1 \
 		|| echo all files formatted.
 	codespell *
-	$(GO) run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.13.2 run \
+	$(GO) run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0 run \
 		$$(echo $(GOFLAGS) | sed s/-tags=/--build-tags=/)
 	$(GO) run $(GOFLAGS) contrib/linters.go ./...
 
