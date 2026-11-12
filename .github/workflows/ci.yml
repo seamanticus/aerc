@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  GO_VERSION: "1.27"
+
+jobs:
+  fedora:
+    name: Fedora ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    container: fedora:latest
+    env:
+      DESTDIR: ./out
+    steps:
+      # git is needed by actions/checkout to fetch a repository instead of
+      # a tarball, tar by actions/setup-go
+      - run: dnf install -y --setopt=install_weak_deps=False
+          codespell gcc git gnupg2 make notmuch-devel scdoc tar
+      - uses: actions/checkout@v4
+      # Fedora's golang package sets GOTOOLCHAIN=local and may lag behind
+      # the go.mod requirement
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+      - run: make
+      - run: make tests
+      - run: make install checkinstall
+      - if: matrix.arch == 'x86_64'
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          make lint
+
+  ubuntu:
+    name: Ubuntu ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    env:
+      DESTDIR: ./out
+    steps:
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libnotmuch-dev scdoc
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+      - run: make
+      - run: make tests
+      - run: make install checkinstall
+
+  freebsd:
+    name: FreeBSD ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, aarch64]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/freebsd-vm@v1
+        with:
+          release: "15"
+          arch: ${{ matrix.arch }}
+          usesh: true
+          prepare: pkg install -y go gmake gnupg notmuch scdoc
+          run: |
+            export DESTDIR=./out
+            gmake
+            gmake tests
+            gmake install checkinstall
+
+  openbsd:
+    name: OpenBSD ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, aarch64]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/openbsd-vm@v1
+        with:
+          release: "8.0"
+          arch: ${{ matrix.arch }}
+          usesh: true
+          prepare: pkg_add base64 gmake gnupg go notmuch scdoc
+          run: |
+            export DESTDIR=./out
+            gmake
+            gmake tests
+            gmake install checkinstall
