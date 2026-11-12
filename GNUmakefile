@@ -1,6 +1,6 @@
 # variables that can be changed by users
 #
-VERSION ?= $(shell git describe --long --abbrev=12 --tags --dirty 2>/dev/null || echo 0.22.0)
+VERSION ?= $(shell git describe --always --abbrev=12 --dirty 2>/dev/null || echo unknown)
 DATE_FMT = +%Y-%m-%d
 ifdef SOURCE_DATE_EPOCH
 DATE ?= $(shell date -u -d "@$(SOURCE_DATE_EPOCH)" "$(DATE_FMT)" 2>/dev/null || \
@@ -116,31 +116,6 @@ uninstall:
 			echo rmdir $$d && rmdir $$d || exit; \
 		fi; \
 	done
-
-.PHONY: gitconfig
-gitconfig:
-	git config format.subjectPrefix "PATCH aerc"
-	git config sendemail.to "~rjarry/aerc-devel@lists.sr.ht"
-	git config format.notes true
-	git config notes.rewriteRef refs/notes/commits
-	git config notes.rewriteMode concatenate
-	@mkdir -p .git/hooks
-	@rm -f .git/hooks/commit-msg*
-	ln -s ../../contrib/commit-msg .git/hooks/commit-msg
-	@rm -f .git/hooks/sendemail-validate*
-	@if grep -q GIT_SENDEMAIL_FILE_COUNTER `git --exec-path`/git-send-email 2>/dev/null; then \
-		set -xe; \
-		ln -s ../../contrib/sendemail-validate .git/hooks/sendemail-validate && \
-		git config sendemail.validate true; \
-	fi
-
-.PHONY: check-patches
-check-patches:
-	@contrib/check-patches origin/master..
-
-.PHONY: validate
-validate: CFLAGS = -Wall -Wextra -Wconversion -Werror -Wformat-security -Wstack-protector -Wpedantic -Wmissing-prototypes
-validate: all tests lint check-patches
 
 # Generate build and install rules for one man page
 #
