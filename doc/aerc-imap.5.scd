@@ -51,18 +51,38 @@ are available:
 
 		_<oauth2_params>_:
 
-		If specified and a _token_endpoint_ is provided, the configured password
-		is used as a refresh token to obtain an access token. If _token_endpoint_
-		is omitted, refresh token exchange is skipped, and the password acts
-		like an access token instead.
+		If _token_endpoint_ is omitted, refresh token exchange is skipped, and
+		the password acts like an access token instead.
+
+		If _token_endpoint_ is provided, a refresh token is exchanged for an
+		access token. The refresh token is obtained with *:oauth2-login* (see
+		*aerc*(1)) and stored encrypted with *oauth2-encrypt-cmd* (see
+		*aerc-accounts*(5)). When no token was stored, the configured password
+		is used as the refresh token. Access tokens are only kept in memory.
+		When the provider rejects the refresh token, *:oauth2-login* must be
+		run again.
 
 		- _token_endpoint_ (optional)
+		- _auth_endpoint_ (optional, for *:oauth2-login*)
+		- _device_endpoint_ (optional, for *:oauth2-login -d*)
 		- _client_id_ (optional)
 		- _client_secret_ (optional)
-		- _scope_ (optional)
+		- _scope_ (optional, space separated)
 
 		Example:
 			imaps+oauthbearer://...?token_endpoint=https://...&client_id=
+
+		Microsoft personal account example, with the client ID of your
+		choice (line breaks added for readability):
+
+		```
+		imaps+xoauth2://you%40outlook.com@outlook.office365.com:993
+		?client_id=<client_id>
+		&auth_endpoint=https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize
+		&device_endpoint=https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode
+		&token_endpoint=https://login.microsoftonline.com/consumers/oauth2/v2.0/token
+		&scope=offline_access%20https://outlook.office.com/IMAP.AccessAsUser.All%20https://outlook.office.com/SMTP.Send
+		```
 
 	_imaps+xoauth2_
 		IMAP with TLS/SSL using XOAUTH2 Authentication. Parameters are

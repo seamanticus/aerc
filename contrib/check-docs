@@ -5,7 +5,7 @@ trap "rm -f $tmp" EXIT
 
 global_fail=0
 
-cmd_scd_sed='s/^\*:([a-z][a-z -]*)\*.*/\1/p'
+cmd_scd_sed='s/^\*:([a-z][a-z0-9 -]*)\*.*/\1/p'
 cmd_go_sed='/^func ([[:alnum:]][[:alnum:]]*) Aliases() \[\]string {$/{n;
         s/", "/ /g;
         s/.*return \[\]string{"\(.*\)"}/\1/p
@@ -49,9 +49,9 @@ if [ "$fail" -gt 0 ]; then
 fi
 
 fail=0
-sed -nE 's/^\*([a-z][a-z-]*)\* = .*/\1/p' doc/*.scd > "$tmp"
+sed -nE 's/^\*([a-z][a-z0-9-]*)\* = .*/\1/p' doc/*.scd > "$tmp"
 for f in $(find config -type f -name '*.go'); do
-	for opt in $(sed -nE 's/.*`ini:"([a-z][a-z-]*)".*/\1/p' $f); do
+	for opt in $(sed -nE 's/.*`ini:"([a-z][a-z0-9-]*)".*/\1/p' $f); do
 		if ! grep -qFx "$opt" "$tmp"; then
 			grep -HnF $grep_color "\"$opt\"" "$f"
 			fail=$((fail+1))

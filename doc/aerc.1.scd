@@ -580,6 +580,19 @@ message list, the message in the message viewer, etc).
 	Disconnect or reconnect the current account. This only applies to
 	certain email sources.
 
+*:oauth2-login* [*-d*]
+	Authorize the current account with the OAuth2 provider configured in its
+	*source* or *outgoing* URI (see *aerc-imap*(5)) and store the refresh
+	token with *oauth2-encrypt-cmd* (see *aerc-accounts*(5)). Run *:connect*
+	once authorization is complete.
+
+	By default, the provider's login page is opened in a web browser which
+	redirects to a temporary listener on _127.0.0.1_.
+
+	*-d*: Use the device authorization flow instead: a URL and a code are
+	displayed in the status line, to be entered in a web browser on any
+	device.
+
 *:clear* [*-s*]
 	Clears the current search or filter criteria.
 

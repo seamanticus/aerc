@@ -225,6 +225,22 @@ Note that many of these configuration options are written for you, such as
 
 	Default: _false_
 
+*oauth2-encrypt-cmd* = _<command>_
+	Command run with _sh -c_ to encrypt the OAuth2 refresh token obtained
+	with *:oauth2-login*. The token is written to its standard input and the
+	encrypted output is stored in
+	_$XDG_STATE_HOME/aerc/oauth2/<account>.token_. Required, along with
+	*oauth2-decrypt-cmd*, to use *:oauth2-login*. Example:
+
+		oauth2-encrypt-cmd = gpg --encrypt --default-recipient-self
+
+*oauth2-decrypt-cmd* = _<command>_
+	Command run with _sh -c_ to decrypt the stored OAuth2 refresh token. The
+	encrypted token is written to its standard input and the token is read
+	from its standard output. Example:
+
+		oauth2-decrypt-cmd = gpg --decrypt --quiet
+
 *pama-auto-switch* = _true_|_false_
 	If _true_, the patch manager will automatically switch to an existing
 	project for the *:patch* command if the subject contains a '[PATCH <project>]'
