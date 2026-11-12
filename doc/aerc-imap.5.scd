@@ -72,8 +72,10 @@ are available:
 		Example:
 			imaps+oauthbearer://...?token_endpoint=https://...&client_id=
 
-		For the hosts _outlook.office365.com_ and _smtp-mail.outlook.com_,
-		missing parameters default to Microsoft's _common_ endpoints
+		For the Microsoft hosts _outlook.office365.com_, _outlook.office.com_,
+		_imap-mail.outlook.com_, _imap.outlook.com_, _smtp-mail.outlook.com_,
+		_smtp.office365.com_ and _smtp.outlook.com_, missing parameters
+		default to Microsoft's _common_ endpoints
 		(_https://login.microsoftonline.com/common/oauth2/v2.0/..._), the
 		Mozilla Thunderbird client ID and the _offline_access_, IMAP and SMTP
 		scopes. These defaults are not applied when the URI has a password and
