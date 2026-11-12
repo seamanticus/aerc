@@ -14,6 +14,7 @@ import (
 	"git.sr.ht/~rjarry/aerc/app"
 	"git.sr.ht/~rjarry/aerc/commands"
 	"git.sr.ht/~rjarry/aerc/commands/mode"
+	"git.sr.ht/~rjarry/aerc/lib/auth"
 	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/aerc/lib/parse"
 	"git.sr.ht/~rjarry/aerc/lib/send"
@@ -158,7 +159,7 @@ func (b Bounce) Execute(args []string) error {
 				msg.Envelope.MessageId, addresses)
 
 			if sender, err = send.NewSender(acct.Worker(), uri,
-				domain, config.From, rcpts, acct.Name(), nil, false); err != nil {
+				domain, config.From, rcpts, auth.NewTokenStore(config), nil, false); err != nil {
 				return
 			}
 			defer func() {

@@ -144,6 +144,10 @@ type AccountConfig struct {
 
 	// AuthRes
 	TrustedAuthRes []string `ini:"trusted-authres" delim:","`
+
+	// OAuth2 refresh token storage
+	OAuth2EncryptCmd string `ini:"oauth2-encrypt-cmd"`
+	OAuth2DecryptCmd string `ini:"oauth2-decrypt-cmd"`
 }
 
 const (

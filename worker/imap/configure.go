@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"git.sr.ht/~rjarry/aerc/lib/auth"
 	"git.sr.ht/~rjarry/aerc/lib/xdg"
 	"git.sr.ht/~rjarry/aerc/worker/lib"
 	"git.sr.ht/~rjarry/aerc/worker/middleware"
@@ -17,6 +18,7 @@ import (
 
 func (w *IMAPWorker) handleConfigure(msg *types.Configure) error {
 	w.config.name = msg.Config.Name
+	w.config.tokens = auth.NewTokenStore(msg.Config)
 	u, err := url.Parse(msg.Config.Source)
 	if err != nil {
 		return err

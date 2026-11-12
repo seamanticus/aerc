@@ -18,7 +18,7 @@ import (
 // sender when finished.
 func NewSender(
 	worker *types.Worker, uri *url.URL, domain string,
-	from *mail.Address, rcpts []*mail.Address, account string,
+	from *mail.Address, rcpts []*mail.Address, tokens *auth.TokenStore,
 	copyTo []string, requestDSN bool,
 ) (io.WriteCloser, error) {
 	protocol, mech, err := auth.ParseScheme(uri)
@@ -30,7 +30,7 @@ func NewSender(
 
 	switch protocol {
 	case "smtp", "smtp+insecure", "smtps", "smtps+insecure":
-		w, err = newSmtpSender(protocol, mech, uri, domain, from, rcpts, account, requestDSN)
+		w, err = newSmtpSender(protocol, mech, uri, domain, from, rcpts, tokens, requestDSN)
 	case "jmap":
 		w, err = newJmapSender(worker, from, rcpts, copyTo)
 	case "":

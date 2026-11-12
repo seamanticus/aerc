@@ -32,7 +32,7 @@ func ParseScheme(uri *url.URL) (protocol string, mech string, err error) {
 	return protocol, mech, nil
 }
 
-func NewSaslClient(mech string, uri *url.URL, acct string) (sasl.Client, error) {
+func NewSaslClient(mech string, uri *url.URL, store *TokenStore) (sasl.Client, error) {
 	var saslClient sasl.Client
 
 	user := uri.User.Username()
@@ -46,16 +46,8 @@ func NewSaslClient(mech string, uri *url.URL, acct string) (sasl.Client, error) 
 	case "plain":
 		saslClient = sasl.NewPlainClient("", user, password)
 	case "oauthbearer", "xoauth2":
-		q := uri.Query()
-		o := oauth2.Config{
-			ClientID:     q.Get("client_id"),
-			ClientSecret: q.Get("client_secret"),
-			Scopes:       strings.Split(q.Get("scope"), " "),
-			Endpoint: oauth2.Endpoint{
-				TokenURL: q.Get("token_endpoint"),
-			},
-		}
-		password, err := GetAccessToken(&o, acct, mech, password)
+		o := OAuth2Config(uri)
+		password, err := GetAccessToken(o, store, password)
 		if err != nil {
 			return nil, err
 		}
@@ -73,4 +65,20 @@ func NewSaslClient(mech string, uri *url.URL, acct string) (sasl.Client, error) 
 		return nil, fmt.Errorf("Unsupported auth mechanism %q", mech)
 	}
 	return saslClient, nil
+}
+
+// OAuth2Config returns the OAuth2 parameters specified in the query string of
+// a source or outgoing URI.
+func OAuth2Config(uri *url.URL) *oauth2.Config {
+	q := uri.Query()
+	return &oauth2.Config{
+		ClientID:     q.Get("client_id"),
+		ClientSecret: q.Get("client_secret"),
+		Scopes:       strings.Fields(q.Get("scope")),
+		Endpoint: oauth2.Endpoint{
+			AuthURL:       q.Get("auth_endpoint"),
+			DeviceAuthURL: q.Get("device_endpoint"),
+			TokenURL:      q.Get("token_endpoint"),
+		},
+	}
 }

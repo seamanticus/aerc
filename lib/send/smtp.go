@@ -87,7 +87,7 @@ func (s *smtpSender) Close() error {
 
 func newSmtpSender(
 	protocol string, mech string, uri *url.URL, domain string,
-	from *mail.Address, rcpts []*mail.Address, account string,
+	from *mail.Address, rcpts []*mail.Address, tokens *auth.TokenStore,
 	requestDSN bool,
 ) (io.WriteCloser, error) {
 	var err error
@@ -117,7 +117,7 @@ func newSmtpSender(
 		}
 	}
 
-	saslclient, err := auth.NewSaslClient(mech, uri, account)
+	saslclient, err := auth.NewSaslClient(mech, uri, tokens)
 	if err != nil {
 		conn.Close()
 		return nil, err

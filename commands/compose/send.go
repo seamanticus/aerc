@@ -16,6 +16,7 @@ import (
 	"git.sr.ht/~rjarry/aerc/commands"
 	"git.sr.ht/~rjarry/aerc/commands/mode"
 	"git.sr.ht/~rjarry/aerc/commands/msg"
+	"git.sr.ht/~rjarry/aerc/lib/auth"
 	"git.sr.ht/~rjarry/aerc/lib/hooks"
 	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/aerc/lib/send"
@@ -216,7 +217,7 @@ func sendHelper(composer *app.Composer, header *mail.Header, uri *url.URL, domai
 		var sender io.WriteCloser
 		sender, err = send.NewSender(
 			composer.Worker(), uri, domain,
-			from, rcpts, composer.Account().Name(),
+			from, rcpts, auth.NewTokenStore(composer.Config()),
 			folders, requestDSN,
 		)
 		if err != nil {

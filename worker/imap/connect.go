@@ -111,7 +111,7 @@ func (w *IMAPWorker) connect() (*client.Client, error) {
 			}
 		}
 	default:
-		saslClient, err := auth.NewSaslClient(mech, w.config.url, w.config.name)
+		saslClient, err := auth.NewSaslClient(mech, w.config.url, w.config.tokens)
 		if err != nil {
 			return nil, err
 		}

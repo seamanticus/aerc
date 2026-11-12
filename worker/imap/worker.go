@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/syndtr/goleveldb/leveldb"
 
+	"git.sr.ht/~rjarry/aerc/lib/auth"
 	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rjarry/aerc/worker/handlers"
@@ -54,6 +55,7 @@ type imapClient struct {
 type imapConfig struct {
 	name           string
 	url            *url.URL
+	tokens         *auth.TokenStore
 	provider       imapProvider
 	headers        []string
 	headersExclude []string
