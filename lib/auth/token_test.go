@@ -302,6 +302,8 @@ func TestOAuth2ConfigProviderDefaults(t *testing.T) {
 		// no parameters: everything from the catalogue
 		{"imaps+xoauth2://u%40hotmail.com@outlook.office365.com:993", thunderbirdMicrosoftClientID, ms},
 		{"smtp+xoauth2://u%40hotmail.com@smtp-mail.outlook.com:587", thunderbirdMicrosoftClientID, ms},
+		{"smtp+xoauth2://u%40hotmail.com@smtp.office365.com:587", thunderbirdMicrosoftClientID, ms},
+		{"imaps+xoauth2://u%40hotmail.com@imap-mail.outlook.com", thunderbirdMicrosoftClientID, ms},
 		// explicit parameters win, missing ones are filled
 		{"imaps+xoauth2://u@outlook.office365.com?client_id=mine", "mine", ms},
 		{"imaps+xoauth2://u@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "https://t"},

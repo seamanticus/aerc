@@ -29,9 +29,16 @@ var microsoftDefaults = oauth2.Config{
 }
 
 // OAuth2 parameters used for well known hosts when the URI omits them.
+// The Microsoft aliases resolve to the same Exchange Online front ends as
+// outlook.office365.com and smtp-mail.outlook.com.
 var providerDefaults = map[string]*oauth2.Config{
 	"outlook.office365.com": &microsoftDefaults,
+	"outlook.office.com":    &microsoftDefaults,
+	"imap-mail.outlook.com": &microsoftDefaults,
+	"imap.outlook.com":      &microsoftDefaults,
 	"smtp-mail.outlook.com": &microsoftDefaults,
+	"smtp.office365.com":    &microsoftDefaults,
+	"smtp.outlook.com":      &microsoftDefaults,
 }
 
 // Fills the parameters missing from o with the defaults of the URI host.
