@@ -292,6 +292,39 @@ func TestBrowserLoginIgnoresWrongState(t *testing.T) {
 	}
 }
 
+func TestOAuth2ConfigProviderDefaults(t *testing.T) {
+	ms := microsoftDefaults.Endpoint.TokenURL
+	vectors := []struct {
+		uri      string
+		clientID string
+		tokenURL string
+	}{
+		// no parameters: everything from the catalogue
+		{"imaps+xoauth2://u%40hotmail.com@outlook.office365.com:993", thunderbirdMicrosoftClientID, ms},
+		{"smtp+xoauth2://u%40hotmail.com@smtp-mail.outlook.com:587", thunderbirdMicrosoftClientID, ms},
+		// explicit parameters win, missing ones are filled
+		{"imaps+xoauth2://u@outlook.office365.com?client_id=mine", "mine", ms},
+		{"imaps+xoauth2://u@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "https://t"},
+		// password without token_endpoint is an access token: untouched
+		{"imaps+xoauth2://u:access@outlook.office365.com", "", ""},
+		// password with token_endpoint is a refresh token: completed
+		{"imaps+xoauth2://u:refresh@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "https://t"},
+		// unknown host
+		{"imaps+xoauth2://u@imap.example.com", "", ""},
+	}
+	for _, v := range vectors {
+		u, err := url.Parse(v.uri)
+		if err != nil {
+			t.Fatal(err)
+		}
+		o := OAuth2Config(u)
+		if o.ClientID != v.clientID || o.Endpoint.TokenURL != v.tokenURL {
+			t.Errorf("%s: got client_id=%q token_endpoint=%q, expected %q %q",
+				v.uri, o.ClientID, o.Endpoint.TokenURL, v.clientID, v.tokenURL)
+		}
+	}
+}
+
 func TestDeviceLogin(t *testing.T) {
 	p := newFakeProvider(t, "r1", "r1")
 	var code string

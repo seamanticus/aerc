@@ -51,7 +51,7 @@ func oauth2URI(acct *config.AccountConfig) (*url.URL, error) {
 		}
 		oauth := strings.HasSuffix(u.Scheme, "+oauthbearer") ||
 			strings.HasSuffix(u.Scheme, "+xoauth2")
-		if oauth && u.Query().Get("token_endpoint") != "" {
+		if oauth && auth.OAuth2Config(u).Endpoint.TokenURL != "" {
 			return u, nil
 		}
 	}

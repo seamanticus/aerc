@@ -68,10 +68,10 @@ func NewSaslClient(mech string, uri *url.URL, store *TokenStore) (sasl.Client, e
 }
 
 // OAuth2Config returns the OAuth2 parameters specified in the query string of
-// a source or outgoing URI.
+// a source or outgoing URI, completed with the defaults of known providers.
 func OAuth2Config(uri *url.URL) *oauth2.Config {
 	q := uri.Query()
-	return &oauth2.Config{
+	o := &oauth2.Config{
 		ClientID:     q.Get("client_id"),
 		ClientSecret: q.Get("client_secret"),
 		Scopes:       strings.Fields(q.Get("scope")),
@@ -81,4 +81,6 @@ func OAuth2Config(uri *url.URL) *oauth2.Config {
 			TokenURL:      q.Get("token_endpoint"),
 		},
 	}
+	applyProviderDefaults(o, uri)
+	return o
 }
