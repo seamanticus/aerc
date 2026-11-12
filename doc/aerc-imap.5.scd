@@ -72,16 +72,19 @@ are available:
 		Example:
 			imaps+oauthbearer://...?token_endpoint=https://...&client_id=
 
-		Microsoft personal account example, with the client ID of your
-		choice (line breaks added for readability):
+		For the hosts _outlook.office365.com_ and _smtp-mail.outlook.com_,
+		missing parameters default to Microsoft's _common_ endpoints
+		(_https://login.microsoftonline.com/common/oauth2/v2.0/..._), the
+		Mozilla Thunderbird client ID and the _offline_access_, IMAP and SMTP
+		scopes. These defaults are not applied when the URI has a password and
+		no _token_endpoint_: the password is then used as access token, as
+		before. A Microsoft account thus only needs:
 
 		```
-		imaps+xoauth2://you%40outlook.com@outlook.office365.com:993
-		?client_id=<client_id>
-		&auth_endpoint=https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize
-		&device_endpoint=https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode
-		&token_endpoint=https://login.microsoftonline.com/consumers/oauth2/v2.0/token
-		&scope=offline_access%20https://outlook.office.com/IMAP.AccessAsUser.All%20https://outlook.office.com/SMTP.Send
+		source = imaps+xoauth2://you%40outlook.com@outlook.office365.com:993
+		outgoing = smtp+xoauth2://you%40outlook.com@smtp-mail.outlook.com:587
+		oauth2-encrypt-cmd = gpg --encrypt --default-recipient-self
+		oauth2-decrypt-cmd = gpg --decrypt --quiet
 		```
 
 	_imaps+xoauth2_
