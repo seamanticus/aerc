@@ -2,8 +2,6 @@ package autoconfig
 
 import (
 	"context"
-	"net"
-	"net/http"
 	"testing"
 	"time"
 
@@ -152,19 +150,6 @@ func TestConfigRetrieval(t *testing.T) {
 			correctConfig: nil,
 		},
 	}
-
-	lookupSRV = customLookupSRV
-	httpGet = autoconfigTestGet
-	mozillaGet = mozillaTestHTTP
-	netDial = mxTestDialer
-	lookupMX = mxTestLookup
-	defer func() {
-		lookupSRV = net.LookupSRV
-		httpGet = http.Get
-		mozillaGet = http.Get
-		netDial = net.Dial
-		lookupMX = net.LookupMX
-	}()
 
 	for _, test := range tests {
 		t.Run(test.address, func(t *testing.T) {

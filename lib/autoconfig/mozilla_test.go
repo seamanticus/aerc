@@ -55,10 +55,6 @@ func TestMozilla(t *testing.T) {
 		},
 	}
 
-	mozillaGet = mozillaTestHTTP
-	defer func() {
-		mozillaGet = http.Get
-	}()
 	for _, test := range tests {
 		t.Run(test.address, func(t *testing.T) {
 			result := make(chan *Config)

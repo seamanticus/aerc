@@ -59,10 +59,6 @@ func TestDNSSRV(t *testing.T) {
 		},
 	}
 
-	lookupSRV = customLookupSRV
-	defer func() {
-		lookupSRV = net.LookupSRV
-	}()
 	for _, test := range tests {
 		t.Run(test.address, func(t *testing.T) {
 			result := make(chan *Config)

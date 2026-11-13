@@ -4,14 +4,26 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// Lookups abandoned on timeout keep running after a test returns and read
+// these hooks: install the mocks once, before any goroutine starts, and never
+// write them again.
+func TestMain(m *testing.M) {
+	httpGet = autoconfigTestGet
+	mozillaGet = mozillaTestHTTP
+	lookupSRV = customLookupSRV
+	netDial = mxTestDialer
+	lookupMX = mxTestLookup
+	os.Exit(m.Run())
+}
 
 func TestAutoconfig(t *testing.T) {
 	tests := []struct {
@@ -60,12 +72,6 @@ func TestAutoconfig(t *testing.T) {
 		},
 	}
 
-	httpGet = autoconfigTestGet
-	lookupSRV = customLookupSRV
-	defer func() {
-		httpGet = http.Get
-		lookupSRV = net.LookupSRV
-	}()
 	for _, test := range tests {
 		t.Run(test.address, func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)

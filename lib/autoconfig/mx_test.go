@@ -35,12 +35,6 @@ func TestMX(t *testing.T) {
 		},
 	}
 
-	netDial = mxTestDialer
-	lookupMX = mxTestLookup
-	defer func() {
-		netDial = net.Dial
-		lookupMX = net.LookupMX
-	}()
 	for _, test := range tests {
 		t.Run(test.address, func(t *testing.T) {
 			result := make(chan *Config)
