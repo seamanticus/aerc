@@ -16,7 +16,7 @@ func (m PatchManager) RebaseCommits(p models.Project, baseID string) ([]models.C
 	}
 
 	if !rc.Exists(baseID) {
-		return nil, fmt.Errorf("cannot rebase on %s. "+
+		return nil, fmt.Errorf("cannot rebase on %s: "+
 			"commit does not exist", baseID)
 	}
 

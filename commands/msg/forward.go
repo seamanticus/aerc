@@ -138,7 +138,7 @@ func (f forward) Execute(args []string) error {
 	store := widget.Store()
 	noStore := store == nil
 	if noStore && !isMsgViewer {
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	}
 
 	if f.AttachFull {
@@ -213,7 +213,7 @@ func (f forward) Execute(args []string) error {
 		}
 
 		if crypto.IsEncrypted(msg.BodyStructure) && !isMsgViewer {
-			return fmt.Errorf("message is encrypted. " +
+			return fmt.Errorf("message is encrypted: " +
 				"can only forward from the message viewer")
 		}
 

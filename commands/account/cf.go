@@ -68,11 +68,11 @@ func (c ChangeFolder) Execute([]string) error {
 	}
 
 	if args.Count() == 0 {
-		return errors.New("<folder> is required. Usage: cf [-a <account>] <folder>")
+		return errors.New("<folder> is required; usage: cf [-a <account>] <folder>")
 	}
 
 	if args.Count() != 1 {
-		return errors.New("unexpected argument(s). Usage: cf [-a <account>] <folder>")
+		return errors.New("unexpected argument(s); usage: cf [-a <account>] <folder>")
 	}
 	target = args.Arg(0)
 

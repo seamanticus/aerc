@@ -160,7 +160,7 @@ func (s SearchFilter) Execute(args []string) error {
 	}
 	store := acct.Store()
 	if store == nil {
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	}
 
 	criteriaPart := types.SearchCriteriaPart{

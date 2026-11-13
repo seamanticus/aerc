@@ -249,7 +249,7 @@ func MsgInfoFromUids(store *lib.MessageStore, uids []models.UID, statusInfo func
 				statusInfo(info)
 			}
 		})
-		return nil, fmt.Errorf("fetching missing message headers. Please wait")
+		return nil, fmt.Errorf("fetching missing message headers, please wait")
 	}
 	return infos, nil
 }

@@ -52,7 +52,7 @@ func (r Recall) Execute(args []string) error {
 	}
 	store := widget.Store()
 	if store == nil {
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	}
 
 	msgInfo, err := widget.SelectedMessage()
@@ -62,8 +62,8 @@ func (r Recall) Execute(args []string) error {
 
 	if acct.SelectedDirectory() != acct.AccountConfig().Postpone &&
 		!msgInfo.Flags.Has(models.DraftFlag) && !r.Force {
-		return errors.New("Use -f to recall non-draft messages from outside the " +
-			acct.AccountConfig().Postpone + " directory.")
+		return errors.New("use -f to recall non-draft messages from outside the " +
+			acct.AccountConfig().Postpone + " directory")
 	}
 
 	log.Debugf("Recalling message <%s>", msgInfo.Envelope.MessageId)

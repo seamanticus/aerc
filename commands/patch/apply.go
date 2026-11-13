@@ -103,7 +103,7 @@ func (a Apply) Execute(args []string) error {
 	}
 
 	if !m.Clean(p) {
-		return fmt.Errorf("aborting... There are unstaged changes in " +
+		return fmt.Errorf("aborting: there are unstaged changes in " +
 			"your repository")
 	}
 

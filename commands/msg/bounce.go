@@ -74,7 +74,7 @@ func (b Bounce) Execute(args []string) error {
 
 	store := widget.Store()
 	if store == nil {
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	}
 
 	config := acct.AccountConfig()

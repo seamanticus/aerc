@@ -17,8 +17,8 @@ func (m PatchManager) CurrentProject() (p models.Project, err error) {
 	name, err := store.CurrentName()
 	if name == "" || err != nil {
 		log.Errorf("failed to get current name: %v", storeErr(err))
-		err = fmt.Errorf("no current project set. " +
-			"Run :patch init first")
+		err = fmt.Errorf("no current project set: " +
+			"run :patch init first")
 		return
 	}
 	names, err := store.Names()
@@ -31,8 +31,8 @@ func (m PatchManager) CurrentProject() (p models.Project, err error) {
 		notFound = !notFound
 	}
 	if notFound {
-		err = fmt.Errorf("project '%s' does not exist anymore. "+
-			"Run :patch init or :patch switch", name)
+		err = fmt.Errorf("project '%s' does not exist anymore: "+
+			"run :patch init or :patch switch", name)
 		return
 	}
 	p, err = store.Current()

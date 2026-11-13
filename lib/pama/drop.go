@@ -23,7 +23,7 @@ func (m PatchManager) DropPatch(patch string) error {
 	}
 
 	if !rc.Clean() {
-		return fmt.Errorf("aborting... There are unstaged changes " +
+		return fmt.Errorf("aborting: there are unstaged changes " +
 			"or a rebase in progress")
 	}
 
@@ -31,8 +31,8 @@ func (m PatchManager) DropPatch(patch string) error {
 	for _, c := range p.Commits {
 		if !rc.Exists(c.ID) {
 			log.Errorf("failed to find commit. %v", c)
-			return fmt.Errorf("cannot drop patch. " +
-				"Please rebase first with ':patch rebase'")
+			return fmt.Errorf("cannot drop patch: " +
+				"rebase first with ':patch rebase'")
 		}
 		if c.Tag == patch {
 			toRemove = append(toRemove, c)
@@ -77,7 +77,7 @@ func (m PatchManager) DropPatch(patch string) error {
 	}
 
 	if len(removed) < len(toRemove) {
-		return fmt.Errorf("failed to drop commits. Dropped %d of %d",
+		return fmt.Errorf("failed to drop commits: dropped %d of %d",
 			len(removed), len(toRemove))
 	}
 

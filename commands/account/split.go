@@ -49,7 +49,7 @@ func (s Split) Execute(args []string) error {
 	}
 	store := app.SelectedAccount().Store()
 	if store == nil {
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	}
 
 	if s.Size == 0 && acct.SplitSize() == 0 {

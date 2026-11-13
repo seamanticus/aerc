@@ -177,7 +177,7 @@ func (r reply) Execute(args []string) error {
 	case noStore && isMsgViewer:
 		app.PushWarning("No message store found: answered flag cannot be set")
 	case noStore:
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	default:
 		original.Folder = store.Name
 	}
@@ -238,7 +238,7 @@ func (r reply) Execute(args []string) error {
 		}
 
 		if crypto.IsEncrypted(msg.BodyStructure) && !isMsgViewer {
-			return fmt.Errorf("message is encrypted. " +
+			return fmt.Errorf("message is encrypted: " +
 				"can only include reply from the message viewer")
 		}
 

@@ -36,7 +36,7 @@ func (h *helper) markedOrSelectedUids() ([]models.UID, error) {
 func (h *helper) store() (*lib.MessageStore, error) {
 	store := h.msgProvider.Store()
 	if store == nil {
-		return nil, errors.New("cannot perform action. Messages still loading")
+		return nil, errors.New("cannot perform action: messages still loading")
 	}
 	return store, nil
 }

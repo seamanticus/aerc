@@ -35,7 +35,7 @@ func (c Clear) Execute(args []string) error {
 	}
 	store := acct.Store()
 	if store == nil {
-		return errors.New("cannot perform action. Messages still loading")
+		return errors.New("cannot perform action: messages still loading")
 	}
 
 	if c.Selected {
