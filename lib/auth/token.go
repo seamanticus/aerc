@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/seamanticus/aerc/config"
 	"github.com/seamanticus/aerc/lib/log"
@@ -159,11 +160,17 @@ func (s *TokenStore) Store(tok *oauth2.Token) error {
 	return nil
 }
 
+// GetAccessToken holds the account lock during the refresh, so a stalled
+// token endpoint would block every IMAP and SMTP connection of the account.
+var refreshTimeout = 30 * time.Second
+
 func exchangeRefreshToken(o *oauth2.Config, refreshToken string) (*oauth2.Token, error) {
 	token := new(oauth2.Token)
 	token.RefreshToken = refreshToken
 	token.TokenType = "Bearer"
-	return o.TokenSource(context.TODO(), token).Token()
+	ctx, cancel := context.WithTimeout(context.Background(), refreshTimeout)
+	defer cancel()
+	return o.TokenSource(ctx, token).Token()
 }
 
 // GetAccessToken returns a valid access token for the account. When no token
@@ -207,9 +214,9 @@ func GetAccessToken(
 
 	token, err := exchangeRefreshToken(o, refreshToken)
 	if err != nil {
-		e.token = nil
 		var rerr *oauth2.RetrieveError
 		if errors.As(err, &rerr) && rerr.ErrorCode == "invalid_grant" {
+			e.token = nil
 			e.loginRequired = true
 			return "", fmt.Errorf("refresh token rejected (%s): %w",
 				rerr.ErrorDescription, ErrLoginRequired)
@@ -220,8 +227,9 @@ func GetAccessToken(
 		token.RefreshToken = refreshToken
 	}
 	if token.RefreshToken != refreshToken && store.EncryptCmd != "" {
-		// The previous refresh token remains in memory and on disk and
-		// stays usable for some time: do not fail the connection.
+		// Only the new token is kept in memory; the previous one stays on
+		// disk for the next start, which works until the provider revokes
+		// it. Do not fail the connection over this.
 		if err := store.save(token.RefreshToken); err != nil {
 			log.Errorf("%s: failed to save refresh token: %v",
 				store.Account, err)

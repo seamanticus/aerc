@@ -13,6 +13,7 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
+	"time"
 
 	"golang.org/x/oauth2"
 )
@@ -201,6 +202,39 @@ func TestGetAccessTokenNoTokenRequiresLogin(t *testing.T) {
 	}
 	if n := p.refreshes.Load(); n != 0 {
 		t.Fatalf("expected no refresh request, got %d", n)
+	}
+}
+
+func TestGetAccessTokenRefreshTimeout(t *testing.T) {
+	stall := httptest.NewServer(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) { <-r.Context().Done() }))
+	t.Cleanup(stall.Close)
+	old := refreshTimeout
+	refreshTimeout = 10 * time.Millisecond
+	t.Cleanup(func() { refreshTimeout = old })
+
+	s := newTestStore(t)
+	if err := s.save("r1"); err != nil {
+		t.Fatal(err)
+	}
+	// rotate r1 -> r2 without saving, so only memory holds r2
+	noSave := *s
+	noSave.EncryptCmd = ""
+	if _, err := GetAccessToken(newFakeProvider(t, "r1", "r2").config(), &noSave, ""); err != nil {
+		t.Fatal(err)
+	}
+	cacheEntry(s.Account).token.Expiry = time.Now().Add(-time.Hour)
+
+	o := newFakeProvider(t, "r2", "r2").config()
+	stalled := *o
+	stalled.Endpoint.TokenURL = stall.URL
+	_, err := GetAccessToken(&stalled, s, "")
+	if !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("expected a deadline error, got %v", err)
+	}
+	// a stalled endpoint is transient: retry with the rotated token
+	if tok, err := GetAccessToken(o, s, ""); err != nil || tok != "access-r2" {
+		t.Fatalf("expected access-r2 after timeout, got %q, %v", tok, err)
 	}
 }
 
