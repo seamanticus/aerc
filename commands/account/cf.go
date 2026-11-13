@@ -2,20 +2,18 @@ package account
 
 import (
 	"errors"
-	"strings"
 	"time"
 
 	"git.sr.ht/~rjarry/go-opt/v2"
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
 	"github.com/seamanticus/aerc/lib/state"
-	"github.com/seamanticus/aerc/models"
 	"github.com/seamanticus/aerc/worker/types"
 )
 
 type ChangeFolder struct {
 	Account string `opt:"-a" complete:"CompleteAccount" desc:"Change to specified account."`
-	Folder  string `opt:"..." complete:"CompleteFolderAndNotmuch" desc:"Folder name."`
+	Folder  string `opt:"..." complete:"CompleteFolder" desc:"Folder name."`
 }
 
 func init() {
@@ -38,33 +36,15 @@ func (c *ChangeFolder) CompleteAccount(arg string) []string {
 	return commands.FilterList(app.AccountNames(), arg, nil)
 }
 
-func (c *ChangeFolder) CompleteFolderAndNotmuch(arg string) []string {
+func (c *ChangeFolder) CompleteFolder(arg string) []string {
 	acct := app.SelectedAccount()
 	if acct == nil {
 		return nil
 	}
 	retval := commands.FilterList(
 		acct.Directories().List(), arg,
-		func(s string) string {
-			dir := acct.Directories().Directory(s)
-			if dir != nil && dir.Role != models.QueryRole {
-				s = commands.QuoteSpace(s)
-			} else {
-				s += " "
-			}
-			return s
-		},
+		commands.QuoteSpace,
 	)
-	if acct.AccountConfig().Backend == "notmuch" {
-		notmuchcomps := handleNotmuchComplete(arg)
-		for _, prefix := range notmuch_search_terms {
-			if strings.HasPrefix(arg, prefix) {
-				return notmuchcomps
-			}
-		}
-		retval = append(retval, notmuchcomps...)
-
-	}
 	return retval
 }
 
@@ -91,19 +71,10 @@ func (c ChangeFolder) Execute([]string) error {
 		return errors.New("<folder> is required. Usage: cf [-a <account>] <folder>")
 	}
 
-	if acct.AccountConfig().Backend == "notmuch" {
-		// With notmuch, :cf can change to a "dynamic folder" that
-		// contains the result of a query. Preserve the entered
-		// arguments verbatim.
-		target = args.String()
-		// Strip trailing space
-		target = strings.TrimSuffix(target, " ")
-	} else {
-		if args.Count() != 1 {
-			return errors.New("Unexpected argument(s). Usage: cf [-a <account>] <folder>")
-		}
-		target = args.Arg(0)
+	if args.Count() != 1 {
+		return errors.New("Unexpected argument(s). Usage: cf [-a <account>] <folder>")
 	}
+	target = args.Arg(0)
 
 	finalize := func(msg types.WorkerMessage) {
 		handleDirOpenResponse(acct, msg)
@@ -123,7 +94,7 @@ func (c ChangeFolder) Execute([]string) error {
 		}
 	}
 
-	dirlist.Open(target, "", 0*time.Second, finalize, false)
+	dirlist.Open(target, 0*time.Second, finalize, false)
 
 	return nil
 }

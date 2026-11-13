@@ -17,7 +17,6 @@ import (
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
 	"github.com/seamanticus/aerc/config"
-	"github.com/seamanticus/aerc/lib"
 	"github.com/seamanticus/aerc/lib/crypto"
 	"github.com/seamanticus/aerc/lib/hooks"
 	"github.com/seamanticus/aerc/lib/ipc"
@@ -101,9 +100,6 @@ var (
 
 func buildInfo() string {
 	info := Version
-	if soVersion, hasNotmuch := lib.NotmuchVersion(); hasNotmuch {
-		info += fmt.Sprintf(" +notmuch-%s", soVersion)
-	}
 	info += fmt.Sprintf(" (%s %s %s %s)",
 		runtime.Version(), runtime.GOARCH, runtime.GOOS, Date)
 	return info

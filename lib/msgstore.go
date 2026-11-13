@@ -657,7 +657,7 @@ func (store *MessageStore) doThreadFolding(uid models.UID, hide bool, toggle boo
 	return nil
 }
 
-func (store *MessageStore) Delete(uids []models.UID, mfs *types.MultiFileStrategy,
+func (store *MessageStore) Delete(uids []models.UID,
 	cb func(msg types.WorkerMessage),
 ) {
 	for _, uid := range uids {
@@ -665,9 +665,8 @@ func (store *MessageStore) Delete(uids []models.UID, mfs *types.MultiFileStrateg
 	}
 
 	store.worker.PostAction(context.TODO(), &types.DeleteMessages{
-		Directory:         store.Name,
-		Uids:              uids,
-		MultiFileStrategy: mfs,
+		Directory: store.Name,
+		Uids:      uids,
 	}, func(msg types.WorkerMessage) {
 		if _, ok := msg.(*types.Error); ok {
 			store.revertDeleted(uids)
@@ -689,7 +688,7 @@ func (store *MessageStore) revertDeleted(uids []models.UID) {
 }
 
 func (store *MessageStore) Copy(uids []models.UID, dest string, createDest bool,
-	mfs *types.MultiFileStrategy, cb func(msg types.WorkerMessage),
+	cb func(msg types.WorkerMessage),
 ) {
 	if createDest {
 		store.worker.PostAction(context.TODO(), &types.CreateDirectory{
@@ -699,10 +698,9 @@ func (store *MessageStore) Copy(uids []models.UID, dest string, createDest bool,
 	}
 
 	store.worker.PostAction(context.TODO(), &types.CopyMessages{
-		Source:            store.Name,
-		Destination:       dest,
-		Uids:              uids,
-		MultiFileStrategy: mfs,
+		Source:      store.Name,
+		Destination: dest,
+		Uids:        uids,
 	}, func(msg types.WorkerMessage) {
 		if _, ok := msg.(*types.Done); ok {
 			store.triggerMailAdded(dest)
@@ -712,7 +710,7 @@ func (store *MessageStore) Copy(uids []models.UID, dest string, createDest bool,
 }
 
 func (store *MessageStore) Move(uids []models.UID, dest string, createDest bool,
-	mfs *types.MultiFileStrategy, cb func(msg types.WorkerMessage),
+	cb func(msg types.WorkerMessage),
 ) {
 	for _, uid := range uids {
 		store.Deleted[uid] = nil
@@ -726,10 +724,9 @@ func (store *MessageStore) Move(uids []models.UID, dest string, createDest bool,
 	}
 
 	store.worker.PostAction(context.TODO(), &types.MoveMessages{
-		Source:            store.Name,
-		Destination:       dest,
-		Uids:              uids,
-		MultiFileStrategy: mfs,
+		Source:      store.Name,
+		Destination: dest,
+		Uids:        uids,
 	}, func(msg types.WorkerMessage) {
 		switch msg.(type) {
 		case *types.Error:

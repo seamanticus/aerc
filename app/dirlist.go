@@ -28,7 +28,7 @@ type DirectoryLister interface {
 	Previous() string
 
 	Select(string)
-	Open(string, string, time.Duration, func(types.WorkerMessage), bool)
+	Open(string, time.Duration, func(types.WorkerMessage), bool)
 
 	Update(types.WorkerMessage)
 	List() []string
@@ -181,10 +181,10 @@ func (dirlist *DirectoryList) ToggleFolder(string) {
 }
 
 func (dirlist *DirectoryList) Select(name string) {
-	dirlist.Open(name, "", dirlist.UiConfig(name).DirListDelay, nil, false)
+	dirlist.Open(name, dirlist.UiConfig(name).DirListDelay, nil, false)
 }
 
-func (dirlist *DirectoryList) Open(name string, query string, delay time.Duration,
+func (dirlist *DirectoryList) Open(name string, delay time.Duration,
 	cb func(types.WorkerMessage), force bool,
 ) {
 	dirlist.selecting = name
@@ -198,7 +198,6 @@ func (dirlist *DirectoryList) Open(name string, query string, delay time.Duratio
 		case <-time.After(delay):
 			dirlist.worker.PostAction(ctx, &types.OpenDirectory{
 				Directory: name,
-				Query:     query,
 				Force:     force,
 			},
 				func(msg types.WorkerMessage) {

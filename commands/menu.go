@@ -12,7 +12,6 @@ import (
 	"github.com/seamanticus/aerc/config"
 	"github.com/seamanticus/aerc/lib/log"
 	"github.com/seamanticus/aerc/lib/ui"
-	"github.com/seamanticus/aerc/models"
 )
 
 type Menu struct {
@@ -204,11 +203,7 @@ func (m Menu) feedLines() ([]string, error) {
 			account, _ := app.Account(a)
 			a = opt.QuoteArg(a)
 			for _, d := range account.Directories().List() {
-				dir := account.Directories().Directory(d)
-				if dir != nil && dir.Role != models.QueryRole {
-					d = opt.QuoteArg(d)
-				}
-				lines = append(lines, a+" "+d)
+				lines = append(lines, a+" "+opt.QuoteArg(d))
 			}
 		}
 
@@ -223,11 +218,7 @@ func (m Menu) feedLines() ([]string, error) {
 			return nil, errors.New("No account selected.")
 		}
 		for _, d := range account.Directories().List() {
-			dir := account.Directories().Directory(d)
-			if dir != nil && dir.Role != models.QueryRole {
-				d = opt.QuoteArg(d)
-			}
-			lines = append(lines, d)
+			lines = append(lines, opt.QuoteArg(d))
 		}
 
 	case m.Links:

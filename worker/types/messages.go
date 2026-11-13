@@ -120,7 +120,6 @@ type ListDirectories struct {
 type OpenDirectory struct {
 	Message
 	Directory string
-	Query     string
 	Force     bool
 }
 
@@ -191,9 +190,8 @@ type FetchMessageFlags struct {
 
 type DeleteMessages struct {
 	Message
-	Directory         string
-	Uids              []models.UID
-	MultiFileStrategy *MultiFileStrategy
+	Directory string
+	Uids      []models.UID
 }
 
 // Flag messages with different mail types
@@ -221,18 +219,16 @@ type ForwardedMessages struct {
 
 type CopyMessages struct {
 	Message
-	Source            string
-	Destination       string
-	Uids              []models.UID
-	MultiFileStrategy *MultiFileStrategy
+	Source      string
+	Destination string
+	Uids        []models.UID
 }
 
 type MoveMessages struct {
 	Message
-	Source            string
-	Destination       string
-	Uids              []models.UID
-	MultiFileStrategy *MultiFileStrategy
+	Source      string
+	Destination string
+	Uids        []models.UID
 }
 
 type AppendMessage struct {

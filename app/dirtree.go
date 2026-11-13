@@ -232,10 +232,10 @@ func (dt *DirectoryTree) Select(name string) {
 	if name == "" {
 		return
 	}
-	dt.Open(name, "", dt.UiConfig(name).DirListDelay, nil, false)
+	dt.Open(name, dt.UiConfig(name).DirListDelay, nil, false)
 }
 
-func (dt *DirectoryTree) Open(name string, query string, delay time.Duration, cb func(types.WorkerMessage), force bool) {
+func (dt *DirectoryTree) Open(name string, delay time.Duration, cb func(types.WorkerMessage), force bool) {
 	if name == "" {
 		return
 	}
@@ -246,7 +246,7 @@ func (dt *DirectoryTree) Open(name string, query string, delay time.Duration, cb
 	} else {
 		dt.reindex(name)
 	}
-	dt.DirectoryList.Open(name, query, delay, func(msg types.WorkerMessage) {
+	dt.DirectoryList.Open(name, delay, func(msg types.WorkerMessage) {
 		if cb != nil {
 			cb(msg)
 		}

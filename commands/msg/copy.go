@@ -18,11 +18,10 @@ import (
 )
 
 type Copy struct {
-	CreateFolders     bool                     `opt:"-p" desc:"Create folder if it does not exist."`
-	Decrypt           bool                     `opt:"-d" desc:"Decrypt the message before copying."`
-	Account           string                   `opt:"-a" complete:"CompleteAccount" desc:"Copy to the specified account."`
-	MultiFileStrategy *types.MultiFileStrategy `opt:"-m" action:"ParseMFS" complete:"CompleteMFS" desc:"Multi-file strategy."`
-	Folder            string                   `opt:"folder" complete:"CompleteFolder" desc:"Target folder."`
+	CreateFolders bool   `opt:"-p" desc:"Create folder if it does not exist."`
+	Decrypt       bool   `opt:"-d" desc:"Decrypt the message before copying."`
+	Account       string `opt:"-a" complete:"CompleteAccount" desc:"Copy to the specified account."`
+	Folder        string `opt:"folder" complete:"CompleteFolder" desc:"Target folder."`
 }
 
 func init() {
@@ -41,17 +40,6 @@ func (Copy) Aliases() []string {
 	return []string{"cp", "copy"}
 }
 
-func (c *Copy) ParseMFS(arg string) error {
-	if arg != "" {
-		mfs, ok := types.StrToStrategy[arg]
-		if !ok {
-			return fmt.Errorf("invalid multi-file strategy %s", arg)
-		}
-		c.MultiFileStrategy = &mfs
-	}
-	return nil
-}
-
 func (*Copy) CompleteAccount(arg string) []string {
 	return commands.FilterList(app.AccountNames(), arg, nil)
 }
@@ -67,10 +55,6 @@ func (c *Copy) CompleteFolder(arg string) []string {
 		return nil
 	}
 	return commands.FilterList(acct.Directories().List(), arg, nil)
-}
-
-func (Copy) CompleteMFS(arg string) []string {
-	return commands.FilterList(types.StrategyStrs(), arg, nil)
 }
 
 func (c Copy) Execute(args []string) error {
@@ -95,7 +79,7 @@ func (c Copy) Execute(args []string) error {
 	}
 
 	if len(c.Account) == 0 {
-		store.Copy(uids, c.Folder, c.CreateFolders, c.MultiFileStrategy,
+		store.Copy(uids, c.Folder, c.CreateFolders,
 			func(msg types.WorkerMessage) {
 				c.CallBack(msg, uids, store)
 			})

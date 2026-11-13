@@ -16,9 +16,7 @@ import (
 	"github.com/seamanticus/aerc/worker/types"
 )
 
-type Delete struct {
-	MultiFileStrategy *types.MultiFileStrategy `opt:"-m" action:"ParseMFS" complete:"CompleteMFS" desc:"Multi-file strategy."`
-}
+type Delete struct{}
 
 func init() {
 	commands.Register(Delete{})
@@ -34,21 +32,6 @@ func (Delete) Context() commands.CommandContext {
 
 func (Delete) Aliases() []string {
 	return []string{"delete", "delete-message"}
-}
-
-func (d *Delete) ParseMFS(arg string) error {
-	if arg != "" {
-		mfs, ok := types.StrToStrategy[arg]
-		if !ok {
-			return fmt.Errorf("invalid multi-file strategy %s", arg)
-		}
-		d.MultiFileStrategy = &mfs
-	}
-	return nil
-}
-
-func (Delete) CompleteMFS(arg string) []string {
-	return commands.FilterList(types.StrategyStrs(), arg, nil)
 }
 
 // :delete is allowed if either:
@@ -92,7 +75,7 @@ func (d Delete) Execute(args []string) error {
 	marker.ClearVisualMark()
 	// caution, can be nil
 	next := findNextNonDeleted(uids, store)
-	store.Delete(uids, d.MultiFileStrategy, func(msg types.WorkerMessage) {
+	store.Delete(uids, func(msg types.WorkerMessage) {
 		switch msg := msg.(type) {
 		case *types.Done:
 			var s string
@@ -143,7 +126,6 @@ func (d Delete) Execute(args []string) error {
 		case *types.Unsupported:
 			marker.Remark()
 			store.Select(sel.Uid)
-			// notmuch doesn't support it, we want the user to know
 			app.PushError(" error, unsupported for this worker")
 		}
 	})

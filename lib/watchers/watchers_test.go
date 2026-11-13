@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Both the maildir and notmuch workers only use watcher events as a "something
+// The maildir worker only uses watcher events as a "something
 // changed, rescan now" trigger, so any change inside a watched directory must
 // produce an event. Without this, new mail never shows up until the folder is
 // reopened.

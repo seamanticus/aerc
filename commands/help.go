@@ -45,7 +45,6 @@ func getTopics() map[string]string {
 		topics["imap"] = ""
 		topics["jmap"] = ""
 		topics["maildir"] = ""
-		topics["notmuch"] = ""
 		topics["patch"] = ""
 		topics["search"] = ""
 		topics["sendmail"] = ""

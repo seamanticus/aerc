@@ -69,9 +69,6 @@ func (s *SearchFilter) CompleteTerms(arg string) []string {
 	if acct == nil {
 		return nil
 	}
-	if acct.AccountConfig().Backend == "notmuch" {
-		return handleNotmuchComplete(arg)
-	}
 	caps := acct.Worker().Backend.Capabilities()
 	if caps != nil && caps.Has("X-GM-EXT-1") && s.UseExtension {
 		return handleXGMEXTComplete(arg)

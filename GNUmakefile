@@ -17,7 +17,6 @@ MANDIR ?= $(PREFIX)/share/man
 GO ?= go
 INSTALL ?= install
 CP ?= cp
-GOFLAGS ?= $(shell contrib/goflags.sh)
 BUILD_OPTS ?= -trimpath
 GO_LDFLAGS :=
 GO_LDFLAGS += -X main.Version=$(VERSION)

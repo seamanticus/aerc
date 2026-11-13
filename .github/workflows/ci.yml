@@ -36,7 +36,7 @@ jobs:
       # a tarball, tar by actions/setup-go, diffutils and gawk by
       # filters/test.sh
       - run: dnf install -y --setopt=install_weak_deps=False
-          diffutils gawk gcc git gnupg2 make notmuch-devel scdoc tar
+          diffutils gawk gcc git gnupg2 make scdoc tar
       - uses: actions/checkout@v4
       # The workspace is owned by the runner user, not the container's root:
       # git refuses it as dubious ownership and go build fails to stamp VCS

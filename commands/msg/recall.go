@@ -80,7 +80,6 @@ func (r Recall) Execute(args []string) error {
 			deleteMessage := func() {
 				store.Delete(
 					uids,
-					nil,
 					func(msg types.WorkerMessage) {
 						switch msg := msg.(type) {
 						case *types.Done:

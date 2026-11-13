@@ -206,7 +206,7 @@ func (r reply) Execute(args []string) error {
 			switch {
 			case c.Sent() && c.Archive() != "" && !noStore:
 				store.Answered([]models.UID{msg.Uid}, true, nil)
-				err := archive([]*models.MessageInfo{msg}, nil, c.Archive(), acct, store)
+				err := archive([]*models.MessageInfo{msg}, c.Archive(), acct, store)
 				if err != nil {
 					app.PushStatus("Archive failed", 10*time.Second)
 				}

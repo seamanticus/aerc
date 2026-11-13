@@ -53,7 +53,6 @@ var Roles = map[string]Role{
 	"junk":    JunkRole,
 	"sent":    SentRole,
 	"trash":   TrashRole,
-	"query":   QueryRole,
 }
 
 const (
@@ -64,8 +63,6 @@ const (
 	JunkRole    Role = "junk"
 	SentRole    Role = "sent"
 	TrashRole   Role = "trash"
-	// Custom aerc roles
-	QueryRole Role = "query"
 	// virtual node created by the directory tree
 	VirtualRole Role = "virtual"
 )
