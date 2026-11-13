@@ -3,10 +3,10 @@ package compose
 import (
 	"bytes"
 	"context"
+	"errors"
+	"fmt"
 	"slices"
 	"time"
-
-	"github.com/pkg/errors"
 
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
@@ -42,15 +42,15 @@ func (*Postpone) CompleteFolder(arg string) []string {
 func (p Postpone) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	store := acct.Store()
 	if store == nil {
-		return errors.New("No message store selected")
+		return errors.New("no message store selected")
 	}
 	tab := app.SelectedTab()
 	if tab == nil {
-		return errors.New("No tab selected")
+		return errors.New("no tab selected")
 	}
 	composer, _ := tab.Content.(*app.Composer)
 	config := composer.Config()
@@ -64,14 +64,14 @@ func (p Postpone) Execute(args []string) error {
 		targetFolder = p.Folder
 	}
 	if targetFolder == "" {
-		return errors.New("No Postpone location configured")
+		return errors.New("no Postpone location configured")
 	}
 
 	log.Tracef("Postponing mail")
 
 	header, err := composer.PrepareHeader()
 	if err != nil {
-		return errors.Wrap(err, "PrepareHeader")
+		return fmt.Errorf("PrepareHeader: %w", err)
 	}
 	header.SetContentType("text/plain", map[string]string{"charset": "UTF-8"})
 	header.Set("Content-Transfer-Encoding", "quoted-printable")
@@ -103,7 +103,7 @@ func (p Postpone) Execute(args []string) error {
 
 		err = composer.WriteMessage(header, buf)
 		if err != nil {
-			handleErr(errors.Wrap(err, "WriteMessage"))
+			handleErr(fmt.Errorf("WriteMessage: %w", err))
 			return
 		}
 		store.Append(

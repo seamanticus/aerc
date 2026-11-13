@@ -3,6 +3,7 @@ package app
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"net/textproto"
@@ -17,7 +18,6 @@ import (
 
 	"github.com/emersion/go-message/mail"
 	"github.com/mattn/go-runewidth"
-	"github.com/pkg/errors"
 
 	"github.com/seamanticus/aerc/commands/mode"
 	"github.com/seamanticus/aerc/completer"
@@ -483,7 +483,7 @@ func (c *Composer) updateCrypto() error {
 		cp := CryptoProvider()
 		s, err := c.Signer()
 		if err != nil {
-			return errors.Wrap(err, "Signer")
+			return fmt.Errorf("Signer: %w", err)
 		}
 		c.crypto.signKey, err = cp.GetSignerKeyId(s)
 		if err != nil {
@@ -902,7 +902,7 @@ func (c *Composer) PrepareHeader() (*mail.Header, error) {
 func (c *Composer) parseEmbeddedHeader() (*mail.Header, error) {
 	_, err := c.email.Seek(0, io.SeekStart)
 	if err != nil {
-		return nil, errors.Wrap(err, "Seek")
+		return nil, fmt.Errorf("seek: %w", err)
 	}
 
 	buf := bytes.NewBuffer([]byte{})
@@ -951,7 +951,7 @@ func (c *Composer) parseEmbeddedHeader() (*mail.Header, error) {
 func getRecipientsEmail(c *Composer) ([]string, error) {
 	h, err := c.PrepareHeader()
 	if err != nil {
-		return nil, errors.Wrap(err, "PrepareHeader")
+		return nil, fmt.Errorf("PrepareHeader: %w", err)
 	}
 
 	// collect all 'recipients' from header (to:, cc:, bcc:)
@@ -1014,7 +1014,7 @@ func (c *Composer) WriteMessage(header *mail.Header, writer io.Writer) error {
 		if c.sign {
 			signer, err = c.Signer()
 			if err != nil {
-				return errors.Wrap(err, "Signer")
+				return fmt.Errorf("Signer: %w", err)
 			}
 		}
 
@@ -1120,7 +1120,7 @@ func writeMsgImpl(c *Composer, header *mail.Header, writer io.Writer) error {
 		// with attachments
 		w, err := mail.CreateWriter(writer, *header)
 		if err != nil {
-			return errors.Wrap(err, "CreateWriter")
+			return fmt.Errorf("CreateWriter: %w", err)
 		}
 		newPart, err := lib.NewPart("text/plain", mimeParams, body)
 		if err != nil {
@@ -1128,15 +1128,15 @@ func writeMsgImpl(c *Composer, header *mail.Header, writer io.Writer) error {
 		}
 		parts := []*lib.Part{newPart}
 		if err := writeMultipartBody(append(parts, c.textParts...), w); err != nil {
-			return errors.Wrap(err, "writeMultipartBody")
+			return fmt.Errorf("writeMultipartBody: %w", err)
 		}
 		for _, a := range c.attachments {
 			if err := a.WriteTo(w); err != nil {
-				return errors.Wrap(err, "writeAttachment")
+				return fmt.Errorf("writeAttachment: %w", err)
 			}
 		}
 		if err := w.Close(); err != nil {
-			return errors.Wrap(err, "Close")
+			return fmt.Errorf("Close: %w", err)
 		}
 	}
 	return nil
@@ -1151,20 +1151,23 @@ func writeInlineBody(
 	header.SetContentType("text/plain", mimeParams)
 	w, err := mail.CreateSingleInlineWriter(writer, *header)
 	if err != nil {
-		return errors.Wrap(err, "CreateSingleInlineWriter")
+		return fmt.Errorf("CreateSingleInlineWriter: %w", err)
 	}
 	if _, err := io.Copy(w, body); err != nil {
 		_ = w.Close()
-		return errors.Wrap(err, "io.Copy")
+		return fmt.Errorf("io.Copy: %w", err)
 	}
-	return errors.Wrap(w.Close(), "Close")
+	if err := w.Close(); err != nil {
+		return fmt.Errorf("Close: %w", err)
+	}
+	return nil
 }
 
 // write the message body to the multipart message
 func writeMultipartBody(parts []*lib.Part, w *mail.Writer) error {
 	bi, err := w.CreateInline()
 	if err != nil {
-		return errors.Wrap(err, "CreateInline")
+		return fmt.Errorf("CreateInline: %w", err)
 	}
 	for _, part := range parts {
 		bh := mail.InlineHeader{}
@@ -1172,7 +1175,7 @@ func writeMultipartBody(parts []*lib.Part, w *mail.Writer) error {
 		bw, err := bi.CreatePart(bh)
 		if err != nil {
 			_ = bi.Close()
-			return errors.Wrap(err, "CreatePart")
+			return fmt.Errorf("CreatePart: %w", err)
 		}
 		_, err = io.Copy(bw, part.NewReader())
 		if cerr := bw.Close(); err == nil {
@@ -1180,11 +1183,14 @@ func writeMultipartBody(parts []*lib.Part, w *mail.Writer) error {
 		}
 		if err != nil {
 			_ = bi.Close()
-			return errors.Wrap(err, "io.Copy")
+			return fmt.Errorf("io.Copy: %w", err)
 		}
 	}
 
-	return errors.Wrap(bi.Close(), "Close")
+	if err := bi.Close(); err != nil {
+		return fmt.Errorf("Close: %w", err)
+	}
+	return nil
 }
 
 func (c *Composer) GetAttachments() []string {
@@ -1886,7 +1892,7 @@ func (c *Composer) updateMultipart(p *lib.Part) error {
 	p.Data = nil
 	body, err := c.GetBody()
 	if err != nil {
-		return setError(errors.Wrap(err, "GetBody"))
+		return setError(fmt.Errorf("GetBody: %w", err))
 	}
 	cmd := exec.Command("sh", "-c", command)
 	cmd.Stdin = body

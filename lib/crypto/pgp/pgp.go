@@ -13,7 +13,6 @@ import (
 	"github.com/ProtonMail/go-crypto/openpgp/packet"
 	"github.com/emersion/go-message/mail"
 	"github.com/emersion/go-pgpmail"
-	"github.com/pkg/errors"
 	"github.com/seamanticus/aerc/lib/log"
 	"github.com/seamanticus/aerc/lib/xdg"
 	"github.com/seamanticus/aerc/models"
@@ -198,7 +197,7 @@ func (m *Mail) Encrypt(buf *bytes.Buffer, rcpts []string, signer string, decrypt
 	for _, rcpt := range rcpts {
 		toEntity, err := m.getEntityByEmail(rcpt)
 		if err != nil {
-			return nil, errors.Wrap(err, "no key for "+rcpt)
+			return nil, fmt.Errorf("no key for %s: %w", rcpt, err)
 		}
 		to = append(to, toEntity)
 	}

@@ -9,7 +9,6 @@ import (
 
 	"github.com/emersion/go-message/mail"
 	"github.com/emersion/go-smtp"
-	"github.com/pkg/errors"
 	"github.com/seamanticus/aerc/lib/auth"
 )
 
@@ -28,13 +27,13 @@ func connectSmtp(starttls bool, host string, domain string) (*smtp.Client, error
 		conn, err = smtp.Dial(host)
 	}
 	if err != nil {
-		return nil, errors.Wrap(err, "smtp.Dial")
+		return nil, fmt.Errorf("smtp.Dial: %w", err)
 	}
 	if domain != "" {
 		err := conn.Hello(domain)
 		if err != nil {
 			_ = conn.Close()
-			return nil, errors.Wrap(err, "Hello")
+			return nil, fmt.Errorf("hello: %w", err)
 		}
 	}
 	return conn, nil
@@ -52,13 +51,13 @@ func connectSmtps(host string, domain string, insecure bool) (*smtp.Client, erro
 		InsecureSkipVerify: insecure,
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "smtp.DialTLS")
+		return nil, fmt.Errorf("smtp.DialTLS: %w", err)
 	}
 	if domain != "" {
 		err := conn.Hello(domain)
 		if err != nil {
 			_ = conn.Close()
-			return nil, errors.Wrap(err, "Hello")
+			return nil, fmt.Errorf("hello: %w", err)
 		}
 	}
 	return conn, nil
@@ -106,7 +105,7 @@ func newSmtpSender(
 	}
 
 	if err != nil {
-		return nil, errors.Wrap(err, "Connection failed")
+		return nil, fmt.Errorf("connection failed: %w", err)
 	}
 
 	if mech == "" && uri.User != nil {
@@ -125,7 +124,7 @@ func newSmtpSender(
 	if saslclient != nil {
 		if err := conn.Auth(saslclient); err != nil {
 			_ = conn.Close()
-			return nil, errors.Wrap(err, "conn.Auth")
+			return nil, fmt.Errorf("conn.Auth: %w", err)
 		}
 	}
 	s := &smtpSender{
@@ -133,7 +132,7 @@ func newSmtpSender(
 	}
 	if err := s.conn.Mail(from.Address, nil); err != nil {
 		_ = conn.Close()
-		return nil, errors.Wrap(err, "conn.Mail")
+		return nil, fmt.Errorf("conn.Mail: %w", err)
 	}
 	var rcptOptions *smtp.RcptOptions
 	if requestDSN {
@@ -148,13 +147,13 @@ func newSmtpSender(
 	for _, rcpt := range rcpts {
 		if err := s.conn.Rcpt(rcpt.Address, rcptOptions); err != nil {
 			_ = conn.Close()
-			return nil, errors.Wrap(err, "conn.Rcpt")
+			return nil, fmt.Errorf("conn.Rcpt: %w", err)
 		}
 	}
 	s.w, err = s.conn.Data()
 	if err != nil {
 		_ = conn.Close()
-		return nil, errors.Wrap(err, "conn.Data")
+		return nil, fmt.Errorf("conn.Data: %w", err)
 	}
 	return s, nil
 }

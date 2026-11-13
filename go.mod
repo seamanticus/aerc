@@ -23,7 +23,6 @@ require (
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/mattn/go-isatty v0.0.23
 	github.com/mattn/go-runewidth v0.0.24
-	github.com/pkg/errors v0.9.1
 	github.com/riywo/loginshell v0.0.0-20200815045211-7d26008be1ab
 	github.com/stretchr/testify v1.11.1
 	github.com/syndtr/goleveldb v1.0.0

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"cmp"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os/exec"
@@ -11,8 +12,6 @@ import (
 	"slices"
 	"strings"
 	"time"
-
-	"github.com/pkg/errors"
 
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
@@ -123,7 +122,7 @@ func (p Pipe) Run(cb func()) error {
 		// Get the message content
 		header, err := composer.PrepareHeader()
 		if err != nil {
-			return errors.Wrap(err, "PrepareHeader")
+			return fmt.Errorf("PrepareHeader: %w", err)
 		}
 
 		pr, pw := io.Pipe()
@@ -152,7 +151,7 @@ func (p Pipe) Run(cb func()) error {
 			p.Full = true
 		} else {
 			return errors.New(
-				"Neither -m nor -p specified and cannot infer default")
+				"neither -m nor -p specified and cannot infer default")
 		}
 	}
 

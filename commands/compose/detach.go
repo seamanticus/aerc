@@ -1,10 +1,10 @@
 package compose
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
-	"github.com/pkg/errors"
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
 	"github.com/seamanticus/aerc/lib/log"

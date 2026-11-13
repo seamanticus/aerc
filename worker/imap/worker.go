@@ -2,6 +2,7 @@ package imap
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"time"
@@ -9,7 +10,6 @@ import (
 	"github.com/emersion/go-imap"
 	sortthread "github.com/emersion/go-imap-sortthread"
 	"github.com/emersion/go-imap/client"
-	"github.com/pkg/errors"
 	"github.com/syndtr/goleveldb/leveldb"
 
 	"github.com/seamanticus/aerc/lib/auth"

@@ -3,6 +3,7 @@ package lib
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"mime"
 	"net/http"
@@ -11,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/emersion/go-message/mail"
-	"github.com/pkg/errors"
 	"github.com/seamanticus/aerc/lib/log"
 	"github.com/seamanticus/aerc/lib/xdg"
 )
@@ -71,7 +71,7 @@ func (fa *FileAttachment) Name() string {
 func (fa *FileAttachment) WriteTo(w *mail.Writer) error {
 	f, err := os.Open(xdg.ExpandHome(fa.path))
 	if err != nil {
-		return errors.Wrap(err, "os.Open")
+		return fmt.Errorf("os.Open: %w", err)
 	}
 	defer func() { _ = f.Close() }()
 
@@ -79,7 +79,7 @@ func (fa *FileAttachment) WriteTo(w *mail.Writer) error {
 
 	mimeType, params, err := FindMimeType(fa.path, reader)
 	if err != nil {
-		return errors.Wrap(err, "ParseMediaType")
+		return fmt.Errorf("ParseMediaType: %w", err)
 	}
 	filename := filepath.Base(fa.path)
 	params["name"] = filename
@@ -94,13 +94,16 @@ func (fa *FileAttachment) WriteTo(w *mail.Writer) error {
 
 	aw, err := w.CreateAttachment(ah)
 	if err != nil {
-		return errors.Wrap(err, "CreateAttachment")
+		return fmt.Errorf("CreateAttachment: %w", err)
 	}
 	if _, err := reader.WriteTo(aw); err != nil {
 		_ = aw.Close()
-		return errors.Wrap(err, "reader.WriteTo")
+		return fmt.Errorf("reader.WriteTo: %w", err)
 	}
-	return errors.Wrap(aw.Close(), "Close")
+	if err := aw.Close(); err != nil {
+		return fmt.Errorf("Close: %w", err)
+	}
+	return nil
 }
 
 type PartAttachment struct {
@@ -131,13 +134,16 @@ func (pa *PartAttachment) WriteTo(w *mail.Writer) error {
 
 	aw, err := w.CreateAttachment(ah)
 	if err != nil {
-		return errors.Wrap(err, "CreateAttachment")
+		return fmt.Errorf("CreateAttachment: %w", err)
 	}
 	if _, err := io.Copy(aw, pa.part.NewReader()); err != nil {
 		_ = aw.Close()
-		return errors.Wrap(err, "io.Copy")
+		return fmt.Errorf("io.Copy: %w", err)
 	}
-	return errors.Wrap(aw.Close(), "Close")
+	if err := aw.Close(); err != nil {
+		return fmt.Errorf("Close: %w", err)
+	}
+	return nil
 }
 
 // SetUtf8Charset sets the charset in a params map to UTF-8.
@@ -166,7 +172,7 @@ func FindMimeType(filename string, reader *bufio.Reader) (string, map[string]str
 		// http.DetectContentType only cares about the first 512 bytes
 		head, err := reader.Peek(512)
 		if err != nil && err != io.EOF {
-			return "", map[string]string{}, errors.Wrap(err, "Peek")
+			return "", map[string]string{}, fmt.Errorf("peek: %w", err)
 		}
 		mimeString = http.DetectContentType(head)
 	}

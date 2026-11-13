@@ -2,6 +2,7 @@ package msg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/url"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/emersion/go-message/mail"
-	"github.com/pkg/errors"
 
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
@@ -52,7 +52,7 @@ func (Bounce) Context() commands.CommandContext {
 
 func (b Bounce) Execute(args []string) error {
 	if len(b.To) == 0 {
-		return errors.New("No recipients specified")
+		return errors.New("no recipients specified")
 	}
 	addresses := strings.Join(b.To, ", ")
 
@@ -69,31 +69,31 @@ func (b Bounce) Execute(args []string) error {
 	case err != nil:
 		return fmt.Errorf("failed to select account %q: %w", b.Account, err)
 	case acct == nil:
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 
 	store := widget.Store()
 	if store == nil {
-		return errors.New("Cannot perform action. Messages still loading")
+		return errors.New("cannot perform action. Messages still loading")
 	}
 
 	config := acct.AccountConfig()
 
 	outgoing, err := config.Outgoing.ConnectionString()
 	if err != nil {
-		return errors.Wrap(err, "ReadCredentials()")
+		return fmt.Errorf("ReadCredentials(): %w", err)
 	}
 	if outgoing == "" {
-		return errors.New("No outgoing mail transport configured for this account")
+		return errors.New("no outgoing mail transport configured for this account")
 	}
 	uri, err := url.Parse(outgoing)
 	if err != nil {
-		return errors.Wrap(err, "url.Parse()")
+		return fmt.Errorf("url.Parse(): %w", err)
 	}
 
 	rcpts, err := mail.ParseAddressList(addresses)
 	if err != nil {
-		return errors.Wrap(err, "ParseAddressList()")
+		return fmt.Errorf("ParseAddressList(): %w", err)
 	}
 
 	var domain string
@@ -103,7 +103,7 @@ func (b Bounce) Execute(args []string) error {
 
 	hostname, err := send.GetMessageIdHostname(config.SendWithHostname, config.From)
 	if err != nil {
-		return errors.Wrap(err, "GetMessageIdHostname()")
+		return fmt.Errorf("GetMessageIdHostname(): %w", err)
 	}
 
 	// According to RFC2822, all of the resent fields corresponding
@@ -142,7 +142,7 @@ func (b Bounce) Execute(args []string) error {
 			return
 		}
 		if err = header.GenerateMessageIDWithHostname(hostname); err != nil {
-			errCh <- errors.Wrap(err, "GenerateMessageIDWithHostname()")
+			errCh <- fmt.Errorf("GenerateMessageIDWithHostname(): %w", err)
 			return
 		}
 		msgId = parse.MsgID(&header)

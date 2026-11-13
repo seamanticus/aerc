@@ -3,6 +3,7 @@ package compose
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -10,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
 	"github.com/seamanticus/aerc/config"
@@ -193,14 +193,14 @@ func (a Attach) readCommand() error {
 
 	data, err := cmd.Output()
 	if err != nil {
-		return errors.Wrap(err, "Output")
+		return fmt.Errorf("output: %w", err)
 	}
 
 	reader := bufio.NewReader(bytes.NewReader(data))
 
 	mimeType, mimeParams, err := lib.FindMimeType(a.Name, reader)
 	if err != nil {
-		return errors.Wrap(err, "FindMimeType")
+		return fmt.Errorf("FindMimeType: %w", err)
 	}
 
 	mimeParams["name"] = a.Name
@@ -208,7 +208,7 @@ func (a Attach) readCommand() error {
 	composer, _ := app.SelectedTabContent().(*app.Composer)
 	err = composer.AddPartAttachment(a.Name, mimeType, mimeParams, reader)
 	if err != nil {
-		return errors.Wrap(err, "AddPartAttachment")
+		return fmt.Errorf("AddPartAttachment: %w", err)
 	}
 
 	app.PushSuccess(fmt.Sprintf("Attached %s", a.Name))

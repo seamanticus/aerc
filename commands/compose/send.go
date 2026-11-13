@@ -3,14 +3,13 @@ package compose
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/url"
 	"slices"
 	"strings"
 	"time"
-
-	"github.com/pkg/errors"
 
 	"git.sr.ht/~rjarry/go-opt/v2"
 	"github.com/emersion/go-message/mail"
@@ -76,7 +75,7 @@ func (o *Send) ParseCopyTo(arg string) error {
 func (s Send) Execute(args []string) error {
 	tab := app.SelectedTab()
 	if tab == nil {
-		return errors.New("No selected tab")
+		return errors.New("no selected tab")
 	}
 	composer, _ := tab.Content.(*app.Composer)
 
@@ -94,23 +93,23 @@ func (s Send) Execute(args []string) error {
 
 	outgoing, err := config.Outgoing.ConnectionString()
 	if err != nil {
-		return errors.Wrap(err, "ReadCredentials(outgoing)")
+		return fmt.Errorf("ReadCredentials(outgoing): %w", err)
 	}
 	if outgoing == "" {
 		return errors.New(
-			"No outgoing mail transport configured for this account")
+			"no outgoing mail transport configured for this account")
 	}
 
 	header, err := composer.PrepareHeader()
 	if err != nil {
-		return errors.Wrap(err, "PrepareHeader")
+		return fmt.Errorf("PrepareHeader: %w", err)
 	}
 	rcpts, err := listRecipients(header)
 	if err != nil {
-		return errors.Wrap(err, "listRecipients")
+		return fmt.Errorf("listRecipients: %w", err)
 	}
 	if len(rcpts) == 0 {
-		return errors.New("Cannot send message with no recipients")
+		return errors.New("cannot send message with no recipients")
 	}
 
 	if config.StripBcc {
@@ -120,7 +119,7 @@ func (s Send) Execute(args []string) error {
 
 	uri, err := url.Parse(outgoing)
 	if err != nil {
-		return errors.Wrap(err, "url.Parse(outgoing)")
+		return fmt.Errorf("url.Parse(outgoing): %w", err)
 	}
 
 	var domain string
@@ -221,7 +220,7 @@ func sendHelper(composer *app.Composer, header *mail.Header, uri *url.URL, domai
 			folders, requestDSN,
 		)
 		if err != nil {
-			failCh <- errors.Wrap(err, "send:")
+			failCh <- fmt.Errorf("send: %w", err)
 			return
 		}
 
@@ -300,12 +299,12 @@ func copyToSent(dests []string, copyToReplied bool, n int, msg *bytes.Buffer, co
 	errCh := make(chan error, 1)
 	acct := composer.Account()
 	if acct == nil {
-		errCh <- errors.New("No account selected")
+		errCh <- errors.New("no account selected")
 		return errCh
 	}
 	store := acct.Store()
 	if store == nil {
-		errCh <- errors.New("No message store selected")
+		errCh <- errors.New("no message store selected")
 		return errCh
 	}
 	for _, dest := range dests {

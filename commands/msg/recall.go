@@ -1,6 +1,7 @@
 package msg
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -8,7 +9,6 @@ import (
 	"time"
 
 	_ "github.com/emersion/go-message/charset"
-	"github.com/pkg/errors"
 
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/commands"
@@ -48,16 +48,16 @@ func (r Recall) Execute(args []string) error {
 	widget := app.SelectedTabContent().(app.ProvidesMessage)
 	acct := widget.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	store := widget.Store()
 	if store == nil {
-		return errors.New("Cannot perform action. Messages still loading")
+		return errors.New("cannot perform action. Messages still loading")
 	}
 
 	msgInfo, err := widget.SelectedMessage()
 	if err != nil {
-		return errors.Wrap(err, "Recall failed")
+		return fmt.Errorf("recall failed: %w", err)
 	}
 
 	if acct.SelectedDirectory() != acct.AccountConfig().Postpone &&

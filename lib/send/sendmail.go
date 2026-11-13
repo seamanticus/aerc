@@ -8,7 +8,6 @@ import (
 
 	"git.sr.ht/~rjarry/go-opt/v2"
 	"github.com/emersion/go-message/mail"
-	"github.com/pkg/errors"
 )
 
 type sendmailSender struct {
@@ -45,11 +44,11 @@ func newSendmailSender(uri *url.URL, rcpts []*mail.Address) (io.WriteCloser, err
 	var err error
 	s.stdin, err = s.cmd.StdinPipe()
 	if err != nil {
-		return nil, errors.Wrap(err, "cmd.StdinPipe")
+		return nil, fmt.Errorf("cmd.StdinPipe: %w", err)
 	}
 	err = s.cmd.Start()
 	if err != nil {
-		return nil, errors.Wrap(err, "cmd.Start")
+		return nil, fmt.Errorf("cmd.Start: %w", err)
 	}
 	return s, nil
 }

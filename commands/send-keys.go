@@ -1,7 +1,9 @@
 package commands
 
 import (
-	"github.com/pkg/errors"
+	"errors"
+	"fmt"
+
 	"github.com/seamanticus/aerc/app"
 	"github.com/seamanticus/aerc/config"
 	"go.rockorager.dev/vaxis"
@@ -30,17 +32,17 @@ func (SendKeys) Aliases() []string {
 func (s SendKeys) Execute(args []string) error {
 	tab, ok := app.SelectedTabContent().(app.HasTerminal)
 	if !ok {
-		return errors.New("There is no terminal here")
+		return errors.New("there is no terminal here")
 	}
 
 	term := tab.Terminal()
 	if term == nil {
-		return errors.New("The terminal is not active")
+		return errors.New("the terminal is not active")
 	}
 
 	keys2send, err := config.ParseKeyStrokes(s.Keys)
 	if err != nil {
-		return errors.Wrapf(err, "Unable to parse keystroke: %q", s.Keys)
+		return fmt.Errorf("unable to parse keystroke: %q: %w", s.Keys, err)
 	}
 
 	for _, key := range keys2send {
