@@ -33,7 +33,7 @@ func (m *Mail) KeyringExists() bool {
 	if err != nil {
 		return false
 	}
-	defer keyfile.Close()
+	defer func() { _ = keyfile.Close() }()
 	_, err = openpgp.ReadKeyRing(keyfile)
 	return err == nil
 }
@@ -52,7 +52,8 @@ func (m *Mail) Init() error {
 		locked = false
 	} else {
 		locked = true
-		lockfile.Close()
+		// only its existence matters
+		_ = lockfile.Close()
 	}
 
 	keypath := xdg.DataPath("aerc", "keyring.asc")
@@ -62,7 +63,7 @@ func (m *Mail) Init() error {
 	} else if err != nil {
 		return err
 	}
-	defer keyfile.Close()
+	defer func() { _ = keyfile.Close() }()
 
 	Keyring, err = openpgp.ReadKeyRing(keyfile)
 	if err != nil {
@@ -76,7 +77,9 @@ func (m *Mail) Close() {
 		return
 	}
 	lockpath := xdg.DataPath("aerc", "keyring.lock")
-	os.Remove(lockpath)
+	if err := os.Remove(lockpath); err != nil {
+		log.Errorf("failed to remove %s: %v", lockpath, err)
+	}
 }
 
 func (m *Mail) getEntityByEmail(email string) (e *openpgp.Entity, err error) {
@@ -165,8 +168,6 @@ func (m *Mail) ImportKeys(r io.Reader) error {
 		if err != nil {
 			return err
 		}
-		defer keyfile.Close()
-
 		for _, key := range keys {
 			if key.PrivateKey != nil {
 				err = key.SerializePrivate(keyfile, &packet.Config{})
@@ -174,9 +175,11 @@ func (m *Mail) ImportKeys(r io.Reader) error {
 				err = key.Serialize(keyfile)
 			}
 			if err != nil {
+				_ = keyfile.Close()
 				return err
 			}
 		}
+		return keyfile.Close()
 	}
 	return nil
 }
@@ -310,7 +313,9 @@ func (m *Mail) ExportKey(k string) (io.Reader, error) {
 	if err != nil {
 		return nil, fmt.Errorf("pgp: error exporting key: %w", err)
 	}
-	w.Close()
+	if err := w.Close(); err != nil {
+		return nil, fmt.Errorf("pgp: error exporting key: %w", err)
+	}
 	return pka, nil
 }
 

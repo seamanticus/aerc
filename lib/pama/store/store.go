@@ -102,6 +102,12 @@ func decode(data []byte) (p models.Project, err error) {
 	return
 }
 
+func closeStorage(db *leveldb.DB) {
+	if err := db.Close(); err != nil {
+		log.Errorf("failed to close patch storage: %v", err)
+	}
+}
+
 func Store() models.PersistentStorer {
 	return &instance{}
 }
@@ -113,7 +119,7 @@ func (instance) StoreProject(p models.Project, overwrite bool) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 
 	key := createKey(p.Name)
 	has, err := db.Has(key, nil)
@@ -138,7 +144,7 @@ func (instance) DeleteProject(name string) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 
 	key := createKey(name)
 	has, err := db.Has(key, nil)
@@ -156,7 +162,7 @@ func (instance) CurrentName() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 	cur, err := db.Get(currentKey, nil)
 	if err != nil {
 		return "", err
@@ -169,7 +175,7 @@ func (instance) SetCurrent(name string) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 	key := createKey(name)
 	return db.Put(currentKey, key, nil)
 }
@@ -179,7 +185,7 @@ func (instance) Current() (models.Project, error) {
 	if err != nil {
 		return models.Project{}, err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 
 	has, err := db.Has(currentKey, nil)
 	if err != nil {
@@ -208,7 +214,7 @@ func (instance) Names() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 	var names []string
 	iter := db.NewIterator(nil, nil)
 	for iter.Next() {
@@ -226,7 +232,7 @@ func (instance) Project(name string) (models.Project, error) {
 	if err != nil {
 		return models.Project{}, err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 	raw, err := db.Get(createKey(name), nil)
 	if err != nil {
 		return models.Project{}, err
@@ -244,7 +250,7 @@ func (instance) Projects() ([]models.Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
+	defer closeStorage(db)
 	iter := db.NewIterator(nil, nil)
 	for iter.Next() {
 		if !isProjectKey(iter.Key()) {

@@ -33,7 +33,7 @@ func connectSmtp(starttls bool, host string, domain string) (*smtp.Client, error
 	if domain != "" {
 		err := conn.Hello(domain)
 		if err != nil {
-			conn.Close()
+			_ = conn.Close()
 			return nil, errors.Wrap(err, "Hello")
 		}
 	}
@@ -57,7 +57,7 @@ func connectSmtps(host string, domain string, insecure bool) (*smtp.Client, erro
 	if domain != "" {
 		err := conn.Hello(domain)
 		if err != nil {
-			conn.Close()
+			_ = conn.Close()
 			return nil, errors.Wrap(err, "Hello")
 		}
 	}
@@ -119,12 +119,12 @@ func newSmtpSender(
 
 	saslclient, err := auth.NewSaslClient(mech, uri, tokens)
 	if err != nil {
-		conn.Close()
+		_ = conn.Close()
 		return nil, err
 	}
 	if saslclient != nil {
 		if err := conn.Auth(saslclient); err != nil {
-			conn.Close()
+			_ = conn.Close()
 			return nil, errors.Wrap(err, "conn.Auth")
 		}
 	}
@@ -132,7 +132,7 @@ func newSmtpSender(
 		conn: conn,
 	}
 	if err := s.conn.Mail(from.Address, nil); err != nil {
-		conn.Close()
+		_ = conn.Close()
 		return nil, errors.Wrap(err, "conn.Mail")
 	}
 	var rcptOptions *smtp.RcptOptions
@@ -147,13 +147,13 @@ func newSmtpSender(
 	}
 	for _, rcpt := range rcpts {
 		if err := s.conn.Rcpt(rcpt.Address, rcptOptions); err != nil {
-			conn.Close()
+			_ = conn.Close()
 			return nil, errors.Wrap(err, "conn.Rcpt")
 		}
 	}
 	s.w, err = s.conn.Data()
 	if err != nil {
-		conn.Close()
+		_ = conn.Close()
 		return nil, errors.Wrap(err, "conn.Data")
 	}
 	return s, nil

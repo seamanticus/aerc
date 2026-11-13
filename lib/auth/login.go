@@ -26,7 +26,7 @@ func BrowserLogin(
 	if err != nil {
 		return nil, err
 	}
-	defer l.Close()
+	defer func() { _ = l.Close() }()
 
 	conf := *o
 	conf.RedirectURL = fmt.Sprintf("http://%s/", l.Addr())
@@ -57,10 +57,11 @@ func BrowserLogin(
 			} else {
 				res.code = q.Get("code")
 			}
+			// the browser page is informational only
 			if res.err != nil {
-				fmt.Fprintf(w, "aerc: %s\n", html.EscapeString(res.err.Error()))
+				_, _ = fmt.Fprintf(w, "aerc: %s\n", html.EscapeString(res.err.Error()))
 			} else {
-				fmt.Fprintln(w, "aerc: authorization complete, you may close this window.")
+				_, _ = fmt.Fprintln(w, "aerc: authorization complete, you may close this window.")
 			}
 			select {
 			case results <- res:
@@ -69,7 +70,7 @@ func BrowserLogin(
 		}),
 	}
 	go func() { _ = srv.Serve(l) }()
-	defer srv.Close()
+	defer func() { _ = srv.Close() }()
 
 	if err := open(conf.AuthCodeURL(state, opts...)); err != nil {
 		return nil, err

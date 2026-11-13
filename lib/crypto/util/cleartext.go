@@ -63,7 +63,9 @@ func createMessage(header mail.Header, body io.Reader) ([]byte, error) {
 	if _, err := io.Copy(w, e.Body); err != nil {
 		return nil, err
 	}
-	w.Close()
+	if err := w.Close(); err != nil {
+		return nil, err
+	}
 
 	return message.Bytes(), nil
 }

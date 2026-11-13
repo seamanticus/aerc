@@ -354,7 +354,7 @@ func MessageInfo(raw RawMessage) (*models.MessageInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Close()
+	defer func() { _ = r.Close() }()
 	msg, err := ReadMessage(r)
 	if err != nil {
 		return nil, fmt.Errorf("could not read message: %w", err)
@@ -403,7 +403,7 @@ func MessageHeaders(raw RawMessage) (*models.MessageInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Close()
+	defer func() { _ = r.Close() }()
 	msg, err := ReadMessage(r)
 	if err != nil {
 		return nil, fmt.Errorf("could not read message: %w", err)

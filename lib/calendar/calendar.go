@@ -59,7 +59,7 @@ func CreateReply(reader io.Reader, from *mail.Address, partstat string) (*Reply,
 	if name == "" {
 		name = from.Address
 	}
-	fmt.Fprintf(cr.PlainText, "%s has %s this invitation.", name, action)
+	_, _ = fmt.Fprintf(cr.PlainText, "%s has %s this invitation.", name, action)
 
 	invite, err := parse(reader)
 	if err != nil {

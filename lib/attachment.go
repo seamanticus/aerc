@@ -73,7 +73,7 @@ func (fa *FileAttachment) WriteTo(w *mail.Writer) error {
 	if err != nil {
 		return errors.Wrap(err, "os.Open")
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	reader := bufio.NewReader(f)
 
@@ -96,13 +96,11 @@ func (fa *FileAttachment) WriteTo(w *mail.Writer) error {
 	if err != nil {
 		return errors.Wrap(err, "CreateAttachment")
 	}
-	defer aw.Close()
-
 	if _, err := reader.WriteTo(aw); err != nil {
+		_ = aw.Close()
 		return errors.Wrap(err, "reader.WriteTo")
 	}
-
-	return nil
+	return errors.Wrap(aw.Close(), "Close")
 }
 
 type PartAttachment struct {
@@ -135,12 +133,11 @@ func (pa *PartAttachment) WriteTo(w *mail.Writer) error {
 	if err != nil {
 		return errors.Wrap(err, "CreateAttachment")
 	}
-	defer aw.Close()
-
 	if _, err := io.Copy(aw, pa.part.NewReader()); err != nil {
+		_ = aw.Close()
 		return errors.Wrap(err, "io.Copy")
 	}
-	return nil
+	return errors.Wrap(aw.Close(), "Close")
 }
 
 // SetUtf8Charset sets the charset in a params map to UTF-8.

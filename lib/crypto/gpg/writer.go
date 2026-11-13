@@ -98,7 +98,7 @@ func (s *Signer) Close() (err error) {
 		return err
 	}
 	boundary := s.mw.Boundary()
-	fmt.Fprintf(s.w, "--%s\r\n", boundary)
+	_, _ = fmt.Fprintf(s.w, "--%s\r\n", boundary)
 	_, _ = s.w.Write(buf.Bytes())
 	_, _ = s.w.Write([]byte("\r\n"))
 

@@ -109,7 +109,8 @@ func tryPort(host string, ports []portEncryption) *Credentials {
 		if err != nil {
 			continue
 		}
-		c.Close()
+		// only probing that the port accepts connections
+		_ = c.Close()
 		return &res
 	}
 

@@ -57,16 +57,16 @@ func (w *crlfWriter) Close() error {
 	scan := bufio.NewScanner(&w.buf)
 	for scan.Scan() {
 		if _, err := w.w.Write(scan.Bytes()); err != nil {
-			w.w.Close()
+			_ = w.w.Close()
 			return err
 		}
 		if _, err := w.w.Write([]byte{'\r', '\n'}); err != nil {
-			w.w.Close()
+			_ = w.w.Close()
 			return err
 		}
 	}
 	if scan.Err() != nil {
-		w.w.Close()
+		_ = w.w.Close()
 		return scan.Err()
 	}
 	return w.w.Close()

@@ -23,7 +23,8 @@ func StartServer(handler Handler, startup context.Context) (*AercServer, error) 
 	sockpath := xdg.RuntimePath("aerc.sock")
 	// remove the socket if it is not connected to a session
 	if _, err := ConnectAndExec(nil); err != nil {
-		os.Remove(sockpath)
+		// stale socket, if any; Listen reports the real failure
+		_ = os.Remove(sockpath)
 	}
 	log.Debugf("Starting Unix server: %s", sockpath)
 	l, err := net.Listen("unix", sockpath)
@@ -37,7 +38,9 @@ func StartServer(handler Handler, startup context.Context) (*AercServer, error) 
 }
 
 func (as *AercServer) Close() {
-	as.listener.Close()
+	if err := as.listener.Close(); err != nil {
+		log.Errorf("ipc: failed to close listener: %v", err)
+	}
 }
 
 var lastId int64 = 0 // access via atomic
@@ -58,7 +61,7 @@ func (as *AercServer) Serve() {
 			continue
 		}
 
-		defer conn.Close()
+		defer func() { _ = conn.Close() }()
 		clientId := atomic.AddInt64(&lastId, 1)
 		log.Debugf("unix:%d accepted connection", clientId)
 		scanner := bufio.NewScanner(conn)

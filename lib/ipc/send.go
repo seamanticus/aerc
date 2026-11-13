@@ -15,7 +15,7 @@ func ConnectAndExec(args []string) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	req, err := (&Request{Arguments: args}).Encode()
 	if err != nil {

@@ -19,9 +19,14 @@ func Verify(m io.Reader, s io.Reader) (*models.MessageDetails, error) {
 		if err != nil {
 			return nil, err
 		}
-		_, _ = io.Copy(sig, s)
-		sig.Close()
-		defer os.Remove(sig.Name())
+		defer func() { _ = os.Remove(sig.Name()) }()
+		_, err = io.Copy(sig, s)
+		if cerr := sig.Close(); err == nil {
+			err = cerr
+		}
+		if err != nil {
+			return nil, err
+		}
 		args = append(args, sig.Name(), "-")
 	}
 	orig, err := io.ReadAll(m)

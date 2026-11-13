@@ -32,22 +32,22 @@ func PanicHandler() {
 		// we tried, not possible. bye
 		panic(r)
 	}
-	defer panicLog.Close()
+	defer func() { _ = panicLog.Close() }()
 
 	outputs := io.MultiWriter(panicLog, os.Stderr)
 
 	// if any error happens here, we do not care.
-	fmt.Fprintln(panicLog, strings.Repeat("#", 80))
-	fmt.Fprint(panicLog, strings.Repeat(" ", 34))
-	fmt.Fprintln(panicLog, "PANIC CAUGHT!")
-	fmt.Fprint(panicLog, strings.Repeat(" ", 24))
-	fmt.Fprintln(panicLog, time.Now().Format("2006-01-02T15:04:05.000000-0700"))
-	fmt.Fprintln(panicLog, strings.Repeat("#", 80))
-	fmt.Fprintf(outputs, "%s\n", panicMessage)
-	fmt.Fprintf(outputs, "Version: %s\n", BuildInfo)
-	fmt.Fprintf(panicLog, "Error: %v\n\n", r)
-	panicLog.Write(debug.Stack()) //nolint:errcheck // we are already in a panic, so not much we can do here
-	fmt.Fprintf(os.Stderr, "\nThis error was also written to: %s\n", filename)
+	_, _ = fmt.Fprintln(panicLog, strings.Repeat("#", 80))
+	_, _ = fmt.Fprint(panicLog, strings.Repeat(" ", 34))
+	_, _ = fmt.Fprintln(panicLog, "PANIC CAUGHT!")
+	_, _ = fmt.Fprint(panicLog, strings.Repeat(" ", 24))
+	_, _ = fmt.Fprintln(panicLog, time.Now().Format("2006-01-02T15:04:05.000000-0700"))
+	_, _ = fmt.Fprintln(panicLog, strings.Repeat("#", 80))
+	_, _ = fmt.Fprintf(outputs, "%s\n", panicMessage)
+	_, _ = fmt.Fprintf(outputs, "Version: %s\n", BuildInfo)
+	_, _ = fmt.Fprintf(panicLog, "Error: %v\n\n", r)
+	_, _ = panicLog.Write(debug.Stack())
+	_, _ = fmt.Fprintf(os.Stderr, "\nThis error was also written to: %s\n", filename)
 	panic(r)
 }
 
