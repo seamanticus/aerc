@@ -29,7 +29,7 @@ jobs:
       # git is needed by actions/checkout to fetch a repository instead of
       # a tarball, tar by actions/setup-go
       - run: dnf install -y --setopt=install_weak_deps=False
-          codespell gcc git gnupg2 make notmuch-devel scdoc tar
+          gcc git gnupg2 make notmuch-devel scdoc tar
       - uses: actions/checkout@v4
       # Fedora's golang package sets GOTOOLCHAIN=local and may lag behind
       # the go.mod requirement
