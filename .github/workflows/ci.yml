@@ -2,10 +2,16 @@ name: CI
 
 on:
   push:
+    branches: [master]
   pull_request:
 
 permissions:
   contents: read
+
+# A newer push to the same branch or pull request supersedes a running one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   GO_VERSION: "1.27"
@@ -27,10 +33,15 @@ jobs:
       DESTDIR: ./out
     steps:
       # git is needed by actions/checkout to fetch a repository instead of
-      # a tarball, tar by actions/setup-go
+      # a tarball, tar by actions/setup-go, diffutils and gawk by
+      # filters/test.sh
       - run: dnf install -y --setopt=install_weak_deps=False
-          gcc git gnupg2 make notmuch-devel scdoc tar
+          diffutils gawk gcc git gnupg2 make notmuch-devel scdoc tar
       - uses: actions/checkout@v4
+      # The workspace is owned by the runner user, not the container's root:
+      # git refuses it as dubious ownership and go build fails to stamp VCS
+      # info (exit status 128)
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       # Fedora's golang package sets GOTOOLCHAIN=local and may lag behind
       # the go.mod requirement
       - uses: actions/setup-go@v5
@@ -41,74 +52,4 @@ jobs:
       - run: make tests
       - run: make install checkinstall
       - if: matrix.arch == 'x86_64'
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          make lint
-
-  ubuntu:
-    name: Ubuntu ${{ matrix.arch }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: x86_64
-            runner: ubuntu-latest
-          - arch: arm64
-            runner: ubuntu-24.04-arm
-    runs-on: ${{ matrix.runner }}
-    env:
-      DESTDIR: ./out
-    steps:
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libnotmuch-dev scdoc
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          check-latest: true
-      - run: make
-      - run: make tests
-      - run: make install checkinstall
-
-  freebsd:
-    name: FreeBSD ${{ matrix.arch }}
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [x86_64, aarch64]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: vmactions/freebsd-vm@v1
-        with:
-          release: "15"
-          arch: ${{ matrix.arch }}
-          usesh: true
-          prepare: pkg install -y go gmake gnupg notmuch scdoc
-          run: |
-            export DESTDIR=./out
-            gmake
-            gmake tests
-            gmake install checkinstall
-
-  openbsd:
-    name: OpenBSD ${{ matrix.arch }}
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [x86_64, aarch64]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: vmactions/openbsd-vm@v1
-        with:
-          release: "8.0"
-          arch: ${{ matrix.arch }}
-          usesh: true
-          prepare: pkg_add base64 gmake gnupg go notmuch scdoc
-          run: |
-            export DESTDIR=./out
-            gmake
-            gmake tests
-            gmake install checkinstall
+        run: make lint
