@@ -51,8 +51,10 @@ var state struct {
 func Initialize(content DrawableInteractive) error {
 	opts := vaxis.Options{
 		DisableMouse: !config.Ui().MouseEnabled,
-		CSIuBitMask:  vaxis.CSIuDisambiguate,
-		WithTTY:      "/dev/tty",
+		// Without a mask vaxis enables every kitty flag, including key
+		// release events, which aerc would handle as extra key presses.
+		CSIuBitMask: vaxis.CSIuDisambiguate, //nolint:staticcheck // see above
+		WithTTY:     "/dev/tty",
 	}
 	vx, err := vaxis.New(opts)
 	if err != nil {
