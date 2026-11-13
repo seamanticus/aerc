@@ -57,6 +57,11 @@ Note that many of these configuration options are written for you, such as
 	seconds) until this maximum is reached. The backoff itself is capped at
 	one day so setting this maximum to a higher value has no effect.
 
+	Authentication failures are not retried: a rejected password or OAuth2
+	token, or a missing OAuth2 login, leaves the account disconnected until
+	*:connect* or *:oauth2-login*. Repeated failed logins can get an account
+	locked out.
+
 	Default: _30s_
 
 *copy-to* = _<folder1,folder2,folder3...>_

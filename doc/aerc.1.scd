@@ -574,8 +574,10 @@ message list, the message in the message viewer, etc).
 *:oauth2-login* [*-d*]
 	Authorize the current account with the OAuth2 provider configured in its
 	*source* or *outgoing* URI (see *aerc-imap*(5)) and store the refresh
-	token with *oauth2-encrypt-cmd* (see *aerc-accounts*(5)). Run *:connect*
-	once authorization is complete.
+	token with *oauth2-encrypt-cmd* (see *aerc-accounts*(5)). Once
+	authorization is complete, a disconnected account connects once. If the
+	server rejects the login, the account stays disconnected until
+	*:connect*.
 
 	By default, the provider's login page is opened in a web browser which
 	redirects to a temporary listener on _127.0.0.1_.
