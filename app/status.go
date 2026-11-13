@@ -111,7 +111,7 @@ func (status *StatusLine) Push(text string, expiry time.Duration) *StatusMessage
 		message: text,
 	}
 	status.stack = append(status.stack, msg)
-	go (func() {
+	go func() {
 		defer log.PanicHandler()
 
 		time.Sleep(expiry)
@@ -124,7 +124,7 @@ func (status *StatusLine) Push(text string, expiry time.Duration) *StatusMessage
 			}
 		}
 		status.Invalidate()
-	})()
+	}()
 	status.Invalidate()
 	return msg
 }

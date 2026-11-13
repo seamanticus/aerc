@@ -275,7 +275,7 @@ func (*UIConfig) ParseSplit(section *ini.Section, key *ini.Key) (p SplitParams, 
 
 func (*UIConfig) ParseDialogPosition(section *ini.Section, key *ini.Key) (string, error) {
 	match, _ := regexp.MatchString(`^\s*(top|center|bottom)\s*$`, key.String())
-	if !(match) {
+	if !match {
 		return "", fmt.Errorf("bad option value")
 	}
 	return key.String(), nil

@@ -21,7 +21,7 @@ type Tabs struct {
 
 	ui func(d Drawable) *config.UIConfig
 
-	parent   *Tabs //nolint:structcheck // used within this file
+	parent   *Tabs
 	CloseTab func(index int)
 }
 
