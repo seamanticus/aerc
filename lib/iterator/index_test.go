@@ -3,7 +3,7 @@ package iterator_test
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/iterator"
+	"github.com/seamanticus/aerc/lib/iterator"
 )
 
 type indexer struct {

@@ -5,7 +5,7 @@ import (
 	"net/textproto"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 type SearchCriteria struct {

@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
 	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/xdg"
 	"go.rockorager.dev/vaxis"
 )
 

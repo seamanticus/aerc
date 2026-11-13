@@ -5,7 +5,7 @@ import (
 	"slices"
 	"sync"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 // Marker provides the interface for the marking behavior of messages

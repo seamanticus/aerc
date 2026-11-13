@@ -6,8 +6,8 @@ package notmuch
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-maildir"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func TestFilterForStrategy(t *testing.T) {

@@ -6,15 +6,15 @@ import (
 	"net/url"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/handlers"
-	"git.sr.ht/~rjarry/aerc/worker/jmap/cache"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail/identity"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/handlers"
+	"github.com/seamanticus/aerc/worker/jmap/cache"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func init() {

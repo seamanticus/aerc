@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/crypto/gpg/gpgbin"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/crypto/gpg/gpgbin"
+	"github.com/seamanticus/aerc/models"
 )
 
 func importSecretKey() {

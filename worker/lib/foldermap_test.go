@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/worker/lib"
+	"github.com/seamanticus/aerc/worker/lib"
 )
 
 func TestFolderMap(t *testing.T) {

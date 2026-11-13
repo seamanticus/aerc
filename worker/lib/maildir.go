@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-maildir"
+	"github.com/seamanticus/aerc/models"
 )
 
 type MaildirStore struct {

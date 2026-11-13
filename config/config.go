@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 func installTemplate(root, name string) error {

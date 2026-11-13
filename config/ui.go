@@ -11,9 +11,9 @@ import (
 	"text/template"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/log"
 	"go.rockorager.dev/vaxis"
 )
 

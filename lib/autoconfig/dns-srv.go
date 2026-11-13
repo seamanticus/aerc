@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // getFromProviderDNS retrieves the config from the provider using SRV DNS records (RFC2782)

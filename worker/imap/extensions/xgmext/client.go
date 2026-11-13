@@ -9,7 +9,7 @@ import (
 	"github.com/emersion/go-imap/commands"
 	"github.com/emersion/go-imap/responses"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // XGMExtClient is a client for the X-GM-EXT-1 Gmail extension.

@@ -3,8 +3,8 @@ package app
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/ui"
 	"go.rockorager.dev/vaxis"
 )
 

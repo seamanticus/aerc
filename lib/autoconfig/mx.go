@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 func guessMX(ctx context.Context, localpart, domain string, result chan *Config) {

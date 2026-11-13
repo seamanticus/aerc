@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 var templateText = `

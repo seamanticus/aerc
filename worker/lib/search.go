@@ -5,12 +5,12 @@ import (
 	"strings"
 	"unicode"
 
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/rfc822"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func Search(messages []rfc822.RawMessage, criteria *types.SearchCriteria) ([]models.UID, error) {

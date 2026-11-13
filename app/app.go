@@ -4,17 +4,17 @@ import (
 	"context"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/crypto"
-	"git.sr.ht/~rjarry/aerc/lib/ipc"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/state"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rjarry/go-opt/v2"
 	"github.com/ProtonMail/go-crypto/openpgp"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/crypto"
+	"github.com/seamanticus/aerc/lib/ipc"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 var aerc Aerc

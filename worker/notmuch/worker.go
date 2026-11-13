@@ -17,17 +17,17 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/watchers"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/handlers"
-	"git.sr.ht/~rjarry/aerc/worker/lib"
-	"git.sr.ht/~rjarry/aerc/worker/middleware"
-	notmuch "git.sr.ht/~rjarry/aerc/worker/notmuch/lib"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-maildir"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/watchers"
+	"github.com/seamanticus/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/handlers"
+	"github.com/seamanticus/aerc/worker/lib"
+	"github.com/seamanticus/aerc/worker/middleware"
+	notmuch "github.com/seamanticus/aerc/worker/notmuch/lib"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func init() {

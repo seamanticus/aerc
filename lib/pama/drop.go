@@ -3,8 +3,8 @@ package pama
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/pama/models"
 )
 
 func (m PatchManager) DropPatch(patch string) error {

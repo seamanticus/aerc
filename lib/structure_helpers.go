@@ -3,7 +3,7 @@ package lib
 import (
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 // FindMIMEPart finds the first message part with the provided MIME type.

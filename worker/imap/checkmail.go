@@ -3,9 +3,9 @@ package imap
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-imap"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (w *IMAPWorker) handleCheckMailMessage(msg *types.CheckMail) error {

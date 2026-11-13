@@ -6,9 +6,9 @@ import (
 	"io"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/lib/rfc822"
 )
 
 func Cleartext(r io.Reader, header mail.Header) ([]byte, error) {

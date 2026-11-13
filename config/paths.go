@@ -4,7 +4,7 @@ import (
 	"path"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 // Set at build time

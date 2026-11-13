@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/models"
 )
 
 func TestDirStore_List(t *testing.T) {

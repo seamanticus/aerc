@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
 	"github.com/emersion/go-message/mail"
 	"github.com/pkg/errors"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 type Part struct {

@@ -9,14 +9,14 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/parse"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-message"
 	"github.com/emersion/go-message/mail"
 	"github.com/emersion/go-message/textproto"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/parse"
+	"github.com/seamanticus/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 

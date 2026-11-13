@@ -4,8 +4,8 @@ import (
 	"errors"
 	"slices"
 
-	"git.sr.ht/~rjarry/aerc/lib/pama"
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/pama"
+	"github.com/seamanticus/aerc/lib/pama/models"
 )
 
 var errNotFound = errors.New("not found")

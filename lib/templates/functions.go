@@ -12,10 +12,10 @@ import (
 	"text/template"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/format"
-	"git.sr.ht/~rjarry/aerc/lib/parse"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/lib/format"
+	"github.com/seamanticus/aerc/lib/parse"
+	"github.com/seamanticus/aerc/models"
 )
 
 var version string

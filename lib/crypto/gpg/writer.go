@@ -10,10 +10,10 @@ import (
 	"io"
 	"mime"
 
-	"git.sr.ht/~rjarry/aerc/lib/crypto/gpg/gpgbin"
-	"git.sr.ht/~rjarry/aerc/lib/pinentry"
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
 	"github.com/emersion/go-message/textproto"
+	"github.com/seamanticus/aerc/lib/crypto/gpg/gpgbin"
+	"github.com/seamanticus/aerc/lib/pinentry"
+	"github.com/seamanticus/aerc/lib/rfc822"
 )
 
 type EncrypterSigner struct {

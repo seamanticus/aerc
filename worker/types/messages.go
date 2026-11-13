@@ -6,9 +6,9 @@ import (
 	"io"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/models"
 )
 
 type WorkerMessage interface {

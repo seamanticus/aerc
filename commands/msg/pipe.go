@@ -14,13 +14,13 @@ import (
 
 	"github.com/pkg/errors"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	cryptoutil "git.sr.ht/~rjarry/aerc/lib/crypto/util"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	mboxer "git.sr.ht/~rjarry/aerc/worker/mbox"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	cryptoutil "github.com/seamanticus/aerc/lib/crypto/util"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	mboxer "github.com/seamanticus/aerc/worker/mbox"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type Pipe struct {

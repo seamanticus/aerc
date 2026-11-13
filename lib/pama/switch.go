@@ -6,7 +6,7 @@ import (
 	"slices"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 func (m PatchManager) SwitchProject(name string) error {

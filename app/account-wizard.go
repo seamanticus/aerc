@@ -16,12 +16,12 @@ import (
 	"github.com/go-ini/ini"
 	"golang.org/x/sys/unix"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/autoconfig"
-	"git.sr.ht/~rjarry/aerc/lib/format"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/autoconfig"
+	"github.com/seamanticus/aerc/lib/format"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/lib/xdg"
 	"go.rockorager.dev/vaxis"
 )
 

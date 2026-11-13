@@ -3,7 +3,7 @@ package pama
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/pama/models"
 )
 
 func (m PatchManager) Find(hash string, p models.Project) (models.Commit, error) {

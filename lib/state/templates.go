@@ -10,14 +10,14 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/danwakefield/fnmatch"
 	sortthread "github.com/emersion/go-imap-sortthread"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/models"
 )
 
 type Composer interface {

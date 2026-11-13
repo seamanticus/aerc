@@ -3,7 +3,7 @@ package state
 import (
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/config"
+	"github.com/seamanticus/aerc/config"
 )
 
 type texterInterface interface {

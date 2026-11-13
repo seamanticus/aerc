@@ -7,9 +7,9 @@ import (
 
 	"github.com/emersion/go-imap"
 
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/charset"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/models"
 )
 
 func init() {

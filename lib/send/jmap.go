@@ -7,7 +7,7 @@ import (
 
 	"github.com/emersion/go-message/mail"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func newJmapSender(

@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"git.sr.ht/~rjarry/aerc/app"
+	"github.com/seamanticus/aerc/app"
 )
 
 type NewAccount struct {

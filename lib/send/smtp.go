@@ -7,10 +7,10 @@ import (
 	"net/url"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/auth"
 	"github.com/emersion/go-message/mail"
 	"github.com/emersion/go-smtp"
 	"github.com/pkg/errors"
+	"github.com/seamanticus/aerc/lib/auth"
 )
 
 func connectSmtp(starttls bool, host string, domain string) (*smtp.Client, error) {

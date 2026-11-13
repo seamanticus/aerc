@@ -1,10 +1,10 @@
 package app
 
 import (
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/authres"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
 	"github.com/mattn/go-runewidth"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/authres"
+	"github.com/seamanticus/aerc/lib/ui"
 	"go.rockorager.dev/vaxis"
 )
 

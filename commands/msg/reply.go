@@ -9,18 +9,18 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/commands/account"
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/crypto"
-	"git.sr.ht/~rjarry/aerc/lib/format"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/parse"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/danwakefield/fnmatch"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/commands/account"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/crypto"
+	"github.com/seamanticus/aerc/lib/format"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/parse"
+	"github.com/seamanticus/aerc/models"
 )
 
 type reply struct {

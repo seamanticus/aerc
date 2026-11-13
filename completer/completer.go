@@ -12,9 +12,9 @@ import (
 	"strings"
 	"syscall"
 
-	"git.sr.ht/~rjarry/aerc/lib/format"
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/lib/format"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // A Completer is used to autocomplete text inputs based on the configured

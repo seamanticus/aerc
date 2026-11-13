@@ -4,8 +4,8 @@ import (
 	"math"
 	"regexp"
 
-	"git.sr.ht/~rjarry/aerc/config"
 	"github.com/mattn/go-runewidth"
+	"github.com/seamanticus/aerc/config"
 	"go.rockorager.dev/vaxis"
 )
 

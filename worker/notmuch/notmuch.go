@@ -3,7 +3,7 @@
 
 package notmuch
 
-import "git.sr.ht/~rjarry/aerc/models"
+import "github.com/seamanticus/aerc/models"
 
 var tagToFlag = map[string]models.Flags{
 	"unread":  models.SeenFlag,

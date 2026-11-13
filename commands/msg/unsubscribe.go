@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/authres"
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/authres"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // Unsubscribe helps people unsubscribe from mailing lists by way of the

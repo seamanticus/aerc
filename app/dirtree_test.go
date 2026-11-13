@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 // mockBackend implements types.Backend for testing

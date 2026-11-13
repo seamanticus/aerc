@@ -3,7 +3,7 @@ package pama
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/pama/models"
 )
 
 // RebaseCommits fetches the commits between baseID and HEAD. The tags from the

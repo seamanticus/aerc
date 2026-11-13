@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"git.sr.ht/~rjarry/aerc/config"
+	"github.com/seamanticus/aerc/config"
 )
 
 type AercStartup struct {

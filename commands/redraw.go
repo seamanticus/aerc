@@ -1,6 +1,6 @@
 package commands
 
-import "git.sr.ht/~rjarry/aerc/lib/ui"
+import "github.com/seamanticus/aerc/lib/ui"
 
 type Redraw struct{}
 

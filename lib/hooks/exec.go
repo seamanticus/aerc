@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 func RunHook(h HookType) error {

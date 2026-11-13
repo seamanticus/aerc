@@ -6,13 +6,13 @@ import (
 	"net/textproto"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/commands/account"
-	"git.sr.ht/~rjarry/aerc/lib/pama"
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
-	"git.sr.ht/~rjarry/aerc/lib/parse"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/commands/account"
+	"github.com/seamanticus/aerc/lib/pama"
+	"github.com/seamanticus/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/parse"
 )
 
 type Find struct {

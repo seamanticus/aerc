@@ -6,9 +6,9 @@ import (
 	"io"
 	"os"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 type Eml struct {

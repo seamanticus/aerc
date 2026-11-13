@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/template"
 
-	"git.sr.ht/~rjarry/aerc/lib/templates"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/templates"
 )
 
 type ColumnFlags uint32

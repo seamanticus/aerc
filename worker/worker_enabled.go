@@ -2,8 +2,8 @@ package worker
 
 // the following workers are always enabled
 import (
-	_ "git.sr.ht/~rjarry/aerc/worker/imap"
-	_ "git.sr.ht/~rjarry/aerc/worker/jmap"
-	_ "git.sr.ht/~rjarry/aerc/worker/maildir"
-	_ "git.sr.ht/~rjarry/aerc/worker/mbox"
+	_ "github.com/seamanticus/aerc/worker/imap"
+	_ "github.com/seamanticus/aerc/worker/jmap"
+	_ "github.com/seamanticus/aerc/worker/maildir"
+	_ "github.com/seamanticus/aerc/worker/mbox"
 )

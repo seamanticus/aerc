@@ -6,12 +6,12 @@ import (
 	"path"
 	"slices"
 
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/jmap/cache"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/jmap/cache"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (w *JMAPWorker) handleListDirectories(msg *types.ListDirectories) error {

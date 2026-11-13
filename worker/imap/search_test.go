@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func Test_translateSearch_ByDate(t *testing.T) {

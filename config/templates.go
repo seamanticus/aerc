@@ -4,11 +4,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/templates"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/templates"
+	"github.com/seamanticus/aerc/models"
 )
 
 type TemplateConfig struct {

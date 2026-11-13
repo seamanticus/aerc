@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"slices"
 
-	"git.sr.ht/~rjarry/aerc/commands"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/commands"
 )
 
 var subCommands map[string]commands.Command

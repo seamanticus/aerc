@@ -6,13 +6,13 @@ import (
 	"io"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	"git.sr.ht/~rockorager/go-jmap/mail/emailsubmission"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (w *JMAPWorker) handleStartSend(msg *types.StartSendingMessage) error {

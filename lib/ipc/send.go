@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net"
 
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 func ConnectAndExec(args []string) (*Response, error) {

@@ -6,7 +6,7 @@ import (
 
 	sortthread "github.com/emersion/go-imap-sortthread"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (imapw *IMAPWorker) handleOpenDirectory(msg *types.OpenDirectory) error {

@@ -22,8 +22,8 @@ BUILD_OPTS ?= -trimpath
 GO_LDFLAGS :=
 GO_LDFLAGS += -X main.Version=$(VERSION)
 GO_LDFLAGS += -X main.Date=$(DATE)
-GO_LDFLAGS += -X git.sr.ht/~rjarry/aerc/config.shareDir=$(SHAREDIR)
-GO_LDFLAGS += -X git.sr.ht/~rjarry/aerc/config.libexecDir=$(LIBEXECDIR)
+GO_LDFLAGS += -X github.com/seamanticus/aerc/config.shareDir=$(SHAREDIR)
+GO_LDFLAGS += -X github.com/seamanticus/aerc/config.libexecDir=$(LIBEXECDIR)
 GO_LDFLAGS += $(GO_EXTRA_LDFLAGS)
 CC ?= cc
 CFLAGS ?= -O2 -g
@@ -50,7 +50,7 @@ aerc: $(gosrc)
 dev:
 	$(RM) aerc
 	$(MAKE) --no-print-directory aerc BUILD_OPTS="-trimpath -race"
-	GORACE="log_path=race.log strip_path_prefix=git.sr.ht/~rjarry/aerc/" GOTRACEBACK=crash ./aerc
+	GORACE="log_path=race.log strip_path_prefix=github.com/seamanticus/aerc/" GOTRACEBACK=crash ./aerc
 
 .PHONY: fmt
 fmt:

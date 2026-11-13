@@ -6,7 +6,7 @@ import (
 	"path"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // assign to a local var to allow mocking in unit tests

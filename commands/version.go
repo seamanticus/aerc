@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 type Version struct{}

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/crypto/gpg/gpgbin"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/textproto"
+	"github.com/seamanticus/aerc/lib/crypto/gpg/gpgbin"
+	"github.com/seamanticus/aerc/models"
 )
 
 func init() {

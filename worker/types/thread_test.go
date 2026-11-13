@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 func genFakeTree() *Thread {

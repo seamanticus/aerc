@@ -13,8 +13,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/log"
 	"go.rockorager.dev/vaxis"
 )
 

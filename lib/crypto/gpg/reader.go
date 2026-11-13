@@ -11,10 +11,10 @@ import (
 	"mime"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/crypto/gpg/gpgbin"
-	"git.sr.ht/~rjarry/aerc/lib/pinentry"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/textproto"
+	"github.com/seamanticus/aerc/lib/crypto/gpg/gpgbin"
+	"github.com/seamanticus/aerc/lib/pinentry"
+	"github.com/seamanticus/aerc/models"
 )
 
 type Reader struct {

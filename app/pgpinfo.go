@@ -5,9 +5,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/models"
 	"go.rockorager.dev/vaxis"
 )
 

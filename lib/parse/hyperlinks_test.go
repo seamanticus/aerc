@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/parse"
+	"github.com/seamanticus/aerc/lib/parse"
 )
 
 func TestHyperlinks(t *testing.T) {

@@ -3,9 +3,9 @@ package account
 import (
 	"errors"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/lib/state"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/lib/state"
 )
 
 type Clear struct {

@@ -8,11 +8,11 @@ import (
 	"path"
 	"path/filepath"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 type Open struct {

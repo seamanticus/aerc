@@ -3,8 +3,8 @@ package lib_test
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/models"
 )
 
 func TestLib_FindAllNonMultipart(t *testing.T) {

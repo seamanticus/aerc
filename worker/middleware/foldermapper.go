@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync"
 
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type folderMapper struct {

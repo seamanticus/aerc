@@ -1,7 +1,7 @@
 package imap
 
 import (
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (imapw *IMAPWorker) handleCreateDirectory(msg *types.CreateDirectory) error {

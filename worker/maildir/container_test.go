@@ -9,7 +9,7 @@ import (
 
 	"github.com/emersion/go-maildir"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 func addTestMessage(t *testing.T, d maildir.Dir, flags ...maildir.Flag) models.UID {

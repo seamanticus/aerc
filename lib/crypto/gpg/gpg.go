@@ -5,10 +5,10 @@ import (
 	"io"
 	"os/exec"
 
-	"git.sr.ht/~rjarry/aerc/lib/crypto/gpg/gpgbin"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/lib/crypto/gpg/gpgbin"
+	"github.com/seamanticus/aerc/models"
 )
 
 // Mail satisfies the PGPProvider interface in aerc

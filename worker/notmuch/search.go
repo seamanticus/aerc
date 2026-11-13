@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type queryBuilder struct {

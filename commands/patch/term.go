@@ -1,8 +1,8 @@
 package patch
 
 import (
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/lib/pama"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/lib/pama"
 )
 
 type Term struct {

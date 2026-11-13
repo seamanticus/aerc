@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"git.sr.ht/~rjarry/aerc/config"
+	"github.com/seamanticus/aerc/config"
 	"go.rockorager.dev/vaxis"
 )
 

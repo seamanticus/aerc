@@ -1,7 +1,7 @@
 package pama
 
 import (
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/pama/models"
 )
 
 // Init creates a new revision control project

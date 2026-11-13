@@ -3,7 +3,7 @@ package commands
 import (
 	"git.sr.ht/~rjarry/go-opt/v2"
 
-	"git.sr.ht/~rjarry/aerc/app"
+	"github.com/seamanticus/aerc/app"
 )
 
 type Prompt struct {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-imap"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 var errIdleTimeout = fmt.Errorf("idle timeout")

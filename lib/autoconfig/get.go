@@ -5,7 +5,7 @@ import (
 	"net/mail"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // GetConfig attempts to retrieve the settings for the given mail address.

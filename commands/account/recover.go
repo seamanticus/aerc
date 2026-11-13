@@ -7,10 +7,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 type Recover struct {

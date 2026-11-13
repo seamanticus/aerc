@@ -6,10 +6,10 @@ import (
 	"net/mail"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/completer"
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/completer"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // GetAddress uses the address-book-cmd for address completion

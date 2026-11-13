@@ -3,11 +3,11 @@ package account
 import (
 	"errors"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/lib/sort"
-	"git.sr.ht/~rjarry/aerc/lib/state"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/lib/sort"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type Sort struct {

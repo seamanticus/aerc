@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/parse"
+	"github.com/seamanticus/aerc/lib/parse"
 )
 
 func TestParseDateRange(t *testing.T) {

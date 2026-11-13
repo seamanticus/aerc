@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/commands"
+	"github.com/seamanticus/aerc/commands"
 )
 
 func TestCommands_Operand(t *testing.T) {

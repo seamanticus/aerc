@@ -7,11 +7,11 @@ import (
 
 	"github.com/mattn/go-runewidth"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/state"
-	"git.sr.ht/~rjarry/aerc/lib/templates"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/lib/templates"
+	"github.com/seamanticus/aerc/lib/ui"
 	"go.rockorager.dev/vaxis"
 )
 

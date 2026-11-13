@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 type StatuslineConfig struct {

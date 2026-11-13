@@ -3,8 +3,8 @@ package hooks
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/config"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/config"
 )
 
 type MailSent struct {

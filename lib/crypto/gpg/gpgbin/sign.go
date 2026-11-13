@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 // Sign creates a detached signature based on the contents of r

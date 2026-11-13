@@ -8,8 +8,8 @@ import (
 	"io"
 	"slices"
 
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/rfc822"
+	"github.com/seamanticus/aerc/models"
 )
 
 type mailboxContainer struct {

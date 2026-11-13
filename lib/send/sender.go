@@ -9,8 +9,8 @@ import (
 
 	"github.com/emersion/go-message/mail"
 
-	"git.sr.ht/~rjarry/aerc/lib/auth"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/lib/auth"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 // NewSender returns an io.WriterCloser into which the caller can write

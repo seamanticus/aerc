@@ -6,12 +6,12 @@ import (
 	"slices"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/models"
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
 	msgmail "github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/models"
 )
 
 func (w *JMAPWorker) translateMsgInfo(m *email.Email, dir string) *models.MessageInfo {

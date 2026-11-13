@@ -3,7 +3,7 @@ package maildir
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func TestNewWorkerFSEvents(t *testing.T) {

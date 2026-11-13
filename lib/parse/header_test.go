@@ -3,8 +3,8 @@ package parse_test
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/parse"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/lib/parse"
 	"github.com/stretchr/testify/assert"
 )
 

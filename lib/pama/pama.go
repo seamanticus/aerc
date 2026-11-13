@@ -3,9 +3,9 @@ package pama
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
-	"git.sr.ht/~rjarry/aerc/lib/pama/revctrl"
-	"git.sr.ht/~rjarry/aerc/lib/pama/store"
+	"github.com/seamanticus/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/pama/revctrl"
+	"github.com/seamanticus/aerc/lib/pama/store"
 )
 
 type (

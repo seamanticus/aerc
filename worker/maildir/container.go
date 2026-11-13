@@ -9,9 +9,9 @@ import (
 
 	"github.com/emersion/go-maildir"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/lib"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/lib"
 )
 
 // A Container is a directory which contains other directories which adhere to

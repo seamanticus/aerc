@@ -11,12 +11,12 @@ import (
 	"github.com/ProtonMail/go-crypto/openpgp"
 	_ "github.com/emersion/go-message/charset"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/crypto"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/crypto"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/rfc822"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 // This is an abstraction for viewing a message with semi-transparent PGP

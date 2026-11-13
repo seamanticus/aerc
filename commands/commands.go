@@ -11,12 +11,12 @@ import (
 
 	"git.sr.ht/~rjarry/go-opt/v2"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/state"
-	"git.sr.ht/~rjarry/aerc/lib/templates"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/lib/templates"
+	"github.com/seamanticus/aerc/models"
 )
 
 type CommandContext uint32

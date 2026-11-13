@@ -5,8 +5,8 @@ import (
 	"io"
 	"os"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/models"
 )
 
 // Verify runs gpg --verify. If s is not nil, then gpg interprets the

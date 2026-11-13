@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/app"
+	"github.com/seamanticus/aerc/app"
 )
 
 type ChangeTab struct {

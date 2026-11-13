@@ -1,7 +1,7 @@
 package app
 
 import (
-	"git.sr.ht/~rjarry/aerc/lib/ui"
+	"github.com/seamanticus/aerc/lib/ui"
 )
 
 type Dialog interface {

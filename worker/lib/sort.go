@@ -5,9 +5,9 @@ import (
 	"slices"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func Sort(messageInfos []*models.MessageInfo,

@@ -6,9 +6,9 @@ import (
 
 	"github.com/emersion/go-imap"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (imapw *IMAPWorker) handleListDirectories(msg *types.ListDirectories) error {

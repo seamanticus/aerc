@@ -7,10 +7,10 @@ import (
 	"github.com/ProtonMail/go-crypto/openpgp"
 	_ "github.com/emersion/go-message/charset"
 
-	"git.sr.ht/~rjarry/aerc/lib/crypto"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/crypto"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/rfc822"
+	"github.com/seamanticus/aerc/models"
 )
 
 // EmlMessage implements the RawMessage interface

@@ -3,10 +3,10 @@ package app
 import (
 	"context"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/ui"
 	"go.rockorager.dev/vaxis"
 )
 

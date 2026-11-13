@@ -12,13 +12,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/syndtr/goleveldb/leveldb"
 
-	"git.sr.ht/~rjarry/aerc/lib/auth"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/handlers"
-	"git.sr.ht/~rjarry/aerc/worker/imap/extensions"
-	"git.sr.ht/~rjarry/aerc/worker/imap/extensions/xgmext"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/lib/auth"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/handlers"
+	"github.com/seamanticus/aerc/worker/imap/extensions"
+	"github.com/seamanticus/aerc/worker/imap/extensions/xgmext"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func init() {

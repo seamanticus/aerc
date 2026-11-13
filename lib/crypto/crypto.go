@@ -5,13 +5,13 @@ import (
 	"io"
 	"slices"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/crypto/gpg"
-	"git.sr.ht/~rjarry/aerc/lib/crypto/pgp"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/crypto/gpg"
+	"github.com/seamanticus/aerc/lib/crypto/pgp"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
 )
 
 type Provider interface {

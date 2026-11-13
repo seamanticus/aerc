@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/worker/imap/extensions/xgmext"
 	"github.com/emersion/go-imap"
+	"github.com/seamanticus/aerc/worker/imap/extensions/xgmext"
 )
 
 func TestXGMEXT_ThreadIDSearch(t *testing.T) {

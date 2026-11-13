@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"regexp"
 
-	"git.sr.ht/~rjarry/aerc/lib/templates"
 	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
+	"github.com/seamanticus/aerc/lib/templates"
 )
 
 func MapToStruct(s *ini.Section, v any, useDefaults bool) error {

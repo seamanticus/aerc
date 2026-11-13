@@ -5,10 +5,10 @@ import (
 	"os/exec"
 	"sync/atomic"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/state"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/lib/ui"
 	"go.rockorager.dev/vaxis"
 	"go.rockorager.dev/vaxis/widgets/term"
 )

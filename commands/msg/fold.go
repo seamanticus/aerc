@@ -3,8 +3,8 @@ package msg
 import (
 	"errors"
 
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/lib/ui"
 )
 
 type Fold struct {

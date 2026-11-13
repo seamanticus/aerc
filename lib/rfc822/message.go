@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/parse"
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message"
 	_ "github.com/emersion/go-message/charset"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/parse"
+	"github.com/seamanticus/aerc/models"
 )
 
 type MultipartError struct {

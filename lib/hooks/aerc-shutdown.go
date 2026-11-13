@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/config"
+	"github.com/seamanticus/aerc/config"
 )
 
 type AercShutdown struct {

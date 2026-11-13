@@ -4,8 +4,8 @@ import (
 	"errors"
 	"os"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/lib/xdg"
 )
 
 var previousDir string

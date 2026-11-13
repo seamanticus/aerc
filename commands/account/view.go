@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"errors"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/state"
-	"git.sr.ht/~rjarry/aerc/lib/templates"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/lib/templates"
+	"github.com/seamanticus/aerc/models"
 )
 
 type ViewMessage struct {

@@ -3,8 +3,8 @@ package compose
 import (
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
 )
 
 type Sign struct{}

@@ -3,9 +3,9 @@ package iterator_test
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/iterator"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/lib/iterator"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func toThreads(uids []models.UID) []*types.Thread {

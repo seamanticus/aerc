@@ -1,4 +1,4 @@
-module git.sr.ht/~rjarry/aerc
+module github.com/seamanticus/aerc
 
 go 1.27.0
 

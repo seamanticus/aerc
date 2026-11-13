@@ -10,12 +10,12 @@ import (
 	"path/filepath"
 	"slices"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/rfc822"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/handlers"
-	"git.sr.ht/~rjarry/aerc/worker/lib"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/rfc822"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/handlers"
+	"github.com/seamanticus/aerc/worker/lib"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func init() {

@@ -3,8 +3,8 @@ package marker_test
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/marker"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/marker"
+	"github.com/seamanticus/aerc/models"
 )
 
 // mockUidProvider implements the UidProvider interface and mocks the message

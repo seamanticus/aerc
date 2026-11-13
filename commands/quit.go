@@ -3,7 +3,7 @@ package commands
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/commands/mode"
+	"github.com/seamanticus/aerc/commands/mode"
 )
 
 type Quit struct {

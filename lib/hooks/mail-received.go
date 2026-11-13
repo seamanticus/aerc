@@ -3,8 +3,8 @@ package hooks
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/models"
 )
 
 type MailReceived struct {

@@ -6,8 +6,8 @@ import (
 
 	"github.com/emersion/go-imap"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func translateSearch(c *types.SearchCriteria) *imap.SearchCriteria {

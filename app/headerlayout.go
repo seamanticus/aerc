@@ -1,8 +1,8 @@
 package app
 
 import (
-	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/models"
 )
 
 type HeaderLayout [][]string

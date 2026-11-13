@@ -1,8 +1,8 @@
 package lib
 
 import (
-	"git.sr.ht/~rjarry/aerc/lib/sort"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/sort"
+	"github.com/seamanticus/aerc/models"
 )
 
 type DirStore struct {

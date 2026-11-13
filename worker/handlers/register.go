@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type FactoryFunc func(*types.Worker) (types.Backend, error)

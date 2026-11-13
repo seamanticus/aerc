@@ -8,11 +8,11 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/auth"
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/auth"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // connect establishes a new tcp connection to the imap server, logs in and

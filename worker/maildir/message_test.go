@@ -6,7 +6,7 @@ import (
 
 	"github.com/emersion/go-maildir"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 // TestMessageConcurrentAccess mimics the worker goroutine changing flags

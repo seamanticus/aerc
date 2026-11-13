@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/worker/jmap/cache"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/worker/jmap/cache"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (w *JMAPWorker) handleConfigure(msg *types.Configure) error {

@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/auth"
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
-	"git.sr.ht/~rjarry/aerc/worker/lib"
-	"git.sr.ht/~rjarry/aerc/worker/middleware"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/lib/auth"
+	"github.com/seamanticus/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/worker/lib"
+	"github.com/seamanticus/aerc/worker/middleware"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (w *IMAPWorker) handleConfigure(msg *types.Configure) error {

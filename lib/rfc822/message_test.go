@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -6,15 +6,15 @@ import (
 	"slices"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/jmap/cache"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/core/push"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
 	"git.sr.ht/~rockorager/go-jmap/mail/thread"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/jmap/cache"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 func (w *JMAPWorker) monitorChanges() {

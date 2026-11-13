@@ -2,4 +2,4 @@
 
 package worker
 
-import _ "git.sr.ht/~rjarry/aerc/worker/notmuch"
+import _ "github.com/seamanticus/aerc/worker/notmuch"

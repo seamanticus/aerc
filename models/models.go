@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/parse"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/lib/parse"
 )
 
 // Flags is an abstraction around the different flags which can be present in

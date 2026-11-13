@@ -1,9 +1,9 @@
 package app
 
 import (
-	"git.sr.ht/~rjarry/aerc/lib"
-	"git.sr.ht/~rjarry/aerc/lib/ui"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/models"
 )
 
 type PartInfo struct {

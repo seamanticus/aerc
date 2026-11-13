@@ -11,14 +11,14 @@ import (
 	"github.com/emersion/go-message/mail"
 	"github.com/pkg/errors"
 
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/commands"
-	"git.sr.ht/~rjarry/aerc/commands/mode"
-	"git.sr.ht/~rjarry/aerc/lib/auth"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/parse"
-	"git.sr.ht/~rjarry/aerc/lib/send"
-	"git.sr.ht/~rjarry/aerc/worker/types"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/commands"
+	"github.com/seamanticus/aerc/commands/mode"
+	"github.com/seamanticus/aerc/lib/auth"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/parse"
+	"github.com/seamanticus/aerc/lib/send"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type Bounce struct {

@@ -9,9 +9,9 @@ import (
 
 	"github.com/mattn/go-runewidth"
 
-	"git.sr.ht/~rjarry/aerc/config"
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"git.sr.ht/~rjarry/go-opt/v2"
+	"github.com/seamanticus/aerc/config"
+	"github.com/seamanticus/aerc/lib/log"
 	"go.rockorager.dev/vaxis"
 )
 

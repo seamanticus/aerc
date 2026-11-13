@@ -3,7 +3,7 @@ package hooks
 import (
 	"fmt"
 
-	"git.sr.ht/~rjarry/aerc/config"
+	"github.com/seamanticus/aerc/config"
 )
 
 type MailDeleted struct {

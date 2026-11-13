@@ -3,7 +3,7 @@ package pama_test
 import (
 	"testing"
 
-	"git.sr.ht/~rjarry/aerc/lib/pama"
+	"github.com/seamanticus/aerc/lib/pama"
 )
 
 func TestFromSubject(t *testing.T) {

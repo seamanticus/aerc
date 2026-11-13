@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/pinentry"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/pinentry"
+	"github.com/seamanticus/aerc/models"
 )
 
 // gpg represents a gpg command with buffers attached to stdout and stderr

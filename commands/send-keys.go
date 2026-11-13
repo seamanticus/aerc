@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"git.sr.ht/~rjarry/aerc/app"
-	"git.sr.ht/~rjarry/aerc/config"
 	"github.com/pkg/errors"
+	"github.com/seamanticus/aerc/app"
+	"github.com/seamanticus/aerc/config"
 	"go.rockorager.dev/vaxis"
 )
 

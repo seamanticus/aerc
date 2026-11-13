@@ -17,7 +17,7 @@ import (
 	"strconv"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 // getFromAutoconfig retrieves the config from the provider using a Mozilla

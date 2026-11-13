@@ -10,10 +10,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail"
 	"git.sr.ht/~rockorager/go-jmap/mail/identity"
+	"github.com/seamanticus/aerc/worker/types"
 	"golang.org/x/oauth2"
 )
 

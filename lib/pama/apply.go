@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/lib/pama/models"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/pama/models"
 )
 
 func (m PatchManager) CurrentProject() (p models.Project, err error) {

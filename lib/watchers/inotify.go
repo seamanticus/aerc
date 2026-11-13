@@ -3,8 +3,8 @@
 package watchers
 
 import (
-	"git.sr.ht/~rjarry/aerc/lib/log"
 	"github.com/fsnotify/fsnotify"
+	"github.com/seamanticus/aerc/lib/log"
 )
 
 func init() {

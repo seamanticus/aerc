@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"text/template"
 
-	"git.sr.ht/~rjarry/aerc/lib/xdg"
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/lib/xdg"
+	"github.com/seamanticus/aerc/models"
 )
 
 func findTemplate(templateName string, templateDirs []string) (string, error) {

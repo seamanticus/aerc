@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/models"
 	"github.com/emersion/go-message/mail"
+	"github.com/seamanticus/aerc/models"
 
 	"github.com/emersion/go-imap"
 	"github.com/stretchr/testify/assert"

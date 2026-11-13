@@ -5,12 +5,12 @@ import (
 	"sync"
 	"time"
 
-	"git.sr.ht/~rjarry/aerc/lib/iterator"
-	"git.sr.ht/~rjarry/aerc/lib/jwz"
-	"git.sr.ht/~rjarry/aerc/lib/log"
-	"git.sr.ht/~rjarry/aerc/models"
-	"git.sr.ht/~rjarry/aerc/worker/types"
 	sortthread "github.com/emersion/go-imap-sortthread"
+	"github.com/seamanticus/aerc/lib/iterator"
+	"github.com/seamanticus/aerc/lib/jwz"
+	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/models"
+	"github.com/seamanticus/aerc/worker/types"
 )
 
 type ThreadBuilder struct {

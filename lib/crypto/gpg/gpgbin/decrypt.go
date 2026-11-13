@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io"
 
-	"git.sr.ht/~rjarry/aerc/models"
+	"github.com/seamanticus/aerc/models"
 )
 
 // Decrypt runs gpg --decrypt on the contents of r. If the packet is signed,
