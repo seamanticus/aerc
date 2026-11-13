@@ -14,7 +14,7 @@ import (
 func MapToStruct(s *ini.Section, v any, useDefaults bool) error {
 	typ := reflect.TypeOf(v)
 	val := reflect.ValueOf(v)
-	if typ.Kind() == reflect.Ptr {
+	if typ.Kind() == reflect.Pointer {
 		typ = typ.Elem()
 		val = val.Elem()
 	} else {
@@ -145,7 +145,7 @@ func setField(
 		switch {
 		case method.IsValid():
 			fieldVal.Set(methodValue)
-		case ft.Elem().Kind() == reflect.Ptr &&
+		case ft.Elem().Kind() == reflect.Pointer &&
 			typePath(ft.Elem().Elem()) == "net/mail.Address":
 			addrs, err := mail.ParseAddressList(key.String())
 			if err != nil {
@@ -164,7 +164,7 @@ func setField(
 		} else {
 			panic(fmt.Sprintf("unsupported type %s", typePath(ft)))
 		}
-	case reflect.Ptr:
+	case reflect.Pointer:
 		if method.IsValid() {
 			fieldVal.Set(methodValue)
 		} else {
@@ -225,7 +225,7 @@ func getParseMethod(
 
 func typePath(t reflect.Type) string {
 	var prefix string
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 		prefix = "*"
 	}
