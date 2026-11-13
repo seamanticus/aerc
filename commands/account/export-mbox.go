@@ -101,14 +101,9 @@ func (e ExportMbox) Execute(args []string) error {
 			app.PushError(err.Error())
 			return
 		}
-		defer func() {
-			if err := file.Close(); err != nil {
-				log.Errorf("failed to close %s: %v", e.Filename, err)
-				app.PushError(err.Error())
-			}
-		}()
 
 		var mu sync.Mutex
+		var writeErr error
 		var ctr uint
 		var retries int
 
@@ -145,16 +140,19 @@ func (e ExportMbox) Execute(args []string) error {
 					done <- false
 				case *types.FullMessage:
 					mu.Lock()
-					err := mboxer.Write(file, msg.Content.Reader, "", t)
-					if err != nil {
-						log.Warnf("failed to write mbox: %v", err)
+					// the fetch cannot be aborted: skip the remaining
+					// messages so the file ends at the failed one
+					if writeErr == nil {
+						writeErr = mboxer.Write(file, msg.Content.Reader, "", t)
+						if writeErr == nil {
+							ctr++
+						}
 					}
 					processedUids[msg.Content.Uid] = struct{}{}
-					ctr++
 					mu.Unlock()
 				}
 			})
-			if ok := <-done; ok {
+			if ok := <-done; ok || writeErr != nil {
 				break
 			}
 
@@ -169,6 +167,16 @@ func (e ExportMbox) Execute(args []string) error {
 			uids = uids[:n]
 
 			retries++
+		}
+		if err := file.Close(); err != nil && writeErr == nil {
+			writeErr = err
+		}
+		if writeErr != nil {
+			err := fmt.Errorf("export to %s failed after %d of %d messages: %w",
+				e.Filename, ctr, total, writeErr)
+			log.Errorf("%v", err)
+			app.PushError(err.Error())
+			return
 		}
 		statusInfo := fmt.Sprintf("Exported %d of %d messages to %s.", ctr, total, e.Filename)
 		app.PushStatus(statusInfo, 10*time.Second)
