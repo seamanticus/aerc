@@ -4,16 +4,18 @@ version = "2"
 # don't lint tests
 tests = false
 
+# gofumpt is a stricter superset of gofmt; golangci-lint v2.15.0 bundles
+# gofumpt v0.12.0. `make fmt` runs `golangci-lint fmt` with this config.
 [formatters]
 enable = [
-	"gofmt", # check that gofmt is satisfied
+	"gofumpt",
 ]
 
-# enable additional linters
+# enable additional linters, on top of the v2 "standard" set (errcheck,
+# govet, ineffassign, staticcheck, unused)
 [linters]
 disable = [
 	"errcheck",
-	"govet",
 	"staticcheck",
 ]
 enable = [
