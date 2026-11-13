@@ -1,8 +1,8 @@
 version = "2"
 
 [run]
-# don't lint tests
-tests = false
+# test code is held to the same rules
+tests = true
 
 # gofumpt is a stricter superset of gofmt; golangci-lint v2.15.0 bundles
 # gofumpt v0.12.0. `make fmt` runs `golangci-lint fmt` with this config.
