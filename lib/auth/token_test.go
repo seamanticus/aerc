@@ -206,9 +206,14 @@ func TestGetAccessTokenNoTokenRequiresLogin(t *testing.T) {
 }
 
 func TestGetAccessTokenRefreshTimeout(t *testing.T) {
+	// The server does not cancel r.Context() when the client gives up on a
+	// request whose body is unread, so release the handler explicitly;
+	// cleanups run in reverse, unblocking it before stall.Close waits.
+	release := make(chan struct{})
 	stall := httptest.NewServer(http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) { <-r.Context().Done() }))
+		func(w http.ResponseWriter, r *http.Request) { <-release }))
 	t.Cleanup(stall.Close)
+	t.Cleanup(func() { close(release) })
 	old := refreshTimeout
 	refreshTimeout = 10 * time.Millisecond
 	t.Cleanup(func() { refreshTimeout = old })
