@@ -15,7 +15,6 @@ enable = [
 # govet, ineffassign, staticcheck, unused)
 [linters]
 disable = [
-	"errcheck",
 	"staticcheck",
 ]
 enable = [
