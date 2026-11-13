@@ -98,7 +98,7 @@ func (u Unsubscribe) Execute(args []string) error {
 		}
 	}
 
-	var title string = "Select method to unsubscribe"
+	title := "Select method to unsubscribe"
 	if msg != nil && msg.Envelope != nil && len(msg.Envelope.From) > 0 {
 		title = fmt.Sprintf("%s from %s", title, msg.Envelope.From[0])
 	}

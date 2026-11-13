@@ -73,7 +73,7 @@ func (i ImportMbox) Execute(args []string) error {
 		var appended uint32
 		for i, m := range messages {
 			done := make(chan bool)
-			var retries int = 4
+			retries := 4
 			for retries > 0 {
 				var buf bytes.Buffer
 				r, err := m.NewReader()

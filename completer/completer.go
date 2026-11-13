@@ -76,7 +76,7 @@ func isAddressHeader(h string) bool {
 
 const maxCompletionLines = 100
 
-var tooManyLines = fmt.Errorf("returned more than %d lines", maxCompletionLines)
+var errTooManyLines = fmt.Errorf("returned more than %d lines", maxCompletionLines)
 
 // completeAddress uses the configured address book completion command to fetch
 // completions for the specified string, returning a slice of completions and
@@ -113,7 +113,7 @@ func (c *Completer) completeAddress(ctx context.Context, s string) ([]opt.Comple
 		syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 		log.Warnf("command %s killed: %s", cmd, err)
 	}
-	if err != nil && !errors.Is(err, tooManyLines) {
+	if err != nil && !errors.Is(err, errTooManyLines) {
 		buf, _ := io.ReadAll(stderr)
 		msg := strings.TrimSpace(string(buf))
 		if msg != "" {
@@ -178,7 +178,7 @@ func readCompletions(r io.Reader) ([]opt.Completion, error) {
 			Value: format.AddressForHumans(addr),
 		})
 	}
-	return completions, tooManyLines
+	return completions, errTooManyLines
 }
 
 func (c *Completer) handleErr(err error) {

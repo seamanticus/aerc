@@ -500,9 +500,9 @@ func threadPrefix(t *types.Thread, reverse bool, msglist bool) string {
 		dummy = uiConfig.ThreadPrefixDummy
 	}
 
-	var hiddenOffspring bool = t.FirstChild != nil && t.FirstChild.Hidden > 0
-	var parentAndSiblings bool = t.Parent != nil && t.NextSibling != nil
-	var hasSiblings string = uiConfig.ThreadPrefixHasSiblings
+	hiddenOffspring := t.FirstChild != nil && t.FirstChild.Hidden > 0
+	parentAndSiblings := t.Parent != nil && t.NextSibling != nil
+	hasSiblings := uiConfig.ThreadPrefixHasSiblings
 	if t.Parent != nil && t.Parent.Hidden > 0 && t.Hidden == 0 {
 		hasSiblings = dummy
 	}

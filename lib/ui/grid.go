@@ -178,9 +178,10 @@ func (grid *Grid) reflow(ctx *Context) {
 		weight := 0
 		nweights := 0
 		for _, spec := range *specs {
-			if spec.Strategy == SIZE_EXACT {
+			switch spec.Strategy {
+			case SIZE_EXACT:
 				exact += spec.Size()
-			} else if spec.Strategy == SIZE_WEIGHT {
+			case SIZE_WEIGHT:
 				nweights += 1
 				weight += spec.Size()
 			}
@@ -192,9 +193,10 @@ func (grid *Grid) reflow(ctx *Context) {
 		}
 		for _, spec := range *specs {
 			layout := gridLayout{Offset: offset}
-			if spec.Strategy == SIZE_EXACT {
+			switch spec.Strategy {
+			case SIZE_EXACT:
 				layout.Size = spec.Size()
-			} else if spec.Strategy == SIZE_WEIGHT {
+			case SIZE_WEIGHT:
 				proportion := float64(spec.Size()) / float64(weight)
 				size := proportion * float64(extent-exact)
 				if remainingExact > 0 {

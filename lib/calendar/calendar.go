@@ -165,8 +165,8 @@ type event struct {
 }
 
 func (e *event) isReplyRequested(from string) error {
-	var present bool = false
-	var rsvp bool = false
+	present := false
+	rsvp := false
 	from = strings.ToLower(from)
 	for _, a := range e.Attendees() {
 		if strings.ToLower(a.Email()) == from {

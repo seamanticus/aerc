@@ -178,8 +178,7 @@ func (r *rebase) content() io.Reader {
 			tag = models.Untracked
 		}
 		shortHash := fmt.Sprintf("%6.6s", c.ID)
-		buf.WriteString(
-			fmt.Sprintf("%-12s     %6.6s     %s\n", tag, shortHash, c.Info()))
+		fmt.Fprintf(&buf, "%-12s     %6.6s     %s\n", tag, shortHash, c.Info())
 		r.table[shortHash] = c
 		r.order = append(r.order, shortHash)
 	}

@@ -564,7 +564,7 @@ func (acct *AccountView) updateDirCounts(destination string, uids []models.UID, 
 	// Only update the destination destDir if it is initialized
 	if destDir := acct.dirlist.Directory(destination); destDir != nil {
 		var recent, unseen int
-		var accurate bool = true
+		accurate := true
 		store := acct.Store()
 		if store == nil {
 			// This could happen for example if a disconnection happened,

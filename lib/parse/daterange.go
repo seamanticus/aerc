@@ -382,7 +382,7 @@ func RelativeDate(s string) (RelDate, error) {
 		var err error
 
 		// expect an integer
-		if !('0' <= s[0] && s[0] <= '9') {
+		if s[0] < '0' || s[0] > '9' {
 			return da, fmt.Errorf("not a valid relative term: %s",
 				s0)
 		}

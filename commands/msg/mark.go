@@ -73,9 +73,9 @@ func (m Mark) Execute(args []string) error {
 	}
 
 	// if filtering and only a single message is provided,
-	m.All = (m.FilterString != "" && !(m.Thread || m.All)) ||
+	m.All = (m.FilterString != "" && !m.Thread && !m.All) ||
 		// or if filtering by read status,
-		((m.Unread || m.NotUnread) && !(m.Thread || m.All)) ||
+		((m.Unread || m.NotUnread) && !m.Thread && !m.All) ||
 		// filter all instead
 		m.All
 

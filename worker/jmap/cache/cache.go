@@ -39,7 +39,7 @@ func NewJMAPCache(state, blobs bool, accountName string) *JMAPCache {
 	return c
 }
 
-var notfound = errors.New("key not found")
+var errNotFound = errors.New("key not found")
 
 func (c *JMAPCache) get(key string) ([]byte, error) {
 	switch {
@@ -48,7 +48,7 @@ func (c *JMAPCache) get(key string) ([]byte, error) {
 	case c.mem != nil:
 		value, ok := c.mem[key]
 		if !ok {
-			return nil, notfound
+			return nil, errNotFound
 		}
 		return value, nil
 	}

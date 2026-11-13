@@ -10,7 +10,7 @@ import (
 func (c *JMAPCache) GetBlob(id jmap.ID) ([]byte, error) {
 	fpath := c.blobPath(id)
 	if fpath == "" {
-		return nil, notfound
+		return nil, errNotFound
 	}
 	return os.ReadFile(fpath)
 }

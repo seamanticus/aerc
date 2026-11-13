@@ -192,7 +192,7 @@ func sendHelper(composer *app.Composer, header *mail.Header, uri *url.URL, domai
 	// enter no-quit mode
 	mode.NoQuit()
 
-	var shouldCopy bool = (len(copyTo) > 0 || copyToReplied) && !strings.HasPrefix(uri.Scheme, "jmap")
+	shouldCopy := (len(copyTo) > 0 || copyToReplied) && !strings.HasPrefix(uri.Scheme, "jmap")
 	var copyBuf bytes.Buffer
 
 	failCh := make(chan error)

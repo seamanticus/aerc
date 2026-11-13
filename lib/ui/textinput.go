@@ -648,7 +648,7 @@ func findStem(words []opt.Completion) string {
 		if len(firstWord) < stemLen {
 			return stem
 		}
-		var r rune = firstWord[stemLen-1]
+		r := firstWord[stemLen-1]
 		for _, word := range words[1:] {
 			runes := []rune(word.Value)
 			if len(runes) < stemLen {

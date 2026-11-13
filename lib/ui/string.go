@@ -75,17 +75,17 @@ func PadRight(ss *vaxis.StyledString, width int) {
 func ApplyAttrs(ss *vaxis.StyledString, style vaxis.Style) {
 	for i, cell := range ss.Cells {
 		if style.Foreground != 0 {
-			cell.Style.Foreground = style.Foreground
+			cell.Foreground = style.Foreground
 		}
 		if style.Background != 0 {
-			cell.Style.Background = style.Background
+			cell.Background = style.Background
 		}
-		cell.Style.Attribute |= style.Attribute
+		cell.Attribute |= style.Attribute
 		if style.UnderlineColor != 0 {
-			cell.Style.UnderlineColor = style.UnderlineColor
+			cell.UnderlineColor = style.UnderlineColor
 		}
 		if style.UnderlineStyle != vaxis.UnderlineOff {
-			cell.Style.UnderlineStyle = style.UnderlineStyle
+			cell.UnderlineStyle = style.UnderlineStyle
 		}
 		ss.Cells[i] = cell
 	}

@@ -35,11 +35,7 @@ func (s *Scrollable) PercentScrolled() float64 {
 }
 
 func (s *Scrollable) NeedScrollbar() bool {
-	needScrollbar := true
-	if s.PercentVisible() >= 1.0 {
-		needScrollbar = false
-	}
-	return needScrollbar
+	return s.PercentVisible() < 1.0
 }
 
 func (s *Scrollable) UpdateScroller(height, elems int) {
