@@ -53,8 +53,8 @@ func PanicHandler() {
 
 const panicMessage = `
 aerc has encountered a critical error and has terminated. Please help us fix
-this by sending this log and the steps to reproduce the crash to:
-~rjarry/aerc-devel@lists.sr.ht
+this by reporting this log and the steps to reproduce the crash at:
+https://github.com/seamanticus/aerc/issues
 
 Thank you
 `
