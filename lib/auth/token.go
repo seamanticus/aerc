@@ -187,6 +187,8 @@ func GetAccessToken(
 	defer e.Unlock()
 
 	if e.token.Valid() {
+		log.Debugf("%s: using cached OAuth2 access token, expires %s",
+			store.Account, e.token.Expiry.Format(time.RFC3339))
 		return e.token.AccessToken, nil
 	}
 	if e.loginRequired {
@@ -212,8 +214,13 @@ func GetAccessToken(
 		return "", fmt.Errorf("no OAuth2 token: %w", ErrLoginRequired)
 	}
 
+	log.Debugf("%s: refreshing OAuth2 access token at %s",
+		store.Account, o.Endpoint.TokenURL)
+	start := time.Now()
 	token, err := exchangeRefreshToken(o, refreshToken)
 	if err != nil {
+		log.Debugf("%s: OAuth2 token refresh failed after %s: %v",
+			store.Account, time.Since(start).Round(time.Millisecond), err)
 		var rerr *oauth2.RetrieveError
 		if errors.As(err, &rerr) && rerr.ErrorCode == "invalid_grant" {
 			e.token = nil
@@ -223,6 +230,10 @@ func GetAccessToken(
 		}
 		return "", err
 	}
+	log.Debugf("%s: OAuth2 token refreshed in %s, expires %s, rotated %t",
+		store.Account, time.Since(start).Round(time.Millisecond),
+		token.Expiry.Format(time.RFC3339),
+		token.RefreshToken != "" && token.RefreshToken != refreshToken)
 	if token.RefreshToken == "" {
 		token.RefreshToken = refreshToken
 	}
