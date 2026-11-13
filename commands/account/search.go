@@ -156,11 +156,11 @@ func (s *SearchFilter) ParseDate(arg string) error {
 func (s SearchFilter) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	store := acct.Store()
 	if store == nil {
-		return errors.New("Cannot perform action. Messages still loading")
+		return errors.New("cannot perform action. Messages still loading")
 	}
 
 	criteriaPart := types.SearchCriteriaPart{

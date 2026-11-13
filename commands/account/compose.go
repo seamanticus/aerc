@@ -70,7 +70,7 @@ func (c Compose) Execute(args []string) error {
 
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 
 	msg, err := gomail.ReadMessage(strings.NewReader(c.Body))

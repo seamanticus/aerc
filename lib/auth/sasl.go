@@ -16,7 +16,7 @@ func ParseScheme(uri *url.URL) (protocol string, mech string, err error) {
 	if uri.Scheme != "" {
 		parts := strings.Split(uri.Scheme, "+")
 		if len(parts) == 0 {
-			return "", "", fmt.Errorf("Unknown scheme %s", uri.Scheme)
+			return "", "", fmt.Errorf("unknown scheme %s", uri.Scheme)
 		}
 		protocol = parts[0]
 		parts = slices.Delete(parts, 0, 1)
@@ -62,7 +62,7 @@ func NewSaslClient(mech string, uri *url.URL, store *TokenStore) (sasl.Client, e
 			)
 		}
 	default:
-		return nil, fmt.Errorf("Unsupported auth mechanism %q", mech)
+		return nil, fmt.Errorf("unsupported auth mechanism %q", mech)
 	}
 	return saslClient, nil
 }

@@ -48,7 +48,7 @@ func (*MakeDir) CompleteFolder(arg string) []string {
 func (m MakeDir) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	acct.Worker().PostAction(context.TODO(), &types.CreateDirectory{
 		Directory: m.Folder,

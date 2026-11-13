@@ -46,11 +46,11 @@ func (*ExportMbox) CompleteFilename(arg string) []string {
 func (e ExportMbox) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	store := acct.Store()
 	if store == nil {
-		return errors.New("No message store selected")
+		return errors.New("no message store selected")
 	}
 
 	e.Filename = xdg.ExpandHome(e.Filename)
@@ -188,7 +188,7 @@ func sortMarkedUids(marked []models.UID, store *lib.MessageStore) ([]models.UID,
 	for iter.Next() {
 		uid, ok := iter.Value().(models.UID)
 		if !ok {
-			return nil, errors.New("Invalid message UID value")
+			return nil, errors.New("invalid message UID value")
 		}
 		_, marked := lookup[uid]
 		if marked {
@@ -204,7 +204,7 @@ func sortAllUids(store *lib.MessageStore) ([]models.UID, error) {
 	for iter.Next() {
 		uid, ok := iter.Value().(models.UID)
 		if !ok {
-			return nil, errors.New("Invalid message UID value")
+			return nil, errors.New("invalid message UID value")
 		}
 		uids = append(uids, uid)
 	}

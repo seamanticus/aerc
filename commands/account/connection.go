@@ -31,7 +31,7 @@ func (Connection) Aliases() []string {
 func (c Connection) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	cb := func(msg types.WorkerMessage) {
 		acct.SetStatus(state.ConnectionActivity(""))

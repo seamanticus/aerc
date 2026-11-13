@@ -99,12 +99,12 @@ func (a Apply) Execute(args []string) error {
 	}
 
 	if models.Commits(p.Commits).HasTag(patch) {
-		return fmt.Errorf("Patch name '%s' already exists.", patch)
+		return fmt.Errorf("patch name '%s' already exists", patch)
 	}
 
 	if !m.Clean(p) {
-		return fmt.Errorf("Aborting... There are unstaged changes in " +
-			"your repository.")
+		return fmt.Errorf("aborting... There are unstaged changes in " +
+			"your repository")
 	}
 
 	commit, err := m.Head(p)

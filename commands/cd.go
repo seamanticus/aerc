@@ -41,7 +41,7 @@ func (cd ChangeDirectory) Execute(args []string) error {
 	}
 	if cd.Target == "-" {
 		if previousDir == "" {
-			return errors.New("No previous folder to return to")
+			return errors.New("no previous folder to return to")
 		} else {
 			cd.Target = previousDir
 		}

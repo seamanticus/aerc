@@ -22,7 +22,7 @@ func (m PatchManager) Unlink(name string) error {
 		}
 	}
 	if index < 0 {
-		return fmt.Errorf("Project '%s' not found", name)
+		return fmt.Errorf("project '%s' not found", name)
 	}
 
 	cur, err := store.CurrentName()

@@ -35,7 +35,7 @@ func NewContext(vx *vaxis.Vaxis, p func(*Popover)) *Context {
 
 func (ctx *Context) Subcontext(x, y, width, height int) *Context {
 	if x < 0 || y < 0 {
-		panic(fmt.Errorf("Attempted to create context with negative offset"))
+		panic(fmt.Errorf("attempted to create context with negative offset"))
 	}
 	win := ctx.window.New(x, y, width, height)
 	return &Context{win, ctx.x + x, ctx.y + y, ctx.onPopover}

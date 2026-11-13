@@ -48,7 +48,7 @@ func (stack *Stack) Push(d Drawable) {
 
 func (stack *Stack) Pop() Drawable {
 	if len(stack.children) == 0 {
-		panic(fmt.Errorf("Tried to pop from an empty UI stack"))
+		panic(fmt.Errorf("tried to pop from an empty UI stack"))
 	}
 	d := stack.children[len(stack.children)-1]
 	stack.children = stack.children[:len(stack.children)-1]
@@ -58,7 +58,7 @@ func (stack *Stack) Pop() Drawable {
 
 func (stack *Stack) Peek() Drawable {
 	if len(stack.children) == 0 {
-		panic(fmt.Errorf("Tried to peek from an empty stack"))
+		panic(fmt.Errorf("tried to peek from an empty stack"))
 	}
 	return stack.children[len(stack.children)-1]
 }

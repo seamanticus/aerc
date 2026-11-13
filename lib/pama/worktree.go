@@ -37,7 +37,7 @@ func (m PatchManager) CreateWorktree(p models.Project, commitID, tag string,
 	var w models.Project
 
 	if isWorktree(p) {
-		return w, fmt.Errorf("This is already a worktree.")
+		return w, fmt.Errorf("this is already a worktree")
 	}
 
 	w.RevctrlID = p.RevctrlID

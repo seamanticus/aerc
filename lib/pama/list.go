@@ -24,7 +24,7 @@ func (m PatchManager) Projects(name string) ([]models.Project, error) {
 		}
 	}
 	if len(projects) == 0 {
-		return nil, errors.New("No projects found.")
+		return nil, errors.New("no projects found")
 	}
 	return projects, nil
 }

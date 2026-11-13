@@ -38,7 +38,7 @@ func RegisterWatcherFactory(fn WatcherFactoryFunc) {
 
 func NewWatcher() (FSWatcher, error) {
 	if watcherFactory == nil {
-		return nil, fmt.Errorf("Unsupported OS: %s", runtime.GOOS)
+		return nil, fmt.Errorf("unsupported OS: %s", runtime.GOOS)
 	}
 	return watcherFactory()
 }

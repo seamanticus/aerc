@@ -22,7 +22,7 @@ func findTemplate(templateName string, templateDirs []string) (string, error) {
 	}
 
 	return "", fmt.Errorf(
-		"Can't find template %q in any of %v ", templateName, templateDirs)
+		"can't find template %q in any of %v ", templateName, templateDirs)
 }
 
 func ParseTemplateFromFile(

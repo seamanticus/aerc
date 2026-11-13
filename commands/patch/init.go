@@ -33,7 +33,7 @@ func (Init) Aliases() []string {
 func (i Init) Execute(args []string) error {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("Could not get current directory: %w", err)
+		return fmt.Errorf("could not get current directory: %w", err)
 	}
 
 	name := i.Name

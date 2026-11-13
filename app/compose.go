@@ -434,7 +434,7 @@ func (c *Composer) SetSign(sign bool) error {
 	err := c.updateCrypto()
 	if err != nil {
 		c.sign = !sign
-		return fmt.Errorf("Cannot sign message: %w", err)
+		return fmt.Errorf("cannot sign message: %w", err)
 	}
 	if c.acct.acct.PgpAttachKey {
 		if err := c.SetAttachKey(sign); err != nil {

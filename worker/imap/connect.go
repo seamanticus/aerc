@@ -81,7 +81,7 @@ func (w *IMAPWorker) connect() (*client.Client, error) {
 			return nil, err
 		}
 	default:
-		return nil, fmt.Errorf("Unknown IMAP scheme %s", protocol)
+		return nil, fmt.Errorf("unknown IMAP scheme %s", protocol)
 	}
 
 	c.ErrorLog = log.ErrorLogger()
@@ -96,7 +96,7 @@ func (w *IMAPWorker) connect() (*client.Client, error) {
 		} else if !nologin {
 			mech = "login"
 		} else {
-			return nil, fmt.Errorf("No auth method supported")
+			return nil, fmt.Errorf("no auth method supported")
 		}
 	}
 

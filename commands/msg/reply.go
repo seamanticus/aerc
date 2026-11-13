@@ -71,7 +71,7 @@ func (r reply) Execute(args []string) error {
 	if r.Account == "" {
 		acct = widget.SelectedAccount()
 		if acct == nil {
-			return errors.New("No account selected")
+			return errors.New("no account selected")
 		}
 	} else {
 		acct, err = app.Account(r.Account)
@@ -177,7 +177,7 @@ func (r reply) Execute(args []string) error {
 	case noStore && isMsgViewer:
 		app.PushWarning("No message store found: answered flag cannot be set")
 	case noStore:
-		return errors.New("Cannot perform action. Messages still loading")
+		return errors.New("cannot perform action. Messages still loading")
 	default:
 		original.Folder = store.Name
 	}

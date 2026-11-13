@@ -28,7 +28,7 @@ func (ToggleSidebar) Aliases() []string {
 func (ToggleSidebar) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	acct.ToggleSidebar()
 	return nil

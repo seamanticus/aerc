@@ -52,16 +52,16 @@ func (*Sort) CompleteCriteria(arg string) []string {
 func (Sort) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected.")
+		return errors.New("no account selected")
 	}
 	store := acct.Store()
 	if store == nil {
-		return errors.New("Messages still loading.")
+		return errors.New("messages still loading")
 	}
 
 	if c := store.Capabilities(); c != nil {
 		if !c.Sort {
-			return errors.New("Sorting is not available for this backend.")
+			return errors.New("sorting is not available for this backend")
 		}
 	}
 

@@ -66,7 +66,7 @@ func (*forward) CompleteAccount(arg string) []string {
 
 func (f forward) Execute(args []string) error {
 	if f.AttachAll && f.AttachFull {
-		return errors.New("Options -A and -F are mutually exclusive")
+		return errors.New("options -A and -F are mutually exclusive")
 	}
 	editHeaders := (config.Compose().EditHeaders || f.Edit) && !f.NoEdit
 
@@ -77,7 +77,7 @@ func (f forward) Execute(args []string) error {
 	if f.Account == "" {
 		acct = widget.SelectedAccount()
 		if acct == nil {
-			return errors.New("No account selected")
+			return errors.New("no account selected")
 		}
 	} else {
 		acct, err = app.Account(f.Account)
@@ -138,7 +138,7 @@ func (f forward) Execute(args []string) error {
 	store := widget.Store()
 	noStore := store == nil
 	if noStore && !isMsgViewer {
-		return errors.New("Cannot perform action. Messages still loading")
+		return errors.New("cannot perform action. Messages still loading")
 	}
 
 	if f.AttachFull {

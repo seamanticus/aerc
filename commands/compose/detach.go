@@ -44,7 +44,7 @@ func (d Detach) Execute(args []string) error {
 		if len(atts) > 0 {
 			d.Path = atts[0]
 		} else {
-			return fmt.Errorf("No attachments to delete")
+			return fmt.Errorf("no attachments to delete")
 		}
 	}
 

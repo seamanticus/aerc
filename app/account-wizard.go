@@ -427,18 +427,18 @@ func (wizard *AccountWizard) finish(tutorial bool) {
 	}
 	if wizard.email.String() == "" {
 		wizard.errorFor(wizard.email,
-			errors.New("Email address is required"))
+			errors.New("email address is required"))
 		return
 	}
 	if wizard.sourceServer.String() == "" {
 		wizard.errorFor(wizard.sourceServer,
-			errors.New("Email source configuration is required"))
+			errors.New("email source configuration is required"))
 		return
 	}
 	if wizard.outgoingServer.String() == "" &&
 		wizard.outgoingProtocol.Selected() != JMAP {
 		wizard.errorFor(wizard.outgoingServer,
-			errors.New("Outgoing mail configuration is required"))
+			errors.New("outgoing mail configuration is required"))
 		return
 	}
 	switch wizard.sourceProtocol.Selected() {
@@ -479,7 +479,7 @@ func (wizard *AccountWizard) finish(tutorial bool) {
 	var sec *ini.Section
 	if sec, _ = file.GetSection(wizard.accountName.String()); sec != nil {
 		wizard.errorFor(wizard.accountName,
-			errors.New("An account by this name already exists"))
+			errors.New("an account by this name already exists"))
 		return
 	}
 	sec, _ = file.NewSection(wizard.accountName.String())

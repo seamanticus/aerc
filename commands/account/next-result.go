@@ -29,7 +29,7 @@ func (NextPrevResult) Aliases() []string {
 func (NextPrevResult) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	if args[0] == "prev-result" {
 		store := acct.Store()

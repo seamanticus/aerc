@@ -20,7 +20,7 @@ func GetMessageIdHostname(sendWithHostname bool, from *mail.Address) (string, er
 	}
 	_, domain, found := strings.Cut(from.Address, "@")
 	if !found {
-		return "", fmt.Errorf("Invalid address %q", from)
+		return "", fmt.Errorf("invalid address %q", from)
 	}
 	return domain, nil
 }

@@ -52,7 +52,7 @@ func (*Save) CompletePath(arg string) []string {
 func (s Save) Execute(args []string) error {
 	// we either need a path or a defaultPath
 	if s.Path == "" && config.General().DefaultSavePath == "" {
-		return errors.New("No default save path in config")
+		return errors.New("no default save path in config")
 	}
 
 	// Absolute paths are taken as is so that the user can override the default
@@ -71,7 +71,7 @@ func (s Save) Execute(args []string) error {
 	if s.Attachments || s.AllAttachments {
 		parts := mv.AttachmentParts(s.AllAttachments)
 		if len(parts) == 0 {
-			return fmt.Errorf("This message has no attachments")
+			return fmt.Errorf("this message has no attachments")
 		}
 		names := make(map[string]struct{})
 		for _, pi := range parts {

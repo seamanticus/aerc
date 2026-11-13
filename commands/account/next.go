@@ -51,11 +51,11 @@ func (NextPrevMsg) Aliases() []string {
 func (np NextPrevMsg) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	store := acct.Store()
 	if store == nil {
-		return fmt.Errorf("No message store set.")
+		return fmt.Errorf("no message store set")
 	}
 
 	n := np.Amount

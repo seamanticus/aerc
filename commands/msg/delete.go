@@ -55,7 +55,7 @@ func mayDeleteOnSelectedDirectory() bool {
 
 func (d Delete) Execute(args []string) error {
 	if !mayDeleteOnSelectedDirectory() {
-		return errors.New("Forbidden by `restrict-delete` setting")
+		return errors.New("forbidden by `restrict-delete` setting")
 	}
 	h := newHelper()
 	store, err := h.store()

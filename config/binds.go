@@ -193,7 +193,7 @@ func LoadBindingSection(sec *ini.Section) (*KeyBindings, error) {
 				return nil, err
 			}
 			if len(strokes) != 1 {
-				return nil, errors.New("Invalid binding")
+				return nil, errors.New("invalid binding")
 			}
 			bindings.ExKey = strokes[0]
 		case "$noinherit":
@@ -201,7 +201,7 @@ func LoadBindingSection(sec *ini.Section) (*KeyBindings, error) {
 				continue
 			}
 			if value != "true" {
-				return nil, errors.New("Invalid binding")
+				return nil, errors.New("invalid binding")
 			}
 			bindings.Globals = false
 		case "$complete":
@@ -210,7 +210,7 @@ func LoadBindingSection(sec *ini.Section) (*KeyBindings, error) {
 				return nil, err
 			}
 			if len(strokes) != 1 {
-				return nil, errors.New("Invalid binding")
+				return nil, errors.New("invalid binding")
 			}
 			bindings.CompleteKey = strokes[0]
 		default:
@@ -272,7 +272,7 @@ func LoadBinds(binds *ini.File, baseName string, baseGroup **KeyBindings) error 
 				return err
 			}
 		} else {
-			return fmt.Errorf("Invalid Bind Context regex in %s", sectionName)
+			return fmt.Errorf("invalid Bind Context regex in %s", sectionName)
 		}
 
 		switch sectionName[len(baseName)+1 : index] {
@@ -295,7 +295,7 @@ func LoadBinds(binds *ini.File, baseName string, baseGroup **KeyBindings) error 
 			// never get used
 			contextualBind.ContextType = bindsContextFolder
 		default:
-			return fmt.Errorf("Unknown Context Bind Section: %s", sectionName)
+			return fmt.Errorf("unknown Context Bind Section: %s", sectionName)
 		}
 		b.contextualBinds = append(b.contextualBinds, &contextualBind)
 		b.contextualCounts[contextualBind.ContextType]++
@@ -656,11 +656,11 @@ func ParseKeyStrokes(keystrokes string) ([]KeyStroke, error) {
 			name, err := buf.ReadString(byte('>'))
 			switch {
 			case err == io.EOF:
-				return nil, errors.New("Expecting '>'")
+				return nil, errors.New("expecting '>'")
 			case err != nil:
 				return nil, err
 			case name == ">":
-				return nil, errors.New("Expected a key name")
+				return nil, errors.New("expected a key name")
 			}
 			name = name[:len(name)-1]
 			args := strings.Split(name, "-")
@@ -677,7 +677,7 @@ func ParseKeyStrokes(keystrokes string) ([]KeyStroke, error) {
 					if !ok {
 						r, n := utf8.DecodeRuneInString(arg)
 						if n != len(arg) {
-							return nil, fmt.Errorf("Unknown key '%s'", name)
+							return nil, fmt.Errorf("unknown key '%s'", name)
 						}
 						key = KeyStroke{Key: r}
 					}
@@ -694,12 +694,12 @@ func ParseKeyStrokes(keystrokes string) ([]KeyStroke, error) {
 						ks.Modifiers |= vaxis.ModCtrl
 					case "":
 					default:
-						return nil, fmt.Errorf("Unknown modifier key '%s'", strings.ToLower(arg))
+						return nil, fmt.Errorf("unknown modifier key '%s'", strings.ToLower(arg))
 					}
 				}
 			}
 		case '>':
-			return nil, errors.New("Found '>' without '<'")
+			return nil, errors.New("found '>' without '<'")
 		case '\\':
 			tok, _, err = buf.ReadRune()
 			if err == io.EOF {

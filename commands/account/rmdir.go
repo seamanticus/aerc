@@ -45,7 +45,7 @@ func (RemoveDir) CompleteFolder(arg string) []string {
 func (r RemoveDir) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 
 	current := acct.Directories().SelectedDirectory()
@@ -53,7 +53,7 @@ func (r RemoveDir) Execute(args []string) error {
 	if r.Folder != "" {
 		toRemove = acct.Directories().Directory(r.Folder)
 		if toRemove == nil {
-			return fmt.Errorf("No such directory: %s", r.Folder)
+			return fmt.Errorf("no such directory: %s", r.Folder)
 		}
 	}
 
@@ -61,11 +61,11 @@ func (r RemoveDir) Execute(args []string) error {
 
 	// Check for any messages in the directory.
 	if toRemove.Exists > 0 && !r.Force {
-		return errors.New("Refusing to remove non-empty directory; use -f")
+		return errors.New("refusing to remove non-empty directory; use -f")
 	}
 
 	if role == models.VirtualRole {
-		return errors.New("Cannot remove a virtual node")
+		return errors.New("cannot remove a virtual node")
 	}
 
 	if toRemove != current {
@@ -105,7 +105,7 @@ func (r RemoveDir) Execute(args []string) error {
 	}
 
 	if !dirFound {
-		return errors.New("No directory to move to afterwards!")
+		return errors.New("no directory to move to afterwards")
 	}
 
 	reopenCurrentDir := func() { acct.Directories().Open(curDir, 0, nil, false) }

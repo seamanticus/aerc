@@ -62,15 +62,15 @@ func (u Unsubscribe) Execute(args []string) error {
 	details, err := authres.CreateParser(authres.DKIM)(headers, widget.SelectedAccount().AccountConfig().TrustedAuthRes)
 	switch {
 	case err != nil:
-		return errors.New("Failed to validate DKIM signature")
+		return errors.New("failed to validate DKIM signature")
 	case slices.Contains(details.Results, authres.ResultFail):
 		return errors.New("DKIM validation failed")
 	case !slices.Contains(details.Results, authres.ResultPass):
-		return errors.New("No passing DKIM signature found")
+		return errors.New("no passing DKIM signature found")
 	}
 
 	if !headers.Has("list-unsubscribe") {
-		return errors.New("No List-Unsubscribe header found")
+		return errors.New("no List-Unsubscribe header found")
 	}
 	text, err := headers.Text("List-Unsubscribe")
 	if err != nil {
@@ -168,7 +168,7 @@ func unsubscribeMailto(u *url.URL, editHeaders, skipEditor bool) error {
 	widget := app.SelectedTabContent().(app.ProvidesMessage)
 	acct := widget.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 
 	h := &mail.Header{}

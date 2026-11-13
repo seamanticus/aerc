@@ -14,7 +14,7 @@ func (m PatchManager) DropPatch(patch string) error {
 	}
 
 	if !models.Commits(p.Commits).HasTag(patch) {
-		return fmt.Errorf("Patch '%s' not found in project '%s'", patch, p.Name)
+		return fmt.Errorf("patch '%s' not found in project '%s'", patch, p.Name)
 	}
 
 	rc, err := m.rc(p.RevctrlID, p.Root)
@@ -23,7 +23,7 @@ func (m PatchManager) DropPatch(patch string) error {
 	}
 
 	if !rc.Clean() {
-		return fmt.Errorf("Aborting... There are unstaged changes " +
+		return fmt.Errorf("aborting... There are unstaged changes " +
 			"or a rebase in progress")
 	}
 
@@ -31,7 +31,7 @@ func (m PatchManager) DropPatch(patch string) error {
 	for _, c := range p.Commits {
 		if !rc.Exists(c.ID) {
 			log.Errorf("failed to find commit. %v", c)
-			return fmt.Errorf("Cannot drop patch. " +
+			return fmt.Errorf("cannot drop patch. " +
 				"Please rebase first with ':patch rebase'")
 		}
 		if c.Tag == patch {
@@ -77,7 +77,7 @@ func (m PatchManager) DropPatch(patch string) error {
 	}
 
 	if len(removed) < len(toRemove) {
-		return fmt.Errorf("Failed to drop commits. Dropped %d of %d.",
+		return fmt.Errorf("failed to drop commits. Dropped %d of %d",
 			len(removed), len(toRemove))
 	}
 

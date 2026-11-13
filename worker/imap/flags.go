@@ -152,7 +152,7 @@ func (imapw *IMAPWorker) handleModifyLabels(msg *types.ModifyLabels) error {
 		// label's virtual folder (otherwise the removal is silently a no-op)
 		for _, l := range msg.Remove {
 			if imapw.selected.Name != fmt.Sprintf("Labels/%s", l) {
-				return errors.New("Proton labels can only " +
+				return errors.New("labels on Proton can only " +
 					"be removed from their virtual folder")
 			}
 		}

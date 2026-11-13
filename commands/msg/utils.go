@@ -36,7 +36,7 @@ func (h *helper) markedOrSelectedUids() ([]models.UID, error) {
 func (h *helper) store() (*lib.MessageStore, error) {
 	store := h.msgProvider.Store()
 	if store == nil {
-		return nil, errors.New("Cannot perform action. Messages still loading")
+		return nil, errors.New("cannot perform action. Messages still loading")
 	}
 	return store, nil
 }
@@ -44,7 +44,7 @@ func (h *helper) store() (*lib.MessageStore, error) {
 func (h *helper) account() (*app.AccountView, error) {
 	acct := h.msgProvider.SelectedAccount()
 	if acct == nil {
-		return nil, errors.New("No account selected")
+		return nil, errors.New("no account selected")
 	}
 	return acct, nil
 }

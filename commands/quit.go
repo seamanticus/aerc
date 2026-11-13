@@ -36,5 +36,5 @@ func (q Quit) Execute(args []string) error {
 	if q.Force || mode.QuitAllowed() {
 		return ErrorExit(1)
 	}
-	return fmt.Errorf("A task is not done yet. Use -f to force an exit.")
+	return fmt.Errorf("a task is not done yet. Use -f to force an exit")
 }

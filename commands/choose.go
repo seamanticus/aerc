@@ -49,5 +49,5 @@ func (Choose) Execute(args []string) error {
 }
 
 func chooseUsage(cmd string) error {
-	return fmt.Errorf("Usage: %s -o <key> <text> <command> [-o <key> <text> <command>]...", cmd)
+	return fmt.Errorf("usage: %s -o <key> <text> <command> [-o <key> <text> <command> ...]", cmd)
 }

@@ -648,7 +648,7 @@ func (store *MessageStore) doThreadFolding(uid models.UID, hide bool, toggle boo
 		return err
 	}
 	if store.builder == nil {
-		return errors.New("No thread builder available")
+		return errors.New("no thread builder available")
 	}
 	store.Select(uid)
 	store.threadsMutex.Lock()

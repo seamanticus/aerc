@@ -63,7 +63,7 @@ func (c ChangeFolder) Execute([]string) error {
 	} else {
 		acct = app.SelectedAccount()
 		if acct == nil {
-			return errors.New("No account selected")
+			return errors.New("no account selected")
 		}
 	}
 
@@ -72,7 +72,7 @@ func (c ChangeFolder) Execute([]string) error {
 	}
 
 	if args.Count() != 1 {
-		return errors.New("Unexpected argument(s). Usage: cf [-a <account>] <folder>")
+		return errors.New("unexpected argument(s). Usage: cf [-a <account>] <folder>")
 	}
 	target = args.Arg(0)
 
@@ -82,7 +82,7 @@ func (c ChangeFolder) Execute([]string) error {
 
 	dirlist := acct.Directories()
 	if dirlist == nil {
-		return errors.New("No directory list found")
+		return errors.New("no directory list found")
 	}
 
 	if target == "-" {
@@ -90,7 +90,7 @@ func (c ChangeFolder) Execute([]string) error {
 		if dir != "" {
 			target = dir
 		} else {
-			return errors.New("No previous folder to return to")
+			return errors.New("no previous folder to return to")
 		}
 	}
 

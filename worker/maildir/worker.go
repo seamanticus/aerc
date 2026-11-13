@@ -386,7 +386,7 @@ func (w *Worker) handleListDirectories(msg *types.ListDirectories) error {
 	// It could be better if we skip directory listing completely
 	// when configure fails.
 	if w.c == nil {
-		return errors.New("Incorrect maildir directory")
+		return errors.New("incorrect maildir directory")
 	}
 	dirs, err := w.c.Store.FolderMap()
 	if err != nil {

@@ -61,7 +61,7 @@ func oauth2URI(acct *config.AccountConfig) (*url.URL, error) {
 func (l OAuth2Login) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	conf := acct.AccountConfig()
 	store := auth.NewTokenStore(conf)

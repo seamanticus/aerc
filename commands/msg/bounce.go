@@ -67,7 +67,7 @@ func (b Bounce) Execute(args []string) error {
 	}
 	switch {
 	case err != nil:
-		return fmt.Errorf("Failed to select account %q: %w", b.Account, err)
+		return fmt.Errorf("failed to select account %q: %w", b.Account, err)
 	case acct == nil:
 		return errors.New("No account selected")
 	}

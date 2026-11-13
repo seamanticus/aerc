@@ -36,7 +36,7 @@ func (c ChangeTab) Execute(args []string) error {
 	if c.Tab == "-" {
 		ok := app.SelectPreviousTab()
 		if !ok {
-			return errors.New("No previous tab to return to")
+			return errors.New("no previous tab to return to")
 		}
 	} else {
 		n, err := strconv.Atoi(c.Tab)
@@ -46,13 +46,13 @@ func (c ChangeTab) Execute(args []string) error {
 			} else {
 				ok := app.SelectTabIndex(n)
 				if !ok {
-					return errors.New("No tab with that index")
+					return errors.New("no tab with that index")
 				}
 			}
 		} else {
 			ok := app.SelectTab(c.Tab)
 			if !ok {
-				return errors.New("No tab with that name")
+				return errors.New("no tab with that name")
 			}
 		}
 	}

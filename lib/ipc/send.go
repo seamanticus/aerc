@@ -28,7 +28,7 @@ func ConnectAndExec(args []string) (*Response, error) {
 	}
 	scanner := bufio.NewScanner(conn)
 	if !scanner.Scan() {
-		return nil, errors.New("No response from server")
+		return nil, errors.New("no response from server")
 	}
 	resp, err := DecodeResponse(scanner.Bytes())
 	if err != nil {

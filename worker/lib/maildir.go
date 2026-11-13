@@ -27,7 +27,7 @@ func NewMaildirStore(root string, maildirpp bool) (*MaildirStore, error) {
 		return nil, err
 	}
 	if !s.IsDir() {
-		return nil, fmt.Errorf("Given maildir '%s' not a directory", root)
+		return nil, fmt.Errorf("given maildir '%s' not a directory", root)
 	}
 	return &MaildirStore{
 		root: root, maildirpp: maildirpp,
@@ -42,7 +42,7 @@ func (s *MaildirStore) FolderMap() (map[string]maildir.Dir, error) {
 	}
 	err := filepath.Walk(s.root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return fmt.Errorf("Invalid path '%s': error: %w", path, err)
+			return fmt.Errorf("invalid path '%s': error: %w", path, err)
 		}
 		if !info.IsDir() {
 			return nil

@@ -51,9 +51,9 @@ func (m Menu) Execute([]string) error {
 	}
 	useFallback := m.useFallback()
 	if m.Background && useFallback {
-		return errors.New("Either -c <command> or " +
+		return errors.New("either -c <command> or " +
 			"default-menu-cmd is required to run " +
-			"in the background.")
+			"in the background")
 	}
 	if _, _, err := ResolveCommand(m.Xargs, nil, nil); err != nil {
 		return err
@@ -215,7 +215,7 @@ func (m Menu) feedLines() ([]string, error) {
 	case m.Directories:
 		account := app.SelectedAccount()
 		if account == nil {
-			return nil, errors.New("No account selected.")
+			return nil, errors.New("no account selected")
 		}
 		for _, d := range account.Directories().List() {
 			lines = append(lines, opt.QuoteArg(d))
@@ -230,7 +230,7 @@ func (m Menu) feedLines() ([]string, error) {
 				}
 			}
 		default:
-			return nil, errors.New("Cannot extract links for current tab.")
+			return nil, errors.New("cannot extract links for current tab")
 		}
 	}
 

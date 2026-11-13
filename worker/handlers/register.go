@@ -17,7 +17,7 @@ func RegisterWorkerFactory(scheme string, factory FactoryFunc) {
 func GetHandlerForScheme(scheme string, worker *types.Worker) (types.Backend, error) {
 	factory, ok := workerFactories[scheme]
 	if !ok {
-		return nil, fmt.Errorf("Unknown backend %s", scheme)
+		return nil, fmt.Errorf("unknown backend %s", scheme)
 	}
 	backend, err := factory(worker)
 	if err != nil {

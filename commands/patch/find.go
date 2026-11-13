@@ -70,7 +70,7 @@ func (s Find) Execute(_ []string) error {
 	}
 
 	if len(hash) < 4 {
-		return errors.New("Commit hash is too short.")
+		return errors.New("commit hash is too short")
 	}
 
 	var c models.Commit

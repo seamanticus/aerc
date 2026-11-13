@@ -42,7 +42,7 @@ func (e Envelope) Execute(args []string) error {
 
 	acct := provider.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 
 	var list []string
@@ -57,7 +57,7 @@ func (e Envelope) Execute(args []string) error {
 					acct.UiConfig().TimestampFormat)
 			}
 		} else {
-			return fmt.Errorf("Selected message is empty.")
+			return fmt.Errorf("selected message is empty")
 		}
 	}
 

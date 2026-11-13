@@ -17,7 +17,7 @@ func (w *JMAPWorker) translateSearch(
 		return w.translateSearchPart(mbox, nil), nil
 	}
 	if criteria.Exclude != nil {
-		return nil, errors.New("Exclude filters not supported in JMAP")
+		return nil, errors.New("exclude filters not supported in JMAP")
 	}
 	return w.translateSearchPart(mbox, criteria.Match), nil
 }

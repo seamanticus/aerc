@@ -194,7 +194,7 @@ func (msv *MessageStoreView) FetchBodyPart(part []int, cb func(io.Reader)) {
 	}
 	reader, err := rfc822.FetchEntityPartReader(msg, part)
 	if err != nil {
-		errMsg := fmt.Errorf("Failed to fetch message part: %w", err)
+		errMsg := fmt.Errorf("failed to fetch message part: %w", err)
 		log.Errorf(errMsg.Error())
 		if msv.message != nil {
 			log.Warnf("Displaying raw message part")

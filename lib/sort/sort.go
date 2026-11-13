@@ -30,7 +30,7 @@ func GetSortCriteria(args []string) ([]*types.SortCriterion, error) {
 		reverse = false
 	}
 	if reverse {
-		return nil, errors.New("Expected argument to reverse")
+		return nil, errors.New("expected argument to reverse")
 	}
 	return sortCriteria, nil
 }

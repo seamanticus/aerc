@@ -38,7 +38,7 @@ func (*ExpandCollapseFolder) CompleteFolder(arg string) []string {
 func (e ExpandCollapseFolder) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	if e.Folder == "" {
 		e.Folder = acct.Directories().Selected()

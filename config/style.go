@@ -220,7 +220,7 @@ func boolSwitch(val string, cur_val bool) (bool, error) {
 		return !cur_val, nil
 	default:
 		return cur_val, errors.New(
-			"Bool Switch attribute must be true, false, or toggle")
+			"bool Switch attribute must be true, false, or toggle")
 	}
 }
 
@@ -470,7 +470,7 @@ func findStyleSet(stylesetName string, stylesetsDir []string) (string, error) {
 	}
 
 	return "", fmt.Errorf(
-		"Can't find styleset %q in any of %v", stylesetName, stylesetsDir)
+		"can't find styleset %q in any of %v", stylesetName, stylesetsDir)
 }
 
 func (ss *StyleSet) ParseStyleSet(file *ini.File) error {

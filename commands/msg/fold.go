@@ -59,7 +59,7 @@ func (f Fold) Execute(args []string) error {
 
 	msg := store.Selected()
 	if msg == nil {
-		return errors.New("No message selected")
+		return errors.New("no message selected")
 	}
 
 	switch args[0] {

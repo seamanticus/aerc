@@ -49,13 +49,13 @@ func cacheDir() (string, error) {
 func openStorage() (*leveldb.DB, error) {
 	cd, err := cacheDir()
 	if err != nil {
-		return nil, fmt.Errorf("Unable to find project store directory: %w", err)
+		return nil, fmt.Errorf("unable to find project store directory: %w", err)
 	}
 	p := path.Join(cd, "projects")
 
 	db, err := leveldb.OpenFile(p, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to open project store: %w", err)
+		return nil, fmt.Errorf("unable to open project store: %w", err)
 	}
 
 	has, err := db.Has(versTagKey, nil)
@@ -127,7 +127,7 @@ func (instance) StoreProject(p models.Project, overwrite bool) error {
 		return err
 	}
 	if has && !overwrite {
-		return fmt.Errorf("Project '%s' already exists.", p.Name)
+		return fmt.Errorf("project '%s' already exists", p.Name)
 	}
 
 	log.Debugf("project data: %v", p)
@@ -152,7 +152,7 @@ func (instance) DeleteProject(name string) error {
 		return err
 	}
 	if !has {
-		return fmt.Errorf("Project does not exist.")
+		return fmt.Errorf("project does not exist")
 	}
 	return db.Delete(key, nil)
 }
@@ -192,7 +192,7 @@ func (instance) Current() (models.Project, error) {
 		return models.Project{}, err
 	}
 	if !has {
-		return models.Project{}, fmt.Errorf("No (current) project found; run 'project init' first.")
+		return models.Project{}, fmt.Errorf("no (current) project found; run 'project init' first")
 	}
 	curProjectKey, err := db.Get(currentKey, nil)
 	if err != nil {

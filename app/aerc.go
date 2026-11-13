@@ -849,7 +849,7 @@ func (aerc *Aerc) mailto(addr *url.URL) error {
 	h := &mail.Header{}
 	to, err := mail.ParseAddressList(addr.Opaque)
 	if err != nil && addr.Opaque != "" {
-		return fmt.Errorf("Could not parse to: %w", err)
+		return fmt.Errorf("could not parse to: %w", err)
 	}
 	h.SetAddressList("to", to)
 	template := config.Templates().NewMessage
@@ -904,7 +904,7 @@ func (aerc *Aerc) mailto(addr *url.URL) error {
 	}
 
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 
 	defer ui.Invalidate()

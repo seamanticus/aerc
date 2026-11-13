@@ -45,11 +45,11 @@ func (Split) Aliases() []string {
 func (s Split) Execute(args []string) error {
 	acct := app.SelectedAccount()
 	if acct == nil {
-		return errors.New("No account selected")
+		return errors.New("no account selected")
 	}
 	store := app.SelectedAccount().Store()
 	if store == nil {
-		return errors.New("Cannot perform action. Messages still loading")
+		return errors.New("cannot perform action. Messages still loading")
 	}
 
 	if s.Size == 0 && acct.SplitSize() == 0 {

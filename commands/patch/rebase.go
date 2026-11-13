@@ -60,7 +60,7 @@ func (r Rebase) Execute(args []string) error {
 	if len(commits) == 0 {
 		err := m.SaveRebased(current, baseID, nil)
 		if err != nil {
-			return fmt.Errorf("No commits to rebase, but saving of new reference failed: %w", err)
+			return fmt.Errorf("no commits to rebase, but saving of new reference failed: %w", err)
 		}
 		app.PushStatus("No commits to rebase.", 10*time.Second)
 		return nil

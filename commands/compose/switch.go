@@ -39,7 +39,7 @@ func (*SwitchAccount) CompleteAccount(arg string) []string {
 
 func (s SwitchAccount) Execute(args []string) error {
 	if !s.Prev && !s.Next && s.Account == "" {
-		return errors.New("Usage: switch-account -n | -p | <account-name>")
+		return errors.New("usage: switch-account -n | -p | <account-name>")
 	}
 
 	switcher, ok := app.SelectedTabContent().(AccountSwitcher)

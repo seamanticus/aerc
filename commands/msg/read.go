@@ -53,7 +53,7 @@ func (f *FlagMsg) ParseFlag(arg string) error {
 		f.Flag = models.DraftFlag
 		f.FlagName = "draft"
 	default:
-		return fmt.Errorf("Unknown flag %q", arg)
+		return fmt.Errorf("unknown flag %q", arg)
 	}
 	return nil
 }

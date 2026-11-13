@@ -22,7 +22,7 @@ func (m PatchManager) SwitchProject(name string) error {
 	}
 	found := slices.Contains(names, name)
 	if !found {
-		return fmt.Errorf("Project '%s' not found", name)
+		return fmt.Errorf("project '%s' not found", name)
 	}
 	return storeErr(m.store().SetCurrent(name))
 }

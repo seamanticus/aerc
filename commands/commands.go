@@ -210,7 +210,7 @@ func templateData(
 func ExecuteCommand(cmd Command, cmdline string) error {
 	args := opt.LexArgs(cmdline)
 	if args.Count() == 0 {
-		return errors.New("No arguments")
+		return errors.New("no arguments")
 	}
 	log.Tracef("executing command %s", args.String())
 	// copy zeroed struct
