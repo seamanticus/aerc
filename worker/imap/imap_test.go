@@ -12,7 +12,10 @@ import (
 )
 
 func TestTranslateEnvelope(t *testing.T) {
-	date, _ := time.Parse("2010-01-31", "1992-10-24")
+	date, err := time.Parse(time.DateOnly, "1992-10-24")
+	if err != nil {
+		t.Fatal(err)
+	}
 	givenAddress := imap.Address{
 		PersonalName: "PERSONAL_NAME",
 		AtDomainList: "AT_DOMAIN_LIST",

@@ -31,7 +31,7 @@ func TestStyleMultiHeaderPattern(t *testing.T) {
 
 	t.Run("default color", func(t *testing.T) {
 		var h mail.Header
-		h.SetAddressList("From", []*mail.Address{{"Alice Foo", "alice@foo.org"}})
+		h.SetAddressList("From", []*mail.Address{{Name: "Alice Foo", Address: "alice@foo.org"}})
 
 		s := ss.Get(STYLE_MSGLIST_DEFAULT, &h)
 		if s.Foreground != colorNames["salmon"] {
@@ -41,7 +41,7 @@ func TestStyleMultiHeaderPattern(t *testing.T) {
 
 	t.Run("single header", func(t *testing.T) {
 		var h mail.Header
-		h.SetAddressList("From", []*mail.Address{{"Bob Foo", "bob@foo.org"}})
+		h.SetAddressList("From", []*mail.Address{{Name: "Bob Foo", Address: "bob@foo.org"}})
 
 		s := ss.Get(STYLE_MSGLIST_DEFAULT, &h)
 		if s.Foreground != colorNames["khaki"] {
@@ -51,7 +51,7 @@ func TestStyleMultiHeaderPattern(t *testing.T) {
 
 	t.Run("two headers", func(t *testing.T) {
 		var h mail.Header
-		h.SetAddressList("From", []*mail.Address{{"Bob Foo", "Bob@foo.org"}})
+		h.SetAddressList("From", []*mail.Address{{Name: "Bob Foo", Address: "Bob@foo.org"}})
 		h.SetSubject("[PATCH] tests")
 
 		s := ss.Get(STYLE_MSGLIST_DEFAULT, &h)
@@ -62,7 +62,7 @@ func TestStyleMultiHeaderPattern(t *testing.T) {
 
 	t.Run("multiple headers", func(t *testing.T) {
 		var h mail.Header
-		h.SetAddressList("From", []*mail.Address{{"Bob Foo", "Bob@foo.org"}})
+		h.SetAddressList("From", []*mail.Address{{Name: "Bob Foo", Address: "Bob@foo.org"}})
 		h.SetSubject("[PATCH] tests")
 		h.SetText("X-Clacks-Overhead", "GNU Terry Pratchett")
 
@@ -74,7 +74,7 @@ func TestStyleMultiHeaderPattern(t *testing.T) {
 
 	t.Run("preserves order-sensitivity", func(t *testing.T) {
 		var h mail.Header
-		h.SetAddressList("From", []*mail.Address{{"Bob Foo", "Bob@foo.org"}})
+		h.SetAddressList("From", []*mail.Address{{Name: "Bob Foo", Address: "Bob@foo.org"}})
 		h.SetSubject("[PATCH] tests")
 		h.SetText("X-Clacks-Overhead", "GNU Terry Pratchett")
 		h.SetText("X-Baz", "exact")
@@ -90,7 +90,7 @@ func TestStyleMultiHeaderPattern(t *testing.T) {
 
 	t.Run("handles uris in regular expressions", func(t *testing.T) {
 		var h mail.Header
-		h.SetAddressList("From", []*mail.Address{{"Bob Foo", "Bob@foo.org"}})
+		h.SetAddressList("From", []*mail.Address{{Name: "Bob Foo", Address: "Bob@foo.org"}})
 		h.SetText("List-ID", "List-ID: ~rjarry/aerc-discuss <~rjarry/aerc-discuss.lists.sr.ht>")
 
 		s := ss.Get(STYLE_MSGLIST_DEFAULT, &h)

@@ -62,8 +62,6 @@ func deepEqual(t *testing.T, name string, r *models.MessageDetails, expect *mode
 	}
 }
 
-const testKeyId = `B1A8669354153B799F2217BF307215C13DF7A964`
-
 const testPrivateKeyArmored = `-----BEGIN PGP PRIVATE KEY BLOCK-----
 
 lQOYBF5FJf8BCACvlKhSSsv4P8C3Wbv391SrNUBtFquoMuWKtuCr/Ks6KHuofGLn

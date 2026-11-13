@@ -89,11 +89,8 @@ type EmailRoot struct {
 
 // Next sets the internal cursor to the next available Threadable
 func (e *EmailRoot) Next() bool {
-	e.position = e.position + 1
-	if e.position < len(e.emails) {
-		return true
-	}
-	return false
+	e.position++
+	return e.position < len(e.emails)
 }
 
 // Get returns the Threadable at the current internal cursor position
@@ -233,7 +230,7 @@ func (e *Email) MessageThreadReferences() []string {
 			// Technically, From: can have more than one sender (back in the day before email lists
 			// got sorted), we will never see this in practice, but, in for a pound, in for a penny
 			//
-			var found bool = false
+			found := false
 			for _, f := range fa {
 				if r == "<"+f.Address+">" {
 					found = true

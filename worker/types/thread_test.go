@@ -17,11 +17,12 @@ func genFakeTree() *Thread {
 			Parent:      tree,
 			PrevSibling: prevChild,
 		}
-		if prevChild != nil {
+		switch {
+		case prevChild != nil:
 			prevChild.NextSibling = child
-		} else if tree.FirstChild == nil {
+		case tree.FirstChild == nil:
 			tree.FirstChild = child
-		} else {
+		default:
 			panic("unreachable")
 		}
 		prevChild = child
@@ -32,11 +33,12 @@ func genFakeTree() *Thread {
 				Parent:      child,
 				PrevSibling: prevSecond,
 			}
-			if prevSecond != nil {
+			switch {
+			case prevSecond != nil:
 				prevSecond.NextSibling = second
-			} else if child.FirstChild == nil {
+			case child.FirstChild == nil:
 				child.FirstChild = second
-			} else {
+			default:
 				panic("unreachable")
 			}
 			prevSecond = second
@@ -51,11 +53,12 @@ func genFakeTree() *Thread {
 					Parent:      second,
 					PrevSibling: prevThird,
 				}
-				if prevThird != nil {
+				switch {
+				case prevThird != nil:
 					prevThird.NextSibling = third
-				} else if second.FirstChild == nil {
+				case second.FirstChild == nil:
 					second.FirstChild = third
-				} else {
+				default:
 					panic("unreachable")
 				}
 				prevThird = third
@@ -69,7 +72,7 @@ func TestNewWalk(t *testing.T) {
 	tree := genFakeTree()
 	var prefix []string
 	lastLevel := 0
-	tree.Walk(func(t *Thread, lvl int, e error) error {
+	err := tree.Walk(func(t *Thread, lvl int, e error) error {
 		if e != nil {
 			fmt.Printf("ERROR: %v\n", e)
 		}
@@ -102,14 +105,21 @@ func TestNewWalk(t *testing.T) {
 		lastLevel = lvl
 		return nil
 	})
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
-func uidSeq(tree *Thread) string {
+func uidSeq(t *testing.T, tree *Thread) string {
+	t.Helper()
 	var seq []string
-	tree.Walk(func(t *Thread, _ int, _ error) error {
+	err := tree.Walk(func(t *Thread, _ int, _ error) error {
 		seq = append(seq, string(t.Uid))
 		return nil
 	})
+	if err != nil {
+		t.Fatal(err)
+	}
 	return strings.Join(seq, ".")
 }
 
@@ -136,7 +146,7 @@ func TestThread_AddChild(t *testing.T) {
 			for _, i := range test.seq {
 				tree.AddChild(&Thread{Uid: i})
 			}
-			if got := uidSeq(tree); got != test.want {
+			if got := uidSeq(t, tree); got != test.want {
 				t.Errorf("got: %s, but wanted: %s", got,
 					test.want)
 			}
@@ -172,7 +182,7 @@ func TestThread_OrderedInsert(t *testing.T) {
 			for _, i := range test.seq {
 				tree.OrderedInsert(&Thread{Uid: i})
 			}
-			if got := uidSeq(tree); got != test.want {
+			if got := uidSeq(t, tree); got != test.want {
 				t.Errorf("got: %s, but wanted: %s", got,
 					test.want)
 			}
@@ -223,7 +233,7 @@ func TestThread_InsertCmd(t *testing.T) {
 			for _, i := range test.seq {
 				tree.InsertCmp(&Thread{Uid: i}, bigger)
 			}
-			if got := uidSeq(tree); got != test.want {
+			if got := uidSeq(t, tree); got != test.want {
 				t.Errorf("got: %s, but wanted: %s", got,
 					test.want)
 			}

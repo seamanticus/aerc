@@ -25,9 +25,9 @@ type writerTestCase struct {
 
 func TestWriter(t *testing.T) {
 	initGPGtest(t)
-	importSecretKey()
-	importPublicKey()
-	importOwnertrust()
+	importSecretKey(t)
+	importPublicKey(t)
+	importOwnertrust(t)
 
 	testCases := []writerTestCase{
 		{
@@ -105,10 +105,12 @@ func TestWriter(t *testing.T) {
 func validateEncrypt(t *testing.T, buf bytes.Buffer) {
 	md, err := gpgbin.Decrypt(&buf)
 	if err != nil {
-		t.Errorf("Encrypt error: could not decrypt test encryption")
+		t.Fatalf("Encrypt error: could not decrypt test encryption: %v", err)
 	}
 	var body bytes.Buffer
-	io.Copy(&body, md.Body)
+	if _, err := io.Copy(&body, md.Body); err != nil {
+		t.Fatal(err)
+	}
 	if s := body.String(); s != wantEncrypted {
 		t.Errorf("Encrypt() = \n%v\n but want \n%v", s, wantEncrypted)
 	}

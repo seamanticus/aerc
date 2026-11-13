@@ -8,19 +8,25 @@ import (
 	"github.com/seamanticus/aerc/models"
 )
 
-func importSecretKey() {
-	r := strings.NewReader(testPrivateKeyArmored)
-	gpgbin.Import(r)
+func importSecretKey(t *testing.T) {
+	t.Helper()
+	if err := gpgbin.Import(strings.NewReader(testPrivateKeyArmored)); err != nil {
+		t.Fatalf("import secret key: %v", err)
+	}
 }
 
-func importPublicKey() {
-	r := strings.NewReader(testPublicKeyArmored)
-	gpgbin.Import(r)
+func importPublicKey(t *testing.T) {
+	t.Helper()
+	if err := gpgbin.Import(strings.NewReader(testPublicKeyArmored)); err != nil {
+		t.Fatalf("import public key: %v", err)
+	}
 }
 
-func importOwnertrust() {
-	r := strings.NewReader(testOwnertrust)
-	gpgbin.ImportOwnertrust(r)
+func importOwnertrust(t *testing.T) {
+	t.Helper()
+	if err := gpgbin.ImportOwnertrust(strings.NewReader(testOwnertrust)); err != nil {
+		t.Fatalf("import ownertrust: %v", err)
+	}
 }
 
 type readerTestCase struct {
@@ -31,8 +37,8 @@ type readerTestCase struct {
 
 func TestReader(t *testing.T) {
 	initGPGtest(t)
-	importSecretKey()
-	importOwnertrust()
+	importSecretKey(t)
+	importOwnertrust(t)
 
 	testCases := []readerTestCase{
 		{

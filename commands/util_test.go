@@ -1,15 +1,13 @@
 package commands
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCompletePath(t *testing.T) {
-	os.Chdir("testdata")
-	defer os.Chdir("..")
+	t.Chdir("testdata")
 
 	vectors := []struct {
 		arg           string

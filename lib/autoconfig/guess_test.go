@@ -68,6 +68,4 @@ func mxTestDialer(_ string, address string) (net.Conn, error) {
 	}
 
 	panic(address)
-
-	return nil, fmt.Errorf("unprepared address %q", address)
 }

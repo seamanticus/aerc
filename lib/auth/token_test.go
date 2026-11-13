@@ -287,7 +287,7 @@ func TestBrowserLogin(t *testing.T) {
 				t.Error(err)
 				return
 			}
-			resp.Body.Close()
+			_ = resp.Body.Close()
 		}()
 		return nil
 	}
@@ -313,7 +313,7 @@ func TestBrowserLoginIgnoresWrongState(t *testing.T) {
 				t.Error(err)
 				return
 			}
-			resp.Body.Close()
+			_ = resp.Body.Close()
 			if resp.StatusCode != http.StatusBadRequest {
 				t.Errorf("forged state answered with %d", resp.StatusCode)
 			}

@@ -42,6 +42,7 @@ func TestSeqMap(t *testing.T) {
 
 	uid, found = seqmap.Get(1)
 	assert.Equal(1107, int(uid))
+	assert.Equal(true, found)
 
 	// Repeated puts of the same UID shouldn't change the size
 	seqmap.Put(1231)
@@ -51,6 +52,7 @@ func TestSeqMap(t *testing.T) {
 
 	uid, found = seqmap.Get(2)
 	assert.Equal(1231, int(uid))
+	assert.Equal(true, found)
 
 	_, found = seqmap.Pop(1)
 	assert.Equal(true, found)
