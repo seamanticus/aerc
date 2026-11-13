@@ -408,7 +408,6 @@ func (w *mboxWorker) Run() {
 		case errors.Is(err, types.ErrNoop):
 			// Operation did not have any effect.
 			// Do *NOT* send a Done message.
-			break
 		case errors.Is(err, types.ErrUnsupported):
 			w.worker.PostMessage(&types.Unsupported{
 				Message: types.RespondTo(msg),

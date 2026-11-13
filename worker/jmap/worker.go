@@ -167,7 +167,6 @@ func (w *JMAPWorker) Run() {
 		case errors.Is(err, types.ErrNoop):
 			// Operation did not have any effect.
 			// Do *NOT* send a Done message.
-			break
 		case errors.Is(err, context.Canceled):
 			w.w.PostMessage(&types.Cancelled{
 				Message: types.RespondTo(msg),

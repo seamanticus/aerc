@@ -406,7 +406,7 @@ func (d *templateData) Filename() string {
 	if d.info == nil {
 		return ""
 	}
-	if (d.info.Filenames != nil) && len(d.info.Filenames) > 0 {
+	if len(d.info.Filenames) > 0 {
 		return d.info.Filenames[0]
 	}
 	return ""
