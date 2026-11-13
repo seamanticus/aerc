@@ -1,19 +1,16 @@
 # aerc
 
-![logo](https://git.sr.ht/~rjarry/aerc/blob/master/contrib/logo.svg)
+![logo](contrib/logo.svg)
 
-[![builds.sr.ht status](https://builds.sr.ht/~rjarry/aerc.svg)](https://builds.sr.ht/~rjarry/aerc)
-[![GitHub macOS CI status](https://github.com/rjarry/aerc/actions/workflows/macos.yml/badge.svg)](https://github.com/rjarry/aerc/actions/workflows/macos.yml)
+[![CI](https://github.com/seamanticus/aerc/actions/workflows/ci.yml/badge.svg)](https://github.com/seamanticus/aerc/actions/workflows/ci.yml)
 
-[aerc](https://sr.ht/~rjarry/aerc/) is an email client for your terminal.
+aerc is an email client for your terminal.
 
-This is a fork of [the original aerc](https://git.sr.ht/~sircmpwn/aerc)
-by Drew DeVault.
-
-A short demonstration can be found on [https://aerc-mail.org/](https://aerc-mail.org/)
-
-Join the IRC channel: [#aerc on irc.libera.chat](http://web.libera.chat/?channels=aerc)
-for end-user support, and development.
+This is a hard fork of [aerc by Robin Jarry](https://sr.ht/~rjarry/aerc/),
+itself a fork of [the original aerc](https://git.sr.ht/~sircmpwn/aerc) by
+Drew DeVault. It does not track or send patches upstream, and upstream
+support channels do not cover it. It drops the notmuch backend and adds
+OAuth2 login with encrypted token storage (`:oauth2-login`).
 
 ## Usage
 
@@ -33,52 +30,40 @@ along with optional `unshare` (from `util-linux`) or `socksify` (from
 
 Also available as man pages:
 
-- [aerc(1)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc.1.scd)
-- [aerc-accounts(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-accounts.5.scd)
-- [aerc-binds(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-binds.5.scd)
-- [aerc-config(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-config.5.scd)
-- [aerc-imap(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-imap.5.scd)
-- [aerc-jmap(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-jmap.5.scd)
-- [aerc-maildir(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-maildir.5.scd)
-- [aerc-mbox(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-mbox.5.scd)
-- [aerc-patch(7)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-patch.7.scd)
-- [aerc-search(1)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-search.1.scd)
-- [aerc-sendmail(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-sendmail.5.scd)
-- [aerc-smtp(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-smtp.5.scd)
-- [aerc-stylesets(7)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-stylesets.7.scd)
-- [aerc-templates(7)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-templates.7.scd)
-- [aerc-tutorial(7)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-tutorial.7.scd)
-- [carddav-query(1)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/carddav-query.1.scd)
+- [aerc(1)](doc/aerc.1.scd)
+- [aerc-accounts(5)](doc/aerc-accounts.5.scd)
+- [aerc-binds(5)](doc/aerc-binds.5.scd)
+- [aerc-config(5)](doc/aerc-config.5.scd)
+- [aerc-imap(5)](doc/aerc-imap.5.scd)
+- [aerc-jmap(5)](doc/aerc-jmap.5.scd)
+- [aerc-maildir(5)](doc/aerc-maildir.5.scd)
+- [aerc-mbox(5)](doc/aerc-mbox.5.scd)
+- [aerc-patch(7)](doc/aerc-patch.7.scd)
+- [aerc-search(1)](doc/aerc-search.1.scd)
+- [aerc-sendmail(5)](doc/aerc-sendmail.5.scd)
+- [aerc-smtp(5)](doc/aerc-smtp.5.scd)
+- [aerc-stylesets(7)](doc/aerc-stylesets.7.scd)
+- [aerc-templates(7)](doc/aerc-templates.7.scd)
+- [aerc-tutorial(7)](doc/aerc-tutorial.7.scd)
+- [carddav-query(1)](doc/carddav-query.1.scd)
 
-User contributions and integration with external tools:
+Integration recipes for external tools (written for upstream aerc, most apply):
 
 - [wiki](https://man.sr.ht/~rjarry/aerc/)
 
 ## Installation
 
-### Binary Packages
-
-Recent versions of aerc are available on:
-
-- [Alpine](https://pkgs.alpinelinux.org/packages?name=aerc)
-- [Arch](https://archlinux.org/packages/extra/x86_64/aerc/)
-- [Debian](https://tracker.debian.org/pkg/aerc)
-- [Fedora](https://packages.fedoraproject.org/pkgs/aerc/aerc/)
-- [openSUSE](https://build.opensuse.org/package/show/openSUSE:Factory/aerc)
-- [macOS through Homebrew](https://formulae.brew.sh/formula/aerc)
-- [Slackware](https://slackbuilds.org/result/?search=aerc)
-
-And likely other platforms.
+Distribution packages named aerc ship upstream aerc, not this fork; build it
+from source.
 
 ### From Source
 
 Install the dependencies:
 
-- go (>=1.25) *(Go versions are supported until their end-of-life; support for
-  older versions may be dropped at any time due to incompatibilities or newer
-  required language features.)*
+- go (>=1.27)
 - [scdoc](https://git.sr.ht/~sircmpwn/scdoc)
 - GNU make
+- a C compiler, for the `colorize` and `wrap` filters
 
 Then compile aerc:
 
@@ -109,29 +94,13 @@ This will install templates and other config files to `/custom/location/share/ae
 and man pages to `/custom/location/share/man`. This extra location will have lower
 priority than the XDG locations but higher than the fixed paths.
 
-## Contributing
+## Issues
 
-Anyone can contribute to aerc. Please refer to [the contribution
-guidelines](https://git.sr.ht/~rjarry/aerc/tree/master/item/CONTRIBUTING.md)
+Report bugs and feature requests at
+[github.com/seamanticus/aerc/issues](https://github.com/seamanticus/aerc/issues).
 
-## Resources
+Report security vulnerabilities privately through
+[GitHub security advisories](https://github.com/seamanticus/aerc/security/advisories/new),
+not in public issues.
 
-Ask for support or follow general discussions on
-[~rjarry/aerc-discuss@lists.sr.ht](https://lists.sr.ht/~rjarry/aerc-discuss).
-
-Send patches and development related questions to
-[~rjarry/aerc-devel@lists.sr.ht](https://lists.sr.ht/~rjarry/aerc-devel).
-
-Instructions for preparing a patch are available at
-[git-send-email.io](https://git-send-email.io)
-
-Subscribe to release announcements on
-[~rjarry/aerc-announce@lists.sr.ht](https://lists.sr.ht/~rjarry/aerc-announce)
-
-Submit *confirmed* bug reports and *confirmed* feature requests on
-[https://todo.sr.ht/~rjarry/aerc](https://todo.sr.ht/~rjarry/aerc).
-
-Send security vulnerability reports via emails to
-[~rjarry/aerc-security@lists.sr.ht](~rjarry/aerc-security@lists.sr.ht).
-
-[License](https://git.sr.ht/~rjarry/aerc/tree/master/item/LICENSE).
+[License](LICENSE).

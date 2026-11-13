@@ -99,5 +99,5 @@ address-book-cmd = carddav-query -S gmail %s
 # AUTHORS
 
 Originally created by Drew DeVault and maintained by Robin Jarry who is assisted
-by other open source contributors. For more information about aerc development,
-see _https://sr.ht/~rjarry/aerc/_.
+by other open source contributors. This hard fork is maintained at
+_https://github.com/seamanticus/aerc_.

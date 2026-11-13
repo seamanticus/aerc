@@ -1,7 +1,7 @@
 # vim: ft=dosini
 #
 # aerc solarized styleset
-# based on https://git.sr.ht/~rjarry/aerc/tree/master/item/stylesets/solarized
+# based on the solarized styleset in this directory
 
 *.default=true
 *.normal=true
