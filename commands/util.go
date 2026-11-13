@@ -61,7 +61,8 @@ func QuickTerm(args []string, stdin io.Reader, silent bool) (*app.Terminal, erro
 	term.OnStart = func() {
 		go func() {
 			defer log.PanicHandler()
-			defer pipe.Close()
+			// closing the command stdin only signals EOF
+			defer func() { _ = pipe.Close() }()
 
 			if _, err := io.Copy(pipe, stdin); err != nil {
 				app.PushError(err.Error())

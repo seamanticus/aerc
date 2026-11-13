@@ -119,13 +119,11 @@ func (s *Save) savePart(
 			ch <- err
 			return
 		}
-		defer f.Close()
 		_, err = io.Copy(f, reader)
-		if err != nil {
-			ch <- err
-			return
+		if cerr := f.Close(); err == nil {
+			err = cerr
 		}
-		ch <- nil
+		ch <- err
 	})
 
 	// we need to wait for the callback prior to displaying a result

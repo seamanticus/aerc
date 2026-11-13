@@ -753,8 +753,9 @@ func (c *Composer) Close() {
 	}
 	if c.email != nil {
 		path := c.email.Name()
-		c.email.Close()
-		os.Remove(path)
+		// draft temp file, discarded
+		_ = c.email.Close()
+		_ = os.Remove(path)
 		c.email = nil
 	}
 	if c.editor != nil {
@@ -1134,7 +1135,9 @@ func writeMsgImpl(c *Composer, header *mail.Header, writer io.Writer) error {
 				return errors.Wrap(err, "writeAttachment")
 			}
 		}
-		w.Close()
+		if err := w.Close(); err != nil {
+			return errors.Wrap(err, "Close")
+		}
 	}
 	return nil
 }
@@ -1150,11 +1153,11 @@ func writeInlineBody(
 	if err != nil {
 		return errors.Wrap(err, "CreateSingleInlineWriter")
 	}
-	defer w.Close()
 	if _, err := io.Copy(w, body); err != nil {
+		_ = w.Close()
 		return errors.Wrap(err, "io.Copy")
 	}
-	return nil
+	return errors.Wrap(w.Close(), "Close")
 }
 
 // write the message body to the multipart message
@@ -1163,22 +1166,25 @@ func writeMultipartBody(parts []*lib.Part, w *mail.Writer) error {
 	if err != nil {
 		return errors.Wrap(err, "CreateInline")
 	}
-	defer bi.Close()
-
 	for _, part := range parts {
 		bh := mail.InlineHeader{}
 		bh.SetContentType(part.MimeType, part.Params)
 		bw, err := bi.CreatePart(bh)
 		if err != nil {
+			_ = bi.Close()
 			return errors.Wrap(err, "CreatePart")
 		}
-		defer bw.Close()
-		if _, err := io.Copy(bw, part.NewReader()); err != nil {
+		_, err = io.Copy(bw, part.NewReader())
+		if cerr := bw.Close(); err == nil {
+			err = cerr
+		}
+		if err != nil {
+			_ = bi.Close()
 			return errors.Wrap(err, "io.Copy")
 		}
 	}
 
-	return nil
+	return errors.Wrap(bi.Close(), "Close")
 }
 
 func (c *Composer) GetAttachments() []string {

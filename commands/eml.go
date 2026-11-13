@@ -86,7 +86,7 @@ func (e Eml) Execute(args []string) error {
 		if err != nil {
 			return err
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 		showEml(f)
 	}
 	return nil

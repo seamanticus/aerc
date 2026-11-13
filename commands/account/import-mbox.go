@@ -62,7 +62,7 @@ func (i ImportMbox) Execute(args []string) error {
 
 	importFolder := func(r io.ReadCloser) {
 		defer log.PanicHandler()
-		defer r.Close()
+		defer func() { _ = r.Close() }()
 
 		messages, err := mboxer.Read(r)
 		if err != nil {

@@ -99,8 +99,9 @@ func (m Menu) Execute([]string) error {
 		if err == nil {
 			buf, err = io.ReadAll(pick)
 		}
-		pick.Close()
-		os.Remove(pick.Name())
+		// temp file, already read
+		_ = pick.Close()
+		_ = os.Remove(pick.Name())
 		if err != nil {
 			app.PushError("command failed: " + err.Error())
 			return

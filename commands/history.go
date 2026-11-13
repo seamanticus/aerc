@@ -149,7 +149,10 @@ func (h *cmdHistory) writeHistory() {
 			return
 		}
 		for _, entry := range h.cmdList {
-			fmt.Fprintln(fh, entry)
+			if _, err := fmt.Fprintln(fh, entry); err != nil {
+				log.Errorf("failed to write history file: %v", err)
+				return
+			}
 		}
 
 		fh.Sync() //nolint:errcheck // if your computer can't sync you're in bigger trouble

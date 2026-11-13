@@ -528,8 +528,12 @@ func (wizard *AccountWizard) finish(tutorial bool) {
 				wizard.errorFor(nil, err)
 				return
 			}
-			defer f.Close()
 			if _, err = querymap.WriteTo(f); err != nil {
+				_ = f.Close()
+				wizard.errorFor(nil, err)
+				return
+			}
+			if err = f.Close(); err != nil {
 				wizard.errorFor(nil, err)
 				return
 			}
@@ -543,8 +547,12 @@ func (wizard *AccountWizard) finish(tutorial bool) {
 			wizard.errorFor(nil, err)
 			return
 		}
-		defer f.Close()
 		if _, err = file.WriteTo(f); err != nil {
+			_ = f.Close()
+			wizard.errorFor(nil, err)
+			return
+		}
+		if err = f.Close(); err != nil {
 			wizard.errorFor(nil, err)
 			return
 		}

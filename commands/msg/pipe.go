@@ -82,7 +82,8 @@ func doExec(command string, reader io.Reader, name string, cb func()) {
 	go func() {
 		defer log.PanicHandler()
 
-		defer pipe.Close()
+		// closing the command stdin only signals EOF
+		defer func() { _ = pipe.Close() }()
 		_, err := io.Copy(pipe, reader)
 		if err != nil {
 			log.Errorf("failed to send data to pipe: %v", err)
@@ -128,7 +129,7 @@ func (p Pipe) Run(cb func()) error {
 		pr, pw := io.Pipe()
 		go func() {
 			defer log.PanicHandler()
-			defer pw.Close()
+			defer func() { _ = pw.Close() }() // never fails
 			err := composer.WriteMessage(header, pw)
 			if err != nil {
 				log.Errorf("failed to write message: %v", err)
@@ -317,7 +318,7 @@ func newMessagesReader(messages []*types.FullMessage, useMbox bool) io.Reader {
 	pr, pw := io.Pipe()
 	go func() {
 		defer log.PanicHandler()
-		defer pw.Close()
+		defer func() { _ = pw.Close() }() // never fails
 		for _, msg := range messages {
 			var err error
 			if useMbox {

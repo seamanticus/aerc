@@ -101,7 +101,12 @@ func (e ExportMbox) Execute(args []string) error {
 			app.PushError(err.Error())
 			return
 		}
-		defer file.Close()
+		defer func() {
+			if err := file.Close(); err != nil {
+				log.Errorf("failed to close %s: %v", e.Filename, err)
+				app.PushError(err.Error())
+			}
+		}()
 
 		var mu sync.Mutex
 		var ctr uint

@@ -73,10 +73,13 @@ func (r Rebase) Execute(args []string) error {
 	}
 	name := f.Name()
 	_, err = io.Copy(f, rebase.content())
+	if cerr := f.Close(); err == nil {
+		err = cerr
+	}
 	if err != nil {
+		_ = os.Remove(name)
 		return err
 	}
-	f.Close()
 
 	createWidget := func() (ui.DrawableInteractive, error) {
 		editorCmd, err := app.CmdFallbackSearch(config.EditorCmds(), true)
@@ -90,7 +93,8 @@ func (r Rebase) Execute(args []string) error {
 		}
 		term.OnClose = func(_ error) {
 			app.CloseDialog()
-			defer os.Remove(name)
+			// temp file, done with it
+			defer func() { _ = os.Remove(name) }()
 			defer term.Focus(false)
 
 			f, err := os.Open(name)
@@ -98,7 +102,7 @@ func (r Rebase) Execute(args []string) error {
 				app.PushError(fmt.Sprintf("failed to open file: %v", err))
 				return
 			}
-			defer f.Close()
+			defer func() { _ = f.Close() }()
 
 			if editor.ProcessState.ExitCode() > 0 {
 				app.PushError("Quitting rebase without saving.")

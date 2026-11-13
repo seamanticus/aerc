@@ -737,7 +737,8 @@ func (pv *PartViewer) writeMailHeaders() {
 	if file == nil {
 		file = pv.pagerin
 	} else {
-		defer file.Close()
+		// stdin of the header filter: closing only signals EOF
+		defer func() { _ = file.Close() }()
 	}
 
 	var buf bytes.Buffer

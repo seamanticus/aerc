@@ -175,8 +175,10 @@ func (f forward) Execute(args []string) error {
 				return
 			}
 
-			defer tmpFile.Close()
 			_, err = io.Copy(tmpFile, r)
+			if cerr := tmpFile.Close(); err == nil {
+				err = cerr
+			}
 			if err != nil {
 				log.Warnf("failed to write to tmpfile: %v", err)
 				return
@@ -190,7 +192,9 @@ func (f forward) Execute(args []string) error {
 				if c.Sent() && store != nil {
 					store.Forwarded([]models.UID{msg.Uid}, true, nil)
 				}
-				os.RemoveAll(tmpDir)
+				if err := os.RemoveAll(tmpDir); err != nil {
+					log.Warnf("failed to remove %s: %v", tmpDir, err)
+				}
 			})
 		})
 	} else {

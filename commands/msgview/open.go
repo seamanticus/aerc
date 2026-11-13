@@ -75,7 +75,9 @@ func (o Open) Execute(args []string) error {
 		}
 
 		_, err = io.Copy(tmpFile, reader)
-		tmpFile.Close()
+		if cerr := tmpFile.Close(); err == nil {
+			err = cerr
+		}
 		if err != nil {
 			app.PushError(err.Error())
 			return
@@ -84,7 +86,11 @@ func (o Open) Execute(args []string) error {
 		go func() {
 			defer log.PanicHandler()
 			if o.Delete {
-				defer os.RemoveAll(tmpDir)
+				defer func() {
+					if err := os.RemoveAll(tmpDir); err != nil {
+						log.Warnf("failed to remove %s: %v", tmpDir, err)
+					}
+				}()
 			}
 			err = lib.XDGOpenMime(tmpFile.Name(), mimeType, o.Cmd)
 			if err != nil {
