@@ -14,9 +14,6 @@ enable = [
 # enable additional linters, on top of the v2 "standard" set (errcheck,
 # govet, ineffassign, staticcheck, unused)
 [linters]
-disable = [
-	"staticcheck",
-]
 enable = [
 	"nolintlint", # nolint comments require justification
 	"errorlint", # check to ensure no problems with wrapped errors
