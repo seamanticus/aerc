@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/seamanticus/aerc/lib/log"
 	"golang.org/x/oauth2"
 )
 
@@ -69,7 +70,10 @@ func BrowserLogin(
 			}
 		}),
 	}
-	go func() { _ = srv.Serve(l) }()
+	go func() {
+		defer log.PanicHandler()
+		_ = srv.Serve(l)
+	}()
 	defer func() { _ = srv.Close() }()
 
 	if err := open(conf.AuthCodeURL(state, opts...)); err != nil {
