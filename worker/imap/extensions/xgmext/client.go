@@ -38,7 +38,7 @@ func (x *XGMExtClient) FetchEntireThreads(requested []uint32) ([]uint32, error) 
 
 func (x *XGMExtClient) fetchThreadIds(uids []uint32) ([]string, error) {
 	messages := make(chan *imap.Message)
-	done := make(chan error)
+	done := make(chan struct{})
 
 	thriditem := imap.FetchItem("X-GM-THRID")
 	items := []imap.FetchItem{thriditem}
@@ -55,7 +55,7 @@ func (x *XGMExtClient) fetchThreadIds(uids []uint32) ([]string, error) {
 				m[item] = struct{}{}
 			}
 		}
-		done <- nil
+		close(done)
 	}()
 
 	var set imap.SeqSet

@@ -132,7 +132,7 @@ func (w *IMAPWorker) handleConfigure(msg *types.Configure) error {
 		if err != nil {
 			return err
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 		fmap, order, err := lib.ParseFolderMap(bufio.NewReader(f))
 		if err != nil {
 			return err

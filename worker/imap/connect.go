@@ -189,7 +189,8 @@ func newTCPConn(addr string, timeout time.Duration) (*net.TCPConn, error) {
 		go func() {
 			defer log.PanicHandler()
 			if tcpResult := <-done; tcpResult.conn != nil {
-				tcpResult.conn.Close()
+				// late connection, already reported as timed out
+				_ = tcpResult.conn.Close()
 			}
 		}()
 		return nil, errTCPTimeout

@@ -13,7 +13,7 @@ func createMailboxContainer(path string) (*mailboxContainer, error) {
 		return nil, err
 	}
 
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	fileInfo, err := file.Stat()
 	if err != nil {
@@ -44,10 +44,11 @@ func createMailboxContainer(path string) (*mailboxContainer, error) {
 			if err != nil {
 				continue
 			}
-			if err := openMboxFile(file, f); err != nil {
+			err = openMboxFile(file, f)
+			_ = f.Close()
+			if err != nil {
 				return nil, err
 			}
-			f.Close()
 		}
 	} else {
 		if err := openMboxFile(path, file); err != nil {

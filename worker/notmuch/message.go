@@ -95,7 +95,7 @@ func (m *Message) NewBodyPartReader(requestedParts []int) (io.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	msg, err := rfc822.ReadMessage(f)
 	if err != nil {
 		return nil, fmt.Errorf("could not read message: %w", err)

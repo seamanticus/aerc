@@ -66,8 +66,9 @@ func (i *idler) Start() {
 	clearing := true
 	for clearing {
 		select {
-		case <-i.done:
-			continue
+		case err := <-i.done:
+			// already logged by Execute
+			i.worker.Tracef("idler (start): discard previous result: %v", err)
 		default:
 			clearing = false
 		}

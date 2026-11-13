@@ -261,8 +261,8 @@ func (w *mboxWorker) handleMessage(msg types.WorkerMessage) error {
 				w.worker.Errorf("could not get message reader: %v", err)
 				continue
 			}
-			defer r.Close()
 			b, err := io.ReadAll(r)
+			_ = r.Close()
 			if err != nil {
 				w.worker.Errorf("could not get message reader: %v", err)
 				continue

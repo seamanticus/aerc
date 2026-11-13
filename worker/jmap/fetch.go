@@ -182,7 +182,7 @@ func (w *JMAPWorker) handleFetchMessageBodyPart(msg *types.FetchMessageBodyPart)
 			return w.wrapDownloadError("part", part.BlobID, err)
 		}
 		buf, err = io.ReadAll(rd)
-		rd.Close()
+		_ = rd.Close()
 		if err != nil {
 			return err
 		}
@@ -224,7 +224,7 @@ func (w *JMAPWorker) handleFetchFullMessages(msg *types.FetchFullMessages) error
 				return w.wrapDownloadError("full", mail.BlobID, err)
 			}
 			buf, err = io.ReadAll(rd)
-			rd.Close()
+			_ = rd.Close()
 			if err != nil {
 				return err
 			}

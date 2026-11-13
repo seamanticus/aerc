@@ -141,6 +141,13 @@ func (w *worker) PathSeparator() string {
 	return "/"
 }
 
+// Closing the database commits pending changes.
+func (w *worker) closeDB() {
+	if err := w.db.Close(); err != nil {
+		w.w.Errorf("failed to close notmuch database: %v", err)
+	}
+}
+
 func (w *worker) handleMessage(msg types.WorkerMessage) error {
 	if w.setupErr != nil {
 		// only configure can recover from a config error, bail for everything else
@@ -154,7 +161,7 @@ func (w *worker) handleMessage(msg types.WorkerMessage) error {
 		if err != nil {
 			return err
 		}
-		defer w.db.Close()
+		defer w.closeDB()
 	}
 
 	switch msg := msg.(type) {
@@ -230,7 +237,7 @@ func (w *worker) handleConfigure(msg *types.Configure) error {
 			return fmt.Errorf("connect: %w", err)
 		}
 		path := w.db.MailRoot()
-		w.db.Close()
+		w.closeDB()
 		w.maildirAccountPath = msg.Config.Params["maildir-account-path"]
 
 		path = filepath.Join(path, w.maildirAccountPath)
@@ -248,7 +255,7 @@ func (w *worker) handleConfigure(msg *types.Configure) error {
 		if err != nil {
 			return err
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 		fmap, order, err := lib.ParseFolderMap(bufio.NewReader(f))
 		if err != nil {
 			return err
@@ -482,7 +489,7 @@ func (w *worker) handleFetchFullMessages(msg *types.FetchFullMessages) error {
 			w.w.Errorf("could not get message reader: %v", err)
 			return err
 		}
-		defer r.Close()
+		defer func() { _ = r.Close() }()
 		b, err := io.ReadAll(r)
 		if err != nil {
 			return err
@@ -662,7 +669,7 @@ func (w *worker) loadQueryMap(acctConfig *config.AccountConfig) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	w.nameQueryMap, w.queryMapOrder, err = lib.ParseFolderMap(f)
 	return err
 }
@@ -985,13 +992,16 @@ func (w *worker) handleAppendMessage(msg *types.AppendMessage) error {
 		return err
 	}
 	filename := newMsg.Filename()
-	if _, err := io.Copy(writer, msg.Reader); err != nil {
+	_, err = io.Copy(writer, msg.Reader)
+	if cerr := writer.Close(); err == nil {
+		err = cerr
+	}
+	if err != nil {
 		w.w.Errorf("could not write message to destination: %v", err)
-		writer.Close()
-		os.Remove(filename)
+		// partial message, never indexed
+		_ = os.Remove(filename)
 		return err
 	}
-	writer.Close()
 	id, err := w.db.IndexFile(filename)
 	if err != nil {
 		return err
@@ -1054,7 +1064,7 @@ func (w *worker) processNewMaildirFiles(dir string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	names, err := f.Readdirnames(0)
 	if err != nil {
 		return err

@@ -79,7 +79,7 @@ func searchMessage(
 		if err != nil {
 			return false, err
 		}
-		defer reader.Close()
+		defer func() { _ = reader.Close() }()
 		msg, err := rfc822.ReadMessage(reader)
 		if err != nil {
 			return false, err
@@ -98,7 +98,7 @@ func searchMessage(
 		if err != nil {
 			return false, err
 		}
-		defer reader.Close()
+		defer func() { _ = reader.Close() }()
 		bytes, err := io.ReadAll(reader)
 		if err != nil {
 			return false, err

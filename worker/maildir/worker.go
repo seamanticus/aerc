@@ -207,7 +207,7 @@ func dirFiles(name string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer dir.Close()
+	defer func() { _ = dir.Close() }()
 	return dir.Readdirnames(-1)
 }
 
@@ -366,7 +366,7 @@ func (w *Worker) handleConfigure(msg *types.Configure) error {
 		if err != nil {
 			return err
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 		fmap, order, err := lib.ParseFolderMap(bufio.NewReader(f))
 		if err != nil {
 			return err
@@ -758,7 +758,7 @@ func (w *Worker) handleFetchFullMessages(msg *types.FetchFullMessages) error {
 			w.worker.Errorf("could not get message reader: %v", err)
 			return err
 		}
-		defer r.Close()
+		defer func() { _ = r.Close() }()
 		b, err := io.ReadAll(r)
 		if err != nil {
 			return err
@@ -919,8 +919,11 @@ func (w *Worker) handleAppendMessage(msg *types.AppendMessage) error {
 		return fmt.Errorf("could not create message at %s: %w",
 			msg.Destination, err)
 	}
-	defer writer.Close()
-	if _, err := io.Copy(writer, msg.Reader); err != nil {
+	_, err = io.Copy(writer, msg.Reader)
+	if cerr := writer.Close(); err == nil {
+		err = cerr
+	}
+	if err != nil {
 		return fmt.Errorf(
 			"could not write message to destination: %w", err)
 	}

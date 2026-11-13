@@ -18,7 +18,7 @@ func (w *worker) handleNotmuchEvent() error {
 	if err != nil {
 		return err
 	}
-	defer w.db.Close()
+	defer w.closeDB()
 	err = w.updateDirCounts()
 	if err != nil {
 		return err

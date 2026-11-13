@@ -52,12 +52,11 @@ type drainCloser struct {
 	wg   *sync.WaitGroup
 }
 
-func (d *drainCloser) Close() error {
+func (d *drainCloser) Close() {
 	d.once.Do(func() {
 		close(d.done)
 		d.wg.Wait()
 	})
-	return nil
 }
 
 func (imapw *IMAPWorker) handleDeleteMessages(msg *types.DeleteMessages) error {
