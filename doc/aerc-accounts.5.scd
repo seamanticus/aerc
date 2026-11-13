@@ -39,9 +39,9 @@ Note that many of these configuration options are written for you, such as
 	Specifies an interval to check for new mail. Mail will be checked at
 	startup, and every interval. IMAP accounts will check for mail in all
 	unselected folders, and the selected folder will continue to receive
-	PUSH mail notifications. Maildir/Notmuch folders must use
-	*check-mail-cmd* in conjunction with this option. See *aerc-maildir*(5)
-	and *aerc-notmuch*(5) for more information.
+	PUSH mail notifications. Maildir folders must use *check-mail-cmd* in
+	conjunction with this option. See *aerc-maildir*(5) for more
+	information.
 
 	Setting this option to _0_ will disable *check-mail*
 
@@ -114,16 +114,9 @@ Note that many of these configuration options are written for you, such as
 	The folder map contains a one-to-one mapping of server folders to displayed
 	folder names. The *folder-map* file expects a
 	_<display-folder-name>_=_<server-folder-name>_[\*]
-	mapping per line (similar key=value syntax as for the *query-map* in notmuch).
+	mapping per line.
 	The mappings are applied as they appear in the *folder-map*.
-	Supported backends: imap, maildir, notmuch.
-
-	For the notmuch backend, the folder-map applies to physical maildir
-	directories. Query-map and dynamic query folders are not affected. If a
-	folder-map display name collides with a query-map or dynamic query folder
-	name, only one entry appears in the folder list: the directory store
-	maps names to entries and the last Directory message for a given name
-	overwrites earlier ones.
+	Supported backends: imap, maildir.
 
 	Note that other account options such as *archive*, *default*, *copy-to*,
 	*postpone*, *folders*, *folders-exclude*, *folders-sort* need to be
@@ -309,7 +302,6 @@ Note that many of these configuration options are written for you, such as
 	- *aerc-jmap*(5)
 	- *aerc-maildir*(5)
 	- *aerc-mbox*(5)
-	- *aerc-notmuch*(5)
 
 *source-cred-cmd* = _<command>_
 	Specifies an optional command that is run to get the source account's
@@ -355,7 +347,7 @@ Note that many of these configuration options are written for you, such as
 # SEE ALSO
 
 *aerc*(1) *aerc-config*(5) *aerc-imap*(5) *aerc-jmap*(5) *aerc-maildir*(5)
-*aerc-mbox*(5) *aerc-notmuch*(5) *aerc-sendmail*(5) *aerc-smtp*(5)
+*aerc-mbox*(5) *aerc-sendmail*(5) *aerc-smtp*(5)
 
 # AUTHORS
 

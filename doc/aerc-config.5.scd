@@ -580,7 +580,7 @@ These options are configured in the *[ui]* section of _aerc.conf_.
 
 *threading-enabled* = _true_|_false_
 	Enable a threaded view of messages. If this is not supported by the
-	backend (IMAP server or notmuch), threads will be built by the client.
+	backend (IMAP server), threads will be built by the client.
 
 	Default: _false_
 
@@ -606,8 +606,8 @@ These options are configured in the *[ui]* section of _aerc.conf_.
 	Default: _50ms_
 
 *show-thread-context* = _true_|_false_
-	Enable showing of thread context. Note: this is currently only supported
-	by the notmuch backend.
+	Enable showing of thread context. Note: this is currently not supported
+	by any backend.
 
 	Default: _false_
 
@@ -905,7 +905,7 @@ These options are configured in the *[viewer]* section of _aerc.conf_.
 	Rows will be hidden if none of their specified headers are present in the
 	message.
 
-	Notmuch tags can be displayed by adding Labels.
+	IMAP and JMAP labels can be displayed by adding Labels.
 
 	Authentication information from the Authentication-Results header can be
 	displayed by adding _DKIM_, _SPF_ or _DMARC_. To show more information
@@ -1507,8 +1507,8 @@ They are configured in the *[hooks]* section of aerc.conf.
 	- *AERC_LIFETIME*
 
 *tag-modified* = _<command>_
-	Executed when notmuch tags are modified in a notmuch account. The list
-	of added, removed and toggled tags are passed as variables.
+	Executed when labels are modified with *:modify-labels*. The list of
+	added, removed and toggled labels are passed as variables.
 
 	Variables:
 
@@ -1574,7 +1574,7 @@ These options are configured in the *[templates]* section of _aerc.conf_.
 # SEE ALSO
 
 *aerc*(1) *aerc-accounts*(5) *aerc-binds*(5) *aerc-imap*(5) *aerc-jmap*(5)
-*aerc-maildir*(5) *aerc-mbox*(5) *aerc-notmuch*(5) *aerc-templates*(7)
+*aerc-maildir*(5) *aerc-mbox*(5) *aerc-templates*(7)
 *aerc-sendmail*(5) *aerc-smtp*(5) *aerc-stylesets*(7) *carddav-query*(1)
 
 # AUTHORS

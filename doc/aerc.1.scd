@@ -320,7 +320,7 @@ _<aerc-cmd ...>_
 These commands are valid in any context that has a selected message (e.g. the
 message list, the message in the message viewer, etc).
 
-*:archive* [*-m* _<strategy>_] _<scheme>_
+*:archive* _<scheme>_
 	Moves the selected message to the archive. The available schemes are:
 
 	_flat_: No special structure, all messages in the archive directory
@@ -328,9 +328,6 @@ message list, the message in the message viewer, etc).
 	_year_: Messages are stored in folders per year
 
 	_month_: Messages are stored in folders per year and subfolders per month
-
-	The *-m* option sets the multi-file strategy. See *aerc-notmuch*(5) for more
-	details.
 
 *:accept* [*-e*|*-E*] [*-s*]
 	Accepts an iCalendar meeting invitation. This opens a compose window
@@ -355,8 +352,8 @@ message list, the message in the message viewer, etc).
 
 	*-s*: Skips the editor and goes directly to the review screen.
 
-*:copy* [*-dp*] [*-a* _<account>_] [*-m* _<strategy>_] _<folder>_++
-*:cp* [*-dp*] [*-a* _<account>_] [*-m* _<strategy>_] _<folder>_
+*:copy* [*-dp*] [*-a* _<account>_] _<folder>_++
+*:cp* [*-dp*] [*-a* _<account>_] _<folder>_
 	Copies the selected message(s) to _<folder>_.
 
 	*-d*: Decrypt the message before copying.
@@ -365,8 +362,6 @@ message list, the message in the message viewer, etc).
 
 	*-a*: Copy to _<folder>_ of _<account>_. If _<folder>_ does
 	not exist, it will be created whether or not *-p* is used.
-
-	*-m*: Set the multi-file strategy. See *aerc-notmuch*(5) for more details.
 
 *:decline* [*-e*|*-E*] [*-s*]
 	Declines an iCalendar meeting invitation.
@@ -377,11 +372,9 @@ message list, the message in the message viewer, etc).
 
 	*-s*: Skips the editor and goes directly to the review screen.
 
-*:delete* [*-m* _<strategy>_]++
-*:delete-message* [*-m* _<strategy>_]
+*:delete*++
+*:delete-message*
 	Deletes the selected message.
-
-	*-m*: Set the multi-file strategy. See *aerc-notmuch*(5) for more details.
 
 *:envelope* [*-h*] [*-s* _<format-specifier>_]
 	Opens the message envelope in a dialog popup.
@@ -433,16 +426,14 @@ message list, the message in the message viewer, etc).
 
 	*-s*: Skips the editor and goes directly to the review screen.
 
-*:move* [*-p*] [*-a* _<account>_] [*-m* _<strategy>_] _<folder>_++
-*:mv* [*-p*] [*-a* _<account>_] [*-m* _<strategy>_] _<folder>_
+*:move* [*-p*] [*-a* _<account>_] _<folder>_++
+*:mv* [*-p*] [*-a* _<account>_] _<folder>_
 	Moves the selected message(s) to _<folder>_.
 
 	*-p*: Create _<folder>_ if it does not exist.
 
 	*-a*: Move to _<folder>_ of _<account>_. If _<folder>_ does
 	not exist, it will be created whether or not *-p* is used.
-
-	*-m*: Set the multi-file strategy. See *aerc-notmuch*(5) for more details.
 
 *:patch* _<args ...>_
 	Patch management sub-commands. See *aerc-patch*(7) for more details.
@@ -544,7 +535,7 @@ message list, the message in the message viewer, etc).
 
 *:modify-labels* [_+_|_-_|_!_]_<label>_...++
 *:tag* [_+_|_-_|_!_]_<label>_...
-	Modify message labels (e.g. IMAP and notmuch tags, GMail or Proton labels).
+	Modify message labels (e.g. IMAP keywords, GMail or Proton labels).
 	Labels prefixed with a *+* are added, those prefixed with a *-* are
 	removed and those prefixed with a *!* are toggled (toggling is not
 	supported for IMAP, GMail nor Proton). As a convenience, labels without either
@@ -730,22 +721,6 @@ message list, the message in the message viewer, etc).
 *:prev-result*
 	Selects the next or previous search result.
 
-*:query* [*-a* _<account>_] [*-n* _name_] [*-f*] _<notmuch query>_
-	Create a virtual folder using the specified top-level notmuch query. This
-	command is exclusive to the notmuch backend.
-
-	*-a* _<account>_
-		Change to _<folder>_ of _<account>_ and focus its corresponding
-		tab.
-
-	*-n* _<name>_
-		Specify the display name for the virtual folder. If not provided,
-		_<notmuch query>_ is used as the display name.
-
-	*-f*
-		Load the query results into an already existing folder (messages
-		in the original folder are not deleted).
-
 *:search* [_<options>_] _<terms>_...
 	Searches the current folder for messages matching the given set of
 	conditions.  The search syntax is dependent on the underlying backend.
@@ -811,8 +786,8 @@ message list, the message in the message viewer, etc).
 
 *:toggle-thread-context*
 	Toggles between showing entire thread and only showing messages which
-	match the current query / mailbox. Thread context is currently only
-	supported by the notmuch backend.
+	match the current query / mailbox. Thread context is currently not
+	supported by any backend.
 
 *:view* [*-pb*]++
 *:view-message* [*-pb*]
@@ -1079,7 +1054,7 @@ in _aerc.conf_.
 
 # SEE ALSO
 
-*aerc-config*(5) *aerc-imap*(5) *aerc-jmap*(5) *aerc-notmuch*(5) *aerc-smtp*(5)
+*aerc-config*(5) *aerc-imap*(5) *aerc-jmap*(5) *aerc-smtp*(5)
 *aerc-maildir*(5) *aerc-mbox*(5) *aerc-sendmail*(5) *aerc-search*(1)
 *aerc-stylesets*(7) *aerc-templates*(7) *aerc-accounts*(5) *aerc-binds*(5)
 *aerc-tutorial*(7) *aerc-patch*(7)

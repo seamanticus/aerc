@@ -141,7 +141,7 @@ available always.
 	```
 
 *Labels*
-	Message labels (for example notmuch tags). Not available when composing,
+	Message labels (for example IMAP keywords or JMAP labels). Not available when composing,
 	replying nor forwarding. This is a list of strings that may be converted
 	to a single string with *join*.
 
@@ -159,8 +159,7 @@ available always.
 
 *Filename*
 	The full path of the message file. Not available when composing,
-	replying nor forwarding. For the notmuch backend, it returns a random
-	filename if there are multiple files associated with the message.
+	replying nor forwarding.
 
 *Filenames*
 	A list of the full paths of the files associated with the message. For
@@ -256,12 +255,11 @@ available always.
 	{{.Role}}
 	```
 
-	*aerc* implements two additional custom roles: A 'query' role is given
-	to folders from a notmuch query-map
-	and 'virtual' indicates a virtual node in the directory tree listing:
+	*aerc* implements an additional custom role: 'virtual' indicates a
+	virtual node in the directory tree listing:
 
 	```
-	{{if eq .Role "query"}}{{...}}{{else}}{{...}}{{end}}
+	{{if eq .Role "virtual"}}{{...}}{{else}}{{...}}{{end}}
 	```
 
 	Current message counts for specific folders:

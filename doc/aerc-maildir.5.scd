@@ -49,7 +49,7 @@ The following maildir-specific options are available:
 
 # SEE ALSO
 
-*aerc*(1) *aerc-accounts*(5) *aerc-smtp*(5) *aerc-notmuch*(5)
+*aerc*(1) *aerc-accounts*(5) *aerc-smtp*(5)
 
 # AUTHORS
 

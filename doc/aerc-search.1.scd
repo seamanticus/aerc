@@ -103,23 +103,6 @@ and use the extension *-e* flag in your *:filter* or *:search* commands.
 		:search -e is:read is:starred
 		:search -e list:~rjarry/aerc-devel@lists.sr.ht
 
-
-# NOTMUCH
-
-For notmuch, it is possible to avoid using the above flags and only rely on
-notmuch search syntax.
-
-*:filter* _query_...++
-*:search* _query_...
-	You can use the full notmuch query language as described in
-	*notmuch-search-terms*(7).
-
-	The query will only apply on top of the active folder query.
-
-	Example, jump to next unread:
-
-		:search tag:unread
-
 # SEE ALSO
 
 *aerc*(1) *aerc-config*(5)

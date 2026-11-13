@@ -41,7 +41,6 @@ Also available as man pages:
 - [aerc-jmap(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-jmap.5.scd)
 - [aerc-maildir(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-maildir.5.scd)
 - [aerc-mbox(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-mbox.5.scd)
-- [aerc-notmuch(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-notmuch.5.scd)
 - [aerc-patch(7)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-patch.7.scd)
 - [aerc-search(1)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-search.1.scd)
 - [aerc-sendmail(5)](https://git.sr.ht/~rjarry/aerc/tree/master/item/doc/aerc-sendmail.5.scd)
@@ -84,24 +83,6 @@ Install the dependencies:
 Then compile aerc:
 
     $ gmake
-
-aerc optionally supports notmuch. To enable it, you need to have a recent
-version of [notmuch](https://notmuchmail.org/#index7h2), including the header
-files (notmuch.h). The `notmuch` build tag should be automatically added. To
-check if it is, run the following command:
-
-    $ ./aerc -v
-    aerc 0.14.0-108-g31e1cd9af565 +notmuch (go1.19.6 amd64 linux)
-                                  ^^^^^^^^
-
-If it is not, you can force it before building:
-
-    $ gmake GOFLAGS=-tags=notmuch
-
-If you have notmuch headers available but do not want to build notmuch support
-in aerc, force GOFLAGS to an empty value:
-
-    $ gmake GOFLAGS=
 
 To install aerc locally (no need to be root):
 
