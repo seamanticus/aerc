@@ -2,7 +2,9 @@ package imap
 
 import (
 	"crypto/tls"
+	"errors"
 	"fmt"
+	"io"
 	"net"
 	"os"
 	"strings"
@@ -13,7 +15,32 @@ import (
 	"github.com/seamanticus/aerc/lib"
 	"github.com/seamanticus/aerc/lib/auth"
 	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/worker/types"
+	"golang.org/x/oauth2"
 )
+
+// go-imap v1.2.1 returns this anonymous error when the server closes the
+// connection before answering a command (imap.StatusResp.Err with nil).
+const errMsgConnClosed = "imap: connection closed during command execution"
+
+// authError marks err with types.ErrAuth unless it shows the credentials
+// never reached a verdict: network errors, a closed connection or a token
+// endpoint 5xx. Anything else (an IMAP NO, an OAuth2 4xx, a failed decrypt
+// command) stops automatic reconnection.
+func authError(err error) error {
+	var nerr net.Error
+	var rerr *oauth2.RetrieveError
+	switch {
+	case errors.As(err, &nerr),
+		errors.Is(err, io.EOF),
+		errors.Is(err, io.ErrUnexpectedEOF),
+		err.Error() == errMsgConnClosed:
+		return err
+	case errors.As(err, &rerr) && rerr.Response != nil && rerr.Response.StatusCode >= 500:
+		return err
+	}
+	return fmt.Errorf("%w: %w", types.ErrAuth, err)
+}
 
 // connect establishes a new tcp connection to the imap server, logs in and
 // selects the default inbox. If no error is returned, the imap client will be
@@ -107,24 +134,24 @@ func (w *IMAPWorker) connect() (*client.Client, error) {
 			password, _ := w.config.url.User.Password()
 
 			if err := c.Login(username, password); err != nil {
-				return nil, err
+				return nil, authError(err)
 			}
 		}
 	default:
 		saslClient, err := auth.NewSaslClient(mech, w.config.url, w.config.tokens)
 		if err != nil {
-			return nil, err
+			return nil, authError(err)
 		}
 		if saslClient != nil {
 			if ok, err := c.SupportAuth(strings.ToUpper(mech)); err != nil {
 				return nil, err
 			} else if !ok {
-				return nil, fmt.Errorf("%s auth not supported", mech)
+				return nil, fmt.Errorf("%w: %s auth not supported", types.ErrAuth, mech)
 			}
 
 			err = c.Authenticate(saslClient)
 			if err != nil {
-				return nil, err
+				return nil, authError(err)
 			}
 		}
 	}

@@ -177,6 +177,11 @@ func (acct *AccountView) Name() string {
 	return acct.acct.Name
 }
 
+// Connected must be called from the main goroutine, which updates the state.
+func (acct *AccountView) Connected() bool {
+	return acct.state.Connected
+}
+
 func (acct *AccountView) Invalidate() {
 	ui.Invalidate()
 }
@@ -528,8 +533,14 @@ func (acct *AccountView) onMessage(msg types.WorkerMessage) {
 	case *types.ConnError:
 		log.Errorf("[%s] connection error: %v", acct.acct.Name, msg.Error)
 		acct.SetStatus(state.SetConnected(false))
-		acct.PushError(msg.Error)
 		acct.msglist.SetStore(nil)
+		if errors.Is(msg.Error, types.ErrAuth) {
+			log.Warnf("[%s] not reconnecting automatically after an authentication failure",
+				acct.acct.Name)
+			acct.PushError(fmt.Errorf("%w; reconnect with :connect", msg.Error))
+			break
+		}
+		acct.PushError(msg.Error)
 		// Exponential backoff: 1.8^retries seconds, capped at ReconnectMaxWait
 		var wait time.Duration
 		if acct.reconnectRetries > 0 {

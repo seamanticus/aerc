@@ -92,6 +92,9 @@ type Unsupported struct {
 var (
 	ErrUnsupported = errors.New("unsupported operation")
 	ErrNoop        = errors.New("operation did not have any effect")
+	// Wraps credential failures in a ConnError. They are not retried
+	// automatically: repeated attempts can get the account locked out.
+	ErrAuth = errors.New("authentication failed")
 )
 
 // Actions

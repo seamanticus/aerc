@@ -192,6 +192,11 @@ func (w *IMAPWorker) handleMessage(msg types.WorkerMessage) error {
 
 		c, err := w.connect()
 		if err != nil {
+			if errors.Is(err, types.ErrAuth) {
+				// the generic ConnError below would start the retry loop
+				w.worker.PostMessage(&types.ConnError{Error: err}, nil)
+				return types.ErrNoop
+			}
 			w.observer.EmitIfNotConnected()
 			return err
 		}
@@ -200,6 +205,11 @@ func (w *IMAPWorker) handleMessage(msg types.WorkerMessage) error {
 
 		return nil
 	case *types.Reconnect:
+		// a retry scheduled before a manual :connect or :oauth2-login
+		// succeeded must not open a second connection
+		if w.client != nil && w.client.State() == imap.SelectedState {
+			return types.ErrNoop
+		}
 		c, err := w.connect()
 		if err != nil {
 			// Send ConnError to trigger retry from account.go

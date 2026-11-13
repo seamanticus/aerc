@@ -14,6 +14,9 @@ import (
 	"github.com/seamanticus/aerc/lib"
 	"github.com/seamanticus/aerc/lib/auth"
 	"github.com/seamanticus/aerc/lib/log"
+	"github.com/seamanticus/aerc/lib/state"
+	"github.com/seamanticus/aerc/lib/ui"
+	"github.com/seamanticus/aerc/worker/types"
 	"golang.org/x/oauth2"
 )
 
@@ -88,7 +91,17 @@ func (l OAuth2Login) Execute(args []string) error {
 			acct.PushError(fmt.Errorf("oauth2-login: %w", err))
 			return
 		}
-		app.PushSuccess(conf.Name + ": OAuth2 authorization complete, run :connect")
+		// A single attempt. If the server rejects the credentials, the
+		// account stays disconnected until :connect (see types.ErrAuth).
+		ui.QueueFunc(func() {
+			if acct.Connected() {
+				app.PushSuccess(conf.Name + ": OAuth2 authorization complete")
+				return
+			}
+			app.PushSuccess(conf.Name + ": OAuth2 authorization complete, connecting")
+			acct.SetStatus(state.ConnectionActivity("Connecting..."))
+			acct.Worker().PostAction(context.TODO(), &types.Connect{}, nil)
+		})
 	}()
 	return nil
 }
