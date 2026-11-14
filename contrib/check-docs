@@ -17,7 +17,7 @@ if echo . | grep --color . >/dev/null 2>&1; then
 fi
 
 fail=0
-sed -nE "$cmd_scd_sed" doc/*.scd | tr ' ' '\n' > "$tmp"
+sed -nE "$cmd_scd_sed" docs/*.scd | tr ' ' '\n' > "$tmp"
 for f in $(find commands -type f -name '*.go'); do
 	for cmd in $(sed -n "$cmd_go_sed" "$f"); do
 		if ! grep -qFx "$cmd" "$tmp"; then
@@ -34,7 +34,7 @@ fi
 
 fail=0
 sed -n "$cmd_go_sed" $(find commands -type f -name '*.go') | tr ' ' '\n' > "$tmp"
-for f in doc/*.scd; do
+for f in docs/*.scd; do
 	for cmd in $(sed -nE "$cmd_scd_sed" "$f" | tr ' ' '\n' | sed '/^-/d;/^$/d'); do
 		if ! grep -qFx "$cmd" "$tmp"; then
 			grep -Hn $grep_color "^\\*:$cmd\\*" "$f"
@@ -49,7 +49,7 @@ if [ "$fail" -gt 0 ]; then
 fi
 
 fail=0
-sed -nE 's/^\*([a-z][a-z0-9-]*)\* = .*/\1/p' doc/*.scd > "$tmp"
+sed -nE 's/^\*([a-z][a-z0-9-]*)\* = .*/\1/p' docs/*.scd > "$tmp"
 for f in $(find config -type f -name '*.go'); do
 	for opt in $(sed -nE 's/.*`ini:"([a-z][a-z0-9-]*)".*/\1/p' $f); do
 		if ! grep -qFx "$opt" "$tmp"; then

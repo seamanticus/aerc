@@ -30,22 +30,22 @@ along with optional `unshare` (from `util-linux`) or `socksify` (from
 
 Also available as man pages:
 
-- [aerc(1)](doc/aerc.1.scd)
-- [aerc-accounts(5)](doc/aerc-accounts.5.scd)
-- [aerc-binds(5)](doc/aerc-binds.5.scd)
-- [aerc-config(5)](doc/aerc-config.5.scd)
-- [aerc-imap(5)](doc/aerc-imap.5.scd)
-- [aerc-jmap(5)](doc/aerc-jmap.5.scd)
-- [aerc-maildir(5)](doc/aerc-maildir.5.scd)
-- [aerc-mbox(5)](doc/aerc-mbox.5.scd)
-- [aerc-patch(7)](doc/aerc-patch.7.scd)
-- [aerc-search(1)](doc/aerc-search.1.scd)
-- [aerc-sendmail(5)](doc/aerc-sendmail.5.scd)
-- [aerc-smtp(5)](doc/aerc-smtp.5.scd)
-- [aerc-stylesets(7)](doc/aerc-stylesets.7.scd)
-- [aerc-templates(7)](doc/aerc-templates.7.scd)
-- [aerc-tutorial(7)](doc/aerc-tutorial.7.scd)
-- [carddav-query(1)](doc/carddav-query.1.scd)
+- [aerc(1)](docs/aerc.1.scd)
+- [aerc-accounts(5)](docs/aerc-accounts.5.scd)
+- [aerc-binds(5)](docs/aerc-binds.5.scd)
+- [aerc-config(5)](docs/aerc-config.5.scd)
+- [aerc-imap(5)](docs/aerc-imap.5.scd)
+- [aerc-jmap(5)](docs/aerc-jmap.5.scd)
+- [aerc-maildir(5)](docs/aerc-maildir.5.scd)
+- [aerc-mbox(5)](docs/aerc-mbox.5.scd)
+- [aerc-patch(7)](docs/aerc-patch.7.scd)
+- [aerc-search(1)](docs/aerc-search.1.scd)
+- [aerc-sendmail(5)](docs/aerc-sendmail.5.scd)
+- [aerc-smtp(5)](docs/aerc-smtp.5.scd)
+- [aerc-stylesets(7)](docs/aerc-stylesets.7.scd)
+- [aerc-templates(7)](docs/aerc-templates.7.scd)
+- [aerc-tutorial(7)](docs/aerc-tutorial.7.scd)
+- [carddav-query(1)](docs/carddav-query.1.scd)
 
 Integration recipes for external tools (written for upstream aerc, most apply):
 

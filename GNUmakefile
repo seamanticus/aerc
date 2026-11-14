@@ -29,9 +29,9 @@ CFLAGS ?= -O2 -g
 
 # internal variables used for automatic rules generation with macros
 gosrc = $(shell find * -type f -name '*.go') go.mod go.sum
-man1 = $(subst .scd,,$(notdir $(wildcard doc/*.1.scd)))
-man5 = $(subst .scd,,$(notdir $(wildcard doc/*.5.scd)))
-man7 = $(subst .scd,,$(notdir $(wildcard doc/*.7.scd)))
+man1 = $(subst .scd,,$(notdir $(wildcard docs/*.1.scd)))
+man5 = $(subst .scd,,$(notdir $(wildcard docs/*.5.scd)))
+man7 = $(subst .scd,,$(notdir $(wildcard docs/*.7.scd)))
 docs = $(man1) $(man5) $(man7)
 cfilters = $(subst .c,,$(notdir $(wildcard filters/*.c)))
 filters = $(filter-out filters/vectors filters/test.sh filters/%.c,$(wildcard filters/*))
@@ -117,7 +117,7 @@ uninstall:
 # $1: man page name (e.g: aerc.1)
 #
 define install_man
-$1: doc/$1.scd
+$1: docs/$1.scd
 	scdoc < $$< > $$@
 
 $1_section = $$(subst .,,$$(suffix $1))
