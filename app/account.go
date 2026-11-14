@@ -490,7 +490,11 @@ func (acct *AccountView) onMessage(msg types.WorkerMessage) {
 		}
 	case *types.MessageInfo:
 		if store, ok := acct.dirlist.MsgStore(msg.Info.Directory); ok {
-			if msg.InResponseTo() == nil || msg.ReplaceFlags {
+			// A flags fetch only resolves the placeholder \Seen of a cached
+			// header: the store never held real state to compare against,
+			// and the server Unseen count already includes the message.
+			_, isFlagsFetch := msg.InResponseTo().(*types.FetchMessageFlags)
+			if !isFlagsFetch && (msg.InResponseTo() == nil || msg.ReplaceFlags) {
 				// This is a server generated message update, e.g. a
 				// notification that a message has changed (this will happen
 				// mostly for flags according to section 2.3.1.1 alinea 4 in
