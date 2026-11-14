@@ -16,9 +16,9 @@ func newTestAccount(t *testing.T, unseen int, flags models.Flags) (*AccountView,
 	t.Helper()
 	// onMessage ends with UpdateStatus(), which looks up the selected tab
 	// of the global aerc; an empty tab list means "no account selected".
-	if aerc.tabs == nil {
-		aerc.tabs = ui.NewTabs(nil)
-	}
+	old := aerc.tabs
+	aerc.tabs = ui.NewTabs(nil)
+	t.Cleanup(func() { aerc.tabs = old })
 	worker := types.NewWorker("test", make(chan types.WorkerMessage, 10))
 	dirlist := &DirectoryList{
 		store:    lib.NewDirStore(),
