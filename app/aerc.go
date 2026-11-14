@@ -841,6 +841,18 @@ func (aerc *Aerc) DirectCommand(cmdline string) error {
 	return aerc.cmd(cmdline, nil, nil)
 }
 
+// Schedule implements ipc.Handler: IPC commands run on the main loop like
+// key bindings do.
+func (aerc *Aerc) Schedule(fn func()) {
+	ui.QueueFunc(fn)
+}
+
+// ReportError implements ipc.Handler for commands whose IPC client did not
+// wait for the result. The IPC server has already logged the error.
+func (aerc *Aerc) ReportError(err error) {
+	aerc.PushError(err.Error())
+}
+
 func (aerc *Aerc) mailto(addr *url.URL) error {
 	var subject string
 	var body string

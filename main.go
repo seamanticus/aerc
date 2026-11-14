@@ -201,8 +201,12 @@ func main() {
 
 		response, err := ipc.ConnectAndExec(opts.Command)
 		if err == nil {
-			if response.Error != "" {
+			switch {
+			case response.Error != "":
 				fmt.Printf("response: %s\n", response.Error)
+			case response.Queued && os.Getenv(ipc.NoWaitEnv) == "":
+				fmt.Println("response: aerc is busy; the command was queued " +
+					"and its result will be shown in aerc")
 			}
 			return // other aerc instance takes over
 		}
@@ -210,6 +214,12 @@ func main() {
 	}
 
 	log.Infof("Starting up version %s", log.BuildInfo)
+
+	// Inherited by every child process (hooks, filters, terminals...) so
+	// that an `aerc :cmd` they run does not wait on this instance.
+	if err := os.Setenv(ipc.NoWaitEnv, "1"); err != nil {
+		log.Warnf("failed to set %s: %v", ipc.NoWaitEnv, err)
+	}
 
 	deferLoop := make(chan struct{})
 

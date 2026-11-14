@@ -8,6 +8,10 @@ type Request struct {
 	// Arguments contains the commandline arguments. The detection of what
 	// action to take is left to the receiver.
 	Arguments []string `json:"arguments"`
+	// Async asks the receiver to reply as soon as the command is queued and
+	// to report its result itself. Clients started by aerc (hooks, filters,
+	// terminals) set it since aerc may be blocked waiting for them.
+	Async bool `json:"async,omitempty"`
 }
 
 // Response is used to report the results of a command.
@@ -15,6 +19,9 @@ type Response struct {
 	// Error contains the success-state of the command. Error is an empty
 	// string if everything ran successfully.
 	Error string `json:"error"`
+	// Queued is set when the command was not started within the pickup
+	// timeout; its result is then reported in the running aerc instance.
+	Queued bool `json:"queued,omitempty"`
 }
 
 // Encode transforms the message in an easier to transfer format

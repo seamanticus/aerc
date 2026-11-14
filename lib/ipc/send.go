@@ -5,9 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"os"
 
 	"github.com/seamanticus/aerc/lib/xdg"
 )
+
+// NoWaitEnv is set in the environment of every process started by aerc. An
+// IPC client that finds it sends async requests: aerc may be blocked waiting
+// for that very process and could not run the command until it exits.
+const NoWaitEnv = "AERC_IPC_NOWAIT"
 
 func ConnectAndExec(args []string) (*Response, error) {
 	sockpath := xdg.RuntimePath("aerc.sock")
@@ -17,7 +23,10 @@ func ConnectAndExec(args []string) (*Response, error) {
 	}
 	defer func() { _ = conn.Close() }()
 
-	req, err := (&Request{Arguments: args}).Encode()
+	req, err := (&Request{
+		Arguments: args,
+		Async:     os.Getenv(NoWaitEnv) != "",
+	}).Encode()
 	if err != nil {
 		return nil, fmt.Errorf("failed to encode request: %w", err)
 	}
