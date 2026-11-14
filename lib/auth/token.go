@@ -147,7 +147,7 @@ func (s *TokenStore) Store(tok *oauth2.Token) error {
 			"oauth2-encrypt-cmd and oauth2-decrypt-cmd must be set to store OAuth2 tokens")
 	}
 	if tok.RefreshToken == "" {
-		return errors.New("no refresh token received, is offline_access in scope?")
+		return errors.New("no refresh token received from the provider (Microsoft needs offline_access in scope)")
 	}
 	e := cacheEntry(s.Account)
 	e.Lock()

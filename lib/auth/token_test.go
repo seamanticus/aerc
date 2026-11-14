@@ -333,25 +333,38 @@ func TestBrowserLoginIgnoresWrongState(t *testing.T) {
 
 func TestOAuth2ConfigProviderDefaults(t *testing.T) {
 	ms := microsoftDefaults.Endpoint.TokenURL
+	g := googleDefaults.Endpoint.TokenURL
+	gID, gSecret := thunderbirdGoogleClientID, thunderbirdGoogleClientSecret
 	vectors := []struct {
-		uri      string
-		clientID string
-		tokenURL string
+		uri          string
+		clientID     string
+		clientSecret string
+		tokenURL     string
 	}{
 		// no parameters: everything from the catalogue
-		{"imaps+xoauth2://u%40hotmail.com@outlook.office365.com:993", thunderbirdMicrosoftClientID, ms},
-		{"smtp+xoauth2://u%40hotmail.com@smtp-mail.outlook.com:587", thunderbirdMicrosoftClientID, ms},
-		{"smtp+xoauth2://u%40hotmail.com@smtp.office365.com:587", thunderbirdMicrosoftClientID, ms},
-		{"imaps+xoauth2://u%40hotmail.com@imap-mail.outlook.com", thunderbirdMicrosoftClientID, ms},
+		{"imaps+xoauth2://u%40hotmail.com@outlook.office365.com:993", thunderbirdMicrosoftClientID, "", ms},
+		{"smtp+xoauth2://u%40hotmail.com@smtp-mail.outlook.com:587", thunderbirdMicrosoftClientID, "", ms},
+		{"smtp+xoauth2://u%40hotmail.com@smtp.office365.com:587", thunderbirdMicrosoftClientID, "", ms},
+		{"imaps+xoauth2://u%40hotmail.com@imap-mail.outlook.com", thunderbirdMicrosoftClientID, "", ms},
+		{"imaps+oauthbearer://u%40gmail.com@imap.gmail.com:993", gID, gSecret, g},
+		{"smtps+oauthbearer://u%40gmail.com@smtp.gmail.com:465", gID, gSecret, g},
+		{"imaps+xoauth2://u%40googlemail.com@imap.googlemail.com", gID, gSecret, g},
+		{"smtp+xoauth2://u%40googlemail.com@smtp.googlemail.com:587", gID, gSecret, g},
 		// explicit parameters win, missing ones are filled
-		{"imaps+xoauth2://u@outlook.office365.com?client_id=mine", "mine", ms},
-		{"imaps+xoauth2://u@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "https://t"},
+		{"imaps+xoauth2://u@outlook.office365.com?client_id=mine", "mine", "", ms},
+		{"imaps+xoauth2://u@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "", "https://t"},
+		// the default secret only goes with the default client id
+		{"imaps+oauthbearer://u@imap.gmail.com?client_id=mine", "mine", "", g},
+		{"imaps+oauthbearer://u@imap.gmail.com?client_id=mine&client_secret=s", "mine", "s", g},
+		{"imaps+oauthbearer://u@imap.gmail.com?client_secret=s", gID, gSecret, g},
+		{"imaps+xoauth2://u@outlook.office365.com?client_secret=s", thunderbirdMicrosoftClientID, "", ms},
 		// password without token_endpoint is an access token: untouched
-		{"imaps+xoauth2://u:access@outlook.office365.com", "", ""},
+		{"imaps+xoauth2://u:access@outlook.office365.com", "", "", ""},
+		{"imaps+oauthbearer://u:access@imap.gmail.com", "", "", ""},
 		// password with token_endpoint is a refresh token: completed
-		{"imaps+xoauth2://u:refresh@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "https://t"},
+		{"imaps+xoauth2://u:refresh@outlook.office365.com?token_endpoint=https://t", thunderbirdMicrosoftClientID, "", "https://t"},
 		// unknown host
-		{"imaps+xoauth2://u@imap.example.com", "", ""},
+		{"imaps+xoauth2://u@imap.example.com", "", "", ""},
 	}
 	for _, v := range vectors {
 		u, err := url.Parse(v.uri)
@@ -359,10 +372,15 @@ func TestOAuth2ConfigProviderDefaults(t *testing.T) {
 			t.Fatal(err)
 		}
 		o := OAuth2Config(u)
-		if o.ClientID != v.clientID || o.Endpoint.TokenURL != v.tokenURL {
-			t.Errorf("%s: got client_id=%q token_endpoint=%q, expected %q %q",
-				v.uri, o.ClientID, o.Endpoint.TokenURL, v.clientID, v.tokenURL)
+		if o.ClientID != v.clientID || o.ClientSecret != v.clientSecret ||
+			o.Endpoint.TokenURL != v.tokenURL {
+			t.Errorf("%s: got client_id=%q client_secret=%q token_endpoint=%q, expected %q %q %q",
+				v.uri, o.ClientID, o.ClientSecret, o.Endpoint.TokenURL,
+				v.clientID, v.clientSecret, v.tokenURL)
 		}
+	}
+	if googleDefaults.Endpoint.DeviceAuthURL != "" {
+		t.Error("Google rejects the device flow for this client, DeviceAuthURL must be empty")
 	}
 }
 
