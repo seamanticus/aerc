@@ -185,6 +185,27 @@ func TestServerProbeDoesNotSchedule(t *testing.T) {
 	}
 }
 
+func TestPickupFromEnv(t *testing.T) {
+	tests := []struct {
+		val  string
+		want time.Duration
+	}{
+		{"", pickupTimeout},
+		{"500ms", 500 * time.Millisecond},
+		{"10s", 10 * time.Second},
+		{"5", pickupTimeout},
+		{"0s", pickupTimeout},
+		{"-1s", pickupTimeout},
+		{"soon", pickupTimeout},
+	}
+	for _, tt := range tests {
+		t.Setenv(TimeoutEnv, tt.val)
+		if got := pickupFromEnv(); got != tt.want {
+			t.Errorf("%s=%q: got %s, want %s", TimeoutEnv, tt.val, got, tt.want)
+		}
+	}
+}
+
 // A connected client that sends nothing must not hold up other clients.
 func TestServerIdleClientDoesNotBlockOthers(t *testing.T) {
 	h := newFakeHandler(nil)

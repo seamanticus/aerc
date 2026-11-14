@@ -26,6 +26,26 @@ type AercServer struct {
 // Default for AercServer.pickup; commands normally start within a frame.
 const pickupTimeout = 2 * time.Second
 
+// TimeoutEnv overrides pickupTimeout in the running instance. Its value is a
+// positive Go duration such as "500ms" or "5s".
+const TimeoutEnv = "AERC_IPC_TIMEOUT"
+
+// pickupFromEnv returns the pickup timeout configured with TimeoutEnv, or
+// the default when it is unset or invalid.
+func pickupFromEnv() time.Duration {
+	val := os.Getenv(TimeoutEnv)
+	if val == "" {
+		return pickupTimeout
+	}
+	d, err := time.ParseDuration(val)
+	if err != nil || d <= 0 {
+		log.Warnf("ipc: invalid %s=%q (want a positive duration such as 5s), using %s",
+			TimeoutEnv, val, pickupTimeout)
+		return pickupTimeout
+	}
+	return d
+}
+
 func StartServer(handler Handler, startup context.Context) (*AercServer, error) {
 	sockpath := xdg.RuntimePath("aerc.sock")
 	// remove the socket if it is not connected to a session
@@ -39,7 +59,7 @@ func StartServer(handler Handler, startup context.Context) (*AercServer, error) 
 		return nil, err
 	}
 	as := &AercServer{
-		listener: l, handler: handler, startup: startup, pickup: pickupTimeout,
+		listener: l, handler: handler, startup: startup, pickup: pickupFromEnv(),
 	}
 	go as.Serve()
 
