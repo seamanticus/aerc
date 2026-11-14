@@ -628,7 +628,8 @@ message list, the message in the message viewer, etc).
 
 	*-d*: Use the device authorization flow instead: a URL and a code are
 	displayed in the status line, to be entered in a web browser on any
-	device.
+	device. Not available for Gmail, whose default client cannot use this
+	flow.
 
 *:clear* [*-s*]
 	Clears the current search or filter criteria.

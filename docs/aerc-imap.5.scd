@@ -66,21 +66,34 @@ are available:
 		- _auth_endpoint_ (optional, for *:oauth2-login*)
 		- _device_endpoint_ (optional, for *:oauth2-login -d*)
 		- _client_id_ (optional)
-		- _client_secret_ (optional)
+		- _client_secret_ (optional; required with _client_id_ when the
+		  provider requires a secret, see below)
 		- _scope_ (optional, space separated)
 
 		Example:
 			imaps+oauthbearer://...?token_endpoint=https://...&client_id=
 
-		For the Microsoft hosts _outlook.office365.com_, _outlook.office.com_,
+		For the Microsoft and Google hosts listed below, missing parameters
+		default to the provider's endpoints and scopes and to the Mozilla
+		Thunderbird client of that provider. These defaults are not applied
+		when the URI has a password and no _token_endpoint_: the password is
+		then used as access token, as before.
+
+		_client_id_ and _client_secret_ go together. When _client_id_ is
+		omitted, both are taken from the Thunderbird client (Microsoft's has
+		no secret) and a _client_secret_ given alone is ignored. When
+		_client_id_ is set, the default secret is never used: you must also
+		set the _client_secret_ of your own client if it has one. Google
+		always requires one, so a Google _client_id_ without _client_secret_
+		fails with _client_secret is missing_.
+
+		*Microsoft*: _outlook.office365.com_, _outlook.office.com_,
 		_imap-mail.outlook.com_, _imap.outlook.com_, _smtp-mail.outlook.com_,
-		_smtp.office365.com_ and _smtp.outlook.com_, missing parameters
-		default to Microsoft's _common_ endpoints
-		(_https://login.microsoftonline.com/common/oauth2/v2.0/..._), the
-		Mozilla Thunderbird client ID and the _offline_access_, IMAP and SMTP
-		scopes. These defaults are not applied when the URI has a password and
-		no _token_endpoint_: the password is then used as access token, as
-		before. A Microsoft account thus only needs:
+		_smtp.office365.com_ and _smtp.outlook.com_ default to Microsoft's
+		_common_ endpoints
+		(_https://login.microsoftonline.com/common/oauth2/v2.0/..._) and the
+		_offline_access_, IMAP and SMTP scopes. A Microsoft account thus only
+		needs:
 
 		```
 		source = imaps+xoauth2://you%40outlook.com@outlook.office365.com:993
@@ -88,6 +101,26 @@ are available:
 		oauth2-encrypt-cmd = gpg --encrypt --default-recipient-self
 		oauth2-decrypt-cmd = gpg --decrypt --quiet
 		```
+
+		*Google*: _imap.gmail.com_, _smtp.gmail.com_, _imap.googlemail.com_
+		and _smtp.googlemail.com_ default to
+		_https://accounts.google.com/o/oauth2/auth_,
+		_https://oauth2.googleapis.com/token_ and the
+		_https://mail.google.com/_ scope (IMAP and SMTP). Google does not
+		allow this client to use the device flow, so only the browser
+		*:oauth2-login* works. A Gmail account thus only needs:
+
+		```
+		source = imaps+oauthbearer://you%40gmail.com@imap.gmail.com:993
+		outgoing = smtps+oauthbearer://you%40gmail.com@smtp.gmail.com:465
+		oauth2-encrypt-cmd = gpg --encrypt --default-recipient-self
+		oauth2-decrypt-cmd = gpg --decrypt --quiet
+		```
+
+		Google Workspace administrators can block third-party clients; the
+		login then fails with _admin_policy_enforced_. Google invalidates the
+		refresh token after six months without use or a password change; run
+		*:oauth2-login* again when aerc asks for it.
 
 	_imaps+xoauth2_
 		IMAP with TLS/SSL using XOAUTH2 Authentication. Parameters are
