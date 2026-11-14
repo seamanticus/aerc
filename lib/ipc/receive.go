@@ -61,7 +61,6 @@ func (as *AercServer) Serve() {
 			continue
 		}
 
-		defer func() { _ = conn.Close() }()
 		clientId := atomic.AddInt64(&lastId, 1)
 		log.Debugf("unix:%d accepted connection", clientId)
 		scanner := bufio.NewScanner(conn)
@@ -93,6 +92,9 @@ func (as *AercServer) Serve() {
 				log.Errorf("unix:%d failed to send response: %v", clientId, err)
 				break
 			}
+		}
+		if err := conn.Close(); err != nil {
+			log.Errorf("unix:%d failed to close connection: %v", clientId, err)
 		}
 		log.Tracef("unix:%d closed connection", clientId)
 	}
