@@ -98,6 +98,23 @@ from your terminal.
 	If aerc is already running (and IPC is not disabled), the file is opened in
 	that instance; otherwise a new instance is started with the file.
 
+# IPC
+
+When *mailto:*, *:*_<command...>_ or *mbox:* is handed over to a running aerc
+instance, the command runs in that instance as if it had been typed there, and
+an error is printed by the calling *aerc* process as _response: <error>_.
+Errors are also written to the log of the running instance.
+
+aerc sets *AERC_IPC_NOWAIT=1* in the environment of every process it starts
+(hooks, filters, the editor, *:terminal*, *:exec*, ...). When this variable is
+set, the calling *aerc* returns as soon as the command is queued, because the
+running instance may be waiting for that very process to exit. The result of
+the command is then shown in the status line of the running instance instead.
+
+If the running instance is busy and does not start the command within two
+seconds, the calling *aerc* prints a notice and returns; the command still
+runs and its result is shown in that instance.
+
 # RUNTIME COMMANDS
 
 To execute a command, press *:* to bring up the command interface. Commands may
