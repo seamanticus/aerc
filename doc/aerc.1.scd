@@ -105,15 +105,42 @@ instance, the command runs in that instance as if it had been typed there, and
 an error is printed by the calling *aerc* process as _response: <error>_.
 Errors are also written to the log of the running instance.
 
-aerc sets *AERC_IPC_NOWAIT=1* in the environment of every process it starts
-(hooks, filters, the editor, *:terminal*, *:exec*, ...). When this variable is
-set, the calling *aerc* returns as soon as the command is queued, because the
-running instance may be waiting for that very process to exit. The result of
-the command is then shown in the status line of the running instance instead.
+The running instance may be busy waiting for a process it started (a hook, a
+filter, a template *exec*, ...). To avoid waiting forever, the calling *aerc*
+only waits for the result of a command once the running instance has started
+it. If the command is not started in time (see *AERC_IPC_TIMEOUT*), the calling
+*aerc* prints _response: aerc is busy; the command was queued and its result
+will be shown in aerc_ and returns. The command still runs, and its error, if
+any, is shown in the status line of the running instance and written to its
+log.
 
-If the running instance is busy and does not start the command within two
-seconds, the calling *aerc* prints a notice and returns; the command still
-runs and its result is shown in that instance.
+## ENVIRONMENT
+
+*AERC_IPC_NOWAIT*
+	Set to _1_ by aerc in the environment of every process it starts (hooks,
+	filters, the editor, *:terminal*, *:exec*, *:pipe*, ...). When it is set
+	to any non-empty value, the calling *aerc* does not wait for the result:
+	it returns as soon as the command is queued and prints nothing. The
+	error, if any, is shown in the status line of the running instance and
+	written to its log. This prevents a deadlock when the running instance is
+	waiting for the very process that runs *aerc :*_<command>_.
+
+	Unset it (e.g. _env -u AERC_IPC_NOWAIT aerc :cmd_) to get the error
+	printed in a terminal started by aerc. Doing so from a hook or any
+	process aerc waits for falls back to *AERC_IPC_TIMEOUT*.
+
+	Setting it in your own shell makes every *aerc* IPC call return without
+	printing errors.
+
+*AERC_IPC_TIMEOUT*
+	Read by the running instance when it starts its IPC server. How long a
+	calling *aerc* is kept waiting for its command to be started before it
+	gets the _queued_ response above. The value is a positive duration with
+	a unit, such as _500ms_, _2s_ or _1m_. When it is unset or empty the
+	default is used; an invalid or non-positive value is ignored with a
+	warning in the log. Changing it requires restarting aerc.
+
+	Default: _2s_
 
 # RUNTIME COMMANDS
 
